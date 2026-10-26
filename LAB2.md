@@ -1,4 +1,4 @@
-# 实验 2 记录：第 <组号> 组
+# 实验 2 记录：第 8 组
 
 评分时依据本文件和 `runs/` 中的原始数据核对。本文件中的每一个数值，都须能在某个 `runs/<名字>/` 的文件中找到：表格用 `scripts/table.sh` 生成后粘贴，其他数值注明出处（例如“`runs/r1-pool4/red.csv` 第 6 阶段”）。不要只贴截图。将 `<填写>` 替换为本组的内容。
 
@@ -8,37 +8,45 @@
 
 | 项 | 内容 |
 |---|---|
-| 小组 | 第 <组号> 组 |
-| 仓库地址 | <https://github.com/…> |
-| 主机 | <云厂商与规格名，例如某云的 2 vCPU 4 GB 通用型；或学校的虚拟机> |
-| CPU | <`lscpu` 的 Model name；vCPU 数；`lscpu -e` 里每个 CPU 对应的 CORE> |
-| 内存 | <`free -m` 的 total> |
-| 数据目录所在的盘 | <`findmnt -T data` 的 SOURCE 和 FSTYPE；磁盘类型，如“通用型 SSD 云盘 40 GB”> |
-| 操作系统与内核 | <`/etc/os-release` 的 PRETTY_NAME；`uname -r`> |
-| Go、Prometheus、node_exporter | <`go version`；`tools/prometheus --version` 第一行；`tools/node_exporter --version` 第一行> |
-| 分核 | enrolld：<如 1>；loadgen、Prometheus、node_exporter：<如 0> |
+| 小组 | 第 8 组 |
+| 仓库地址 | <https://github.com/aCannedFish/ops-lab2-8> |
+| 主机 | 华为云 ECS 通用型 x1e（`x1e.2u.4g`），华东-上海一 `cn-east-3a`，2 vCPU / 4 GiB |
+| CPU | `General Purpose Processor`（KVM 虚拟化，AMD 家族 25）；2 个 vCPU；`lscpu -e` 中 CPU 0 与 CPU 1 同属 CORE 0，是同一物理核的两个超线程 |
+| 内存 | 3531 MB（`free -m` 的 total） |
+| 数据目录所在的盘 | `findmnt -T data` 给出 `/dev/vda1`、`ext4`，即挂载在 `/` 的 40 GB 系统云盘；`lsblk` 的 ROTA 为 1 是 virtio-blk 未上报 rotational 标志时的默认值，实测 fsync 平均 1.36 ms，属云盘（SSD）量级 |
+| 操作系统与内核 | Ubuntu 24.04.5 LTS；`6.8.0-146-generic` |
+| Go、Prometheus、node_exporter | `go version go1.26.9 linux/amd64`；`prometheus, version 3.13.4 (branch: HEAD, revision: 007a9e9ba628f815ce83e1ba9f29b97981996c3c)`；`node_exporter, version 1.12.1 (branch: HEAD, revision: 6044da783597cc3b57aef7580ddcdcff58a4ee99)` |
+| 分核 | enrolld：1；loadgen、Prometheus、node_exporter：0（两个 vCPU 是同一物理核的超线程，无法真正分开，如实记录） |
 
 ## 2. 任务 0：基线
 
-`bin/enrolld -bench-fsync 2000` 连续运行三次的输出：
+`bin/enrolld -bench-fsync 2000` 连续运行三次的输出（原文见 `runs/t0-baseline/bench-fsync-2000.txt`）：
 
 ```text
-<粘贴三次的输出>
+fsync 次数 2000，总耗时 2.63 s，数据目录 data
+fsync 耗时（毫秒）：mean 1.304  p50 1.145  p90 1.702  p99 3.497  max 12.295
+按平均值推算，一个写者串行 fsync 每秒最多约 767 次（= 1000 / 1.304）
+fsync 次数 2000，总耗时 2.78 s，数据目录 data
+fsync 耗时（毫秒）：mean 1.379  p50 1.156  p90 1.830  p99 3.995  max 19.822
+按平均值推算，一个写者串行 fsync 每秒最多约 725 次（= 1000 / 1.379）
+fsync 次数 2000，总耗时 2.84 s，数据目录 data
+fsync 耗时（毫秒）：mean 1.406  p50 1.172  p90 1.878  p99 4.547  max 10.569
+按平均值推算，一个写者串行 fsync 每秒最多约 711 次（= 1000 / 1.406）
 ```
 
-按平均值计算，单个写者串行 fsync 每秒最多约 <填写> 次。三次之间相差多少？<填写>
+按平均值计算，单个写者串行 fsync 每秒最多约 734 次。三次之间相差多少？三次的平均耗时分别为 1.304、1.379、1.406 ms，其平均值为 1.363 ms，1000 ÷ 1.363 ≈ 734；换算后最高 767 次/秒、最低 711 次/秒，相差 56 次/秒，约 8%。差异主要来自尾部：p99 从 3.497 ms 升到 4.547 ms，max 从 12.295 ms 到 19.822 ms，而中位数几乎不动（1.145 → 1.172 ms），说明平均值被少量慢 fsync 抬高，同一主机上重复测量时单次结果有约 10% 的波动。
 
-空载和运行 fsync 测试时各工具的读数（各观察 5 秒以上，填写典型值）：
+空载和运行 fsync 测试时各工具的读数（各观察 5 秒以上，取典型值；原文见 `runs/t0-baseline/vmstat-idle.log`、`iostat-idle.log`、`vmstat-fsync.log`、`iostat-fsync.log`，空载观察 11 秒，负载观察覆盖 `bin/enrolld -bench-fsync 5000` 的 6.97 s）：
 
 | 工具与列 | 空载 | 运行 `-bench-fsync` 时 | 该列的含义 |
 |---|---|---|---|
-| `vmstat -w 1`：r、b | <填写> | <填写> | <填写> |
-| `vmstat -w 1`：us、sy、id、wa、st | <填写> | <填写> | <填写> |
-| `iostat -dx 1 <盘>`：w/s、wkB/s | <填写> | <填写> | <填写> |
-| `iostat -dx 1 <盘>`：w_await、f/s、f_await | <填写> | <填写> | <填写> |
-| `iostat -dx 1 <盘>`：aqu-sz、%util | <填写> | <填写> | <填写> |
+| `vmstat -w 1`：r、b | 0、0 | 0、1 | r：可运行并等 CPU 的进程数；b：处于不可中断睡眠（D 状态，多在等 I/O）的进程数 |
+| `vmstat -w 1`：us、sy、id、wa、st | 1、1、99、0、0 | 1、5、49、45、0 | us/sy：用户态与内核态 CPU 占比；id：空闲；wa：空闲但期间有未完成的 I/O；st：被 hypervisor 抢占、未分给本机的时间 |
+| `iostat -dx 1 vda`：w/s、wkB/s | 0（偶有 1–4）、0–116 | 2200、12000 | 每秒完成的写请求数与写入量（KiB/s） |
+| `iostat -dx 1 vda`：w_await、f/s、f_await | 无 I/O（偶发时为 0.5–1.0）、0–2、0.00 | 0.45、1450、0.04 | 写请求的平均响应时间（ms）；每秒 flush 次数及其平均耗时，一次 fsync 在设备层表现为一次 flush |
+| `iostat -dx 1 vda`：aqu-sz、%util | 0.00、0–0.2 | 1.0、94 | aqu-sz：平均排队中的请求数；%util：设备处于忙碌状态的时间占比 |
 
-运行 fsync 测试时，CPU 是否繁忙？哪几列表明存在等待？<填写>
+运行 fsync 测试时，CPU 是否繁忙？哪几列表明存在等待？CPU 不繁忙：us 与 sy 合计约 6%（两核平均，折合约 0.12 个核），id 仍有 49%，真正在等的是 I/O。表明等待的列有四处：`vmstat` 的 b 从 0 变为 1，说明有一个进程处于 D 状态、卡在 I/O 上；wa 从 0 升到 44–46%，即 CPU 空闲的那段时间里始终有未完成的 I/O；`iostat` 的 %util 从 0 升到 91–95%，设备几乎没有空闲；aqu-sz 从 0 升到约 1.0，队列里始终有 1 个请求。与之相对，w_await 只有 0.45 ms、f_await 只有 0.04 ms，单次 I/O 很快、队列并不长，饱和体现为“设备一直忙”而不是“每次等待变长”。`vmstat` 的 bo 同时从 0 升到 11000–13000 块/秒（约 11–13 MB/s），与 `iostat` 的 w/s ≈ 2200、wkB/s ≈ 12000 对应。按同一窗口折算，f/s ≈ 1450 约为本次 fsync 速率（约 717 次/秒）的两倍，w/s ≈ 2200 约为三次，说明 ext4 的一次 fsync 在设备层会连带下发数据、日志与元数据的写，任务 3 分析 `disk_w_await_ms` 与 `disk_f_await_ms` 的差别时会用到这组比例。
 
 ## 3. 任务 1：指标流水线
 
