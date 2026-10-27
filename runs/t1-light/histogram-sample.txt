@@ -1,0 +1,16 @@
+# TYPE http_request_duration_seconds histogram
+http_request_duration_seconds_bucket{route="/api/courses/{id}",code="200",le="0.001"} 0
+http_request_duration_seconds_bucket{route="/api/courses/{id}",code="200",le="0.002"} 0
+http_request_duration_seconds_bucket{route="/api/courses/{id}",code="200",le="0.005"} 0
+http_request_duration_seconds_bucket{route="/api/courses/{id}",code="200",le="0.01"} 0
+http_request_duration_seconds_bucket{route="/api/courses/{id}",code="200",le="0.02"} 1
+http_request_duration_seconds_bucket{route="/api/courses/{id}",code="200",le="0.05"} 1
+http_request_duration_seconds_bucket{route="/api/courses/{id}",code="200",le="0.1"} 1
+http_request_duration_seconds_bucket{route="/api/courses/{id}",code="200",le="0.2"} 1
+http_request_duration_seconds_bucket{route="/api/courses/{id}",code="200",le="0.5"} 1
+http_request_duration_seconds_bucket{route="/api/courses/{id}",code="200",le="1"} 1
+http_request_duration_seconds_bucket{route="/api/courses/{id}",code="200",le="2"} 1
+http_request_duration_seconds_bucket{route="/api/courses/{id}",code="200",le="5"} 1
+http_request_duration_seconds_bucket{route="/api/courses/{id}",code="200",le="+Inf"} 1
+http_request_duration_seconds_sum{route="/api/courses/{id}",code="200"} 0.010614412
+http_request_duration_seconds_count{route="/api/courses/{id}",code="200"} 1

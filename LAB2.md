@@ -11,12 +11,12 @@
 | 小组 | 第 8 组 |
 | 仓库地址 | <https://github.com/aCannedFish/ops-lab2-8> |
 | 主机 | 华为云 ECS 通用型 x1e（`x1e.2u.4g`），华东-上海一 `cn-east-3a`，2 vCPU / 4 GiB |
-| CPU | `General Purpose Processor`（KVM 虚拟化，AMD 家族 25）；2 个 vCPU；`lscpu -e` 中 CPU 0 与 CPU 1 同属 CORE 0，是同一物理核的两个超线程 |
-| 内存 | 3531 MB（`free -m` 的 total） |
-| 数据目录所在的盘 | `findmnt -T data` 给出 `/dev/vda1`、`ext4`，即挂载在 `/` 的 40 GB 系统云盘；`lsblk` 的 ROTA 为 1 是 virtio-blk 未上报 rotational 标志时的默认值，实测 fsync 平均 1.36 ms，属云盘（SSD）量级 |
+| CPU | `General Purpose Processor`（KVM 虚拟化，AMD 家族 25）；2 个 vCPU；来宾机的 `lscpu -e` 中 CPU 0 与 CPU 1 同属 CORE 0，呈现为同核双线程拓扑，但不能据此确认宿主机的实际物理核分配（原文见 `runs/t0-baseline/host.txt`） |
+| 内存 | 3531 MiB（`free -m` 的 total，见 `runs/t0-baseline/host.txt`） |
+| 数据目录所在的盘 | `findmnt -T data` 给出 `/dev/vda1`、`ext4`，即挂载在 `/` 的 40 GB 系统云盘（`runs/t0-baseline/host.txt`）；ROTA 为 1，但虚拟块设备的标志和 fsync 延迟都不足以判断后端介质，SSD/HDD 类型未确认 |
 | 操作系统与内核 | Ubuntu 24.04.5 LTS；`6.8.0-146-generic` |
-| Go、Prometheus、node_exporter | `go version go1.26.9 linux/amd64`；`prometheus, version 3.13.4 (branch: HEAD, revision: 007a9e9ba628f815ce83e1ba9f29b97981996c3c)`；`node_exporter, version 1.12.1 (branch: HEAD, revision: 6044da783597cc3b57aef7580ddcdcff58a4ee99)` |
-| 分核 | enrolld：1；loadgen、Prometheus、node_exporter：0（两个 vCPU 是同一物理核的超线程，无法真正分开，如实记录） |
+| Go、Prometheus、node_exporter | `go version go1.26.9 linux/amd64`；`prometheus, version 3.13.4 (branch: HEAD, revision: 007a9e9ba628f815ce83e1ba9f29b97981996c3c)`；`node_exporter, version 1.12.1 (branch: HEAD, revision: 6044da783597cc3b57aef7580ddcdcff58a4ee99)`（版本原文见 `runs/t1-light/environment.txt`） |
+| 分核 | enrolld：1；loadgen、Prometheus、node_exporter：0（已按逻辑核分开，见 `runs/t1-light/meta.txt`、`environment.txt`；虚拟拓扑显示同核双线程，不能假设两者拥有独立的物理核资源） |
 
 ## 2. 任务 0：基线
 
@@ -34,38 +34,49 @@ fsync 耗时（毫秒）：mean 1.406  p50 1.172  p90 1.878  p99 4.547  max 10.5
 按平均值推算，一个写者串行 fsync 每秒最多约 711 次（= 1000 / 1.406）
 ```
 
-按平均值计算，单个写者串行 fsync 每秒最多约 734 次。三次之间相差多少？三次的平均耗时分别为 1.304、1.379、1.406 ms，其平均值为 1.363 ms，1000 ÷ 1.363 ≈ 734；换算后最高 767 次/秒、最低 711 次/秒，相差 56 次/秒，约 8%。差异主要来自尾部：p99 从 3.497 ms 升到 4.547 ms，max 从 12.295 ms 到 19.822 ms，而中位数几乎不动（1.145 → 1.172 ms），说明平均值被少量慢 fsync 抬高，同一主机上重复测量时单次结果有约 10% 的波动。
+按平均值计算，单个写者串行 fsync 每秒最多约 734 次。三次之间相差多少？三次的平均耗时分别为 1.304、1.379、1.406 ms，其平均值为 1.363 ms，1000 ÷ 1.363 ≈ 734；换算后最高 767 次/秒、最低 711 次/秒，相差 56 次/秒，约 8%。差异主要来自尾部：p99 从 3.497 ms 升到 4.547 ms，max 在 10.569–19.822 ms 之间波动，而中位数几乎不动（1.145 → 1.172 ms），说明平均值被少量慢 fsync 抬高，本次同主机三次重复测量的极差约为均值的 8%，不能据此保证后续测量的波动范围。
 
 空载和运行 fsync 测试时各工具的读数（各观察 5 秒以上，取典型值；原文见 `runs/t0-baseline/vmstat-idle.log`、`iostat-idle.log`、`vmstat-fsync.log`、`iostat-fsync.log`，空载观察 11 秒，负载观察覆盖 `bin/enrolld -bench-fsync 5000` 的 6.97 s）：
 
 | 工具与列 | 空载 | 运行 `-bench-fsync` 时 | 该列的含义 |
 |---|---|---|---|
-| `vmstat -w 1`：r、b | 0、0 | 0、1 | r：可运行并等 CPU 的进程数；b：处于不可中断睡眠（D 状态，多在等 I/O）的进程数 |
+| `vmstat -w 1`：r、b | 0、0 | 0、1 | r：可运行的进程数（含正在运行和等 CPU）；b：处于不可中断睡眠（D 状态，多在等 I/O）的进程数 |
 | `vmstat -w 1`：us、sy、id、wa、st | 1、1、99、0、0 | 1、5、49、45、0 | us/sy：用户态与内核态 CPU 占比；id：空闲；wa：空闲但期间有未完成的 I/O；st：被 hypervisor 抢占、未分给本机的时间 |
 | `iostat -dx 1 vda`：w/s、wkB/s | 0（偶有 1–4）、0–116 | 2200、12000 | 每秒完成的写请求数与写入量（KiB/s） |
-| `iostat -dx 1 vda`：w_await、f/s、f_await | 无 I/O（偶发时为 0.5–1.0）、0–2、0.00 | 0.45、1450、0.04 | 写请求的平均响应时间（ms）；每秒 flush 次数及其平均耗时，一次 fsync 在设备层表现为一次 flush |
-| `iostat -dx 1 vda`：aqu-sz、%util | 0.00、0–0.2 | 1.0、94 | aqu-sz：平均排队中的请求数；%util：设备处于忙碌状态的时间占比 |
+| `iostat -dx 1 vda`：w_await、f/s、f_await | 无 I/O（偶发时为 0.5–1.0）、0–2、0.00 | 0.45、1450、0.04 | 写请求的平均响应时间（ms）；每秒 flush 次数及其平均耗时；fsync 与设备 flush 不一定一一对应，本次约为 1:2 |
+| `iostat -dx 1 vda`：aqu-sz、%util | 0.00、0–0.2 | 1.0、94 | aqu-sz：平均未完成 I/O 请求数（含排队和正在处理）；%util：设备处于忙碌状态的时间占比 |
 
-运行 fsync 测试时，CPU 是否繁忙？哪几列表明存在等待？CPU 不繁忙：us 与 sy 合计约 6%（两核平均，折合约 0.12 个核），id 仍有 49%，真正在等的是 I/O。表明等待的列有四处：`vmstat` 的 b 从 0 变为 1，说明有一个进程处于 D 状态、卡在 I/O 上；wa 从 0 升到 44–46%，即 CPU 空闲的那段时间里始终有未完成的 I/O；`iostat` 的 %util 从 0 升到 91–95%，设备几乎没有空闲；aqu-sz 从 0 升到约 1.0，队列里始终有 1 个请求。与之相对，w_await 只有 0.45 ms、f_await 只有 0.04 ms，单次 I/O 很快、队列并不长，饱和体现为“设备一直忙”而不是“每次等待变长”。`vmstat` 的 bo 同时从 0 升到 11000–13000 块/秒（约 11–13 MB/s），与 `iostat` 的 w/s ≈ 2200、wkB/s ≈ 12000 对应。按同一窗口折算，f/s ≈ 1450 约为本次 fsync 速率（约 717 次/秒）的两倍，w/s ≈ 2200 约为三次，说明 ext4 的一次 fsync 在设备层会连带下发数据、日志与元数据的写，任务 3 分析 `disk_w_await_ms` 与 `disk_f_await_ms` 的差别时会用到这组比例。
+运行 fsync 测试时，CPU 是否繁忙？哪几列表明存在等待？CPU 不繁忙：us 与 sy 典型合计约 6%（两核平均，折合约 0.12 个逻辑核），id 仍约 49%。直接表明等待的是 `vmstat` 的 b 和 wa：负载期间 b 多数为 1，表示有进程处于不可中断睡眠；wa 约为 43–46%，表示约有这些比例的 CPU 时间记为 I/O 等待。`iostat` 同期 %util 为 91.5–95.5%，aqu-sz 为 0.99–1.27，说明设备持续有未完成的 I/O，但 aqu-sz 包含正在处理的请求，不能将其全部视为排队；仅凭高 %util 也不能断言云盘的最大吞吐已耗尽。w_await 为 0.41–0.50 ms，f_await 为 0.03–0.06 ms，均小于应用测得的 fsync 平均 1.381 ms，因为后者包含文件系统处理及一组 I/O 的等待，并非单个设备请求的耗时。`vmstat-fsync.log` 的 bo 约为 10904–13120 KiB/s，与 `iostat-fsync.log` 的 wkB/s 约 10936–13116 相符。该次 5000 次测试总耗时 6.97 s（`bench-fsync-5000.txt`），含循环开销的整体速率为 5000 ÷ 6.97 ≈ 717 次/秒；`iostat-fsync.log` 中间七个负载样本的 f/s 为 1335–1526，w/s 为 2002–2433，粗略对应每次 fsync 约两次 flush、三次写。该比例仅适用于本次 ext4/云盘组合与近似对齐的采样窗口，并非 fsync 的固定规则。
 
 ## 3. 任务 1：指标流水线
 
-两个抓取目标的状态（`curl -s 127.0.0.1:9090/api/v1/targets` 中两处 `"health"` 的值）：<填写>
+两个抓取目标的状态（`curl -s 127.0.0.1:9090/api/v1/targets` 中两处 `"health"` 的值）：`enrolld`（`127.0.0.1:8080`）为 `"up"`，`node`（`127.0.0.1:9100`）为 `"up"`，两者的 `lastError` 均为空；原始响应保存在 `runs/t1-light/targets.json`。
 
-本组编写的四条查询（与 `deploy/queries-red.txt` 一致）：
+本组编写的四条查询（与 `deploy/queries-red.txt` 一致，实验时的副本见 `runs/t1-light/queries-red.txt`）：
 
 ```text
-server_rps          <填写>
-server_error_rate   <填写>
-server_p99_ms       <填写>
-server_slo_good     <填写>
+server_rps          sum(rate(http_requests_total{route="${route}"}[${window}]))
+server_error_rate   (sum(rate(http_requests_total{route="${route}",code=~"5.."}[${window}])) or vector(0)) / sum(rate(http_requests_total{route="${route}"}[${window}]))
+server_p99_ms       1000 * histogram_quantile(0.99, sum by (le) (rate(http_request_duration_seconds_bucket{route="${route}"}[${window}])))
+server_slo_good     (sum(rate(http_request_duration_seconds_bucket{route="${route}",code="200",le="${slo}"}[${window}])) or vector(0)) / sum(rate(http_requests_total{route="${route}"}[${window}]))
 ```
+
+分母包含该接口的全部状态码；错误率分子只计 5xx，没有对应序列时用 `or vector(0)` 补零。p99 先按 `le` 合并所有状态码的桶，再估计分位数并换算为毫秒。SLI 分子只计 `code="200"` 且耗时不超过 `${slo}` 的累计桶，本次 `${slo}=0.05`。空载时没有请求，比例和每请求开销没有定义，不将它们强行补为零。
+
+实验使用默认参数 `-work 200000 -pool 4 -db-ms 10 -sync each`，`GOMAXPROCS=1`；enrolld 绑核 1，loadgen、Prometheus、node_exporter 绑核 0。Prometheus 仅监听 `127.0.0.1:9090`，TSDB 位于 `/dev/shm/lab2-prom`；服务配置、版本与绑核证据见 `runs/t1-light/meta.txt`、`enrolld.log`、`environment.txt`。执行 `GEN_CPUS=0 scripts/run.sh t1-light -url http://127.0.0.1:8080/api/courses/1 -rates 0,50,100`，每阶段 30 秒；`make build test` 全部通过，输出见 `runs/t1-light/build-test.txt`。
 
 `runs/t1-light` 的数据（`scripts/table.sh runs/t1-light ok_rps mean_ms p99_ms server_rps server_mean_ms server_p99_ms cpu_ms_per_req db_query_mean_ms`）：
 
-<粘贴表格>
+| step | target_rps | ok_rps | mean_ms | p99_ms | server_rps | server_mean_ms | server_p99_ms | cpu_ms_per_req | db_query_mean_ms |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | 0 | 0.0 | - | - | 0 | NaN | NaN | +Inf | NaN |
+| 2 | 50 | 50.5 | 11.44 | 12.63 | 51.6667 | 10.7216 | 19.9 | 0.540031 | 10.3144 |
+| 3 | 100 | 97.8 | 11.60 | 14.05 | 95.4167 | 10.867 | 19.9 | 0.539766 | 10.4262 |
+| all | - | 74.2 | 11.54 | 13.31 | - | - | - | - | - |
 
-从这次实验读出：每次查询实际占用连接 <填写> ms（`db_query_mean_ms`）；每个请求消耗的 CPU <填写> ms（`cpu_ms_per_req`，取 100 请求/秒的阶段）。
+从这次实验读出：每次查询实际占用连接 **10.4262 ms**（`runs/t1-light/red.csv` 第 3 阶段的 `db_query_mean_ms`；第 2 阶段为 10.3144 ms）；每个请求消耗的 CPU **0.539766 ms**（同文件第 3 阶段的 `cpu_ms_per_req`，取目标 100 请求/秒阶段，约 0.540 ms）。查询占用时间略大于配置的 10 ms，是因为还包含睡眠结束后重新调度及连接释放等开销，而不是只有设定的休眠时长；CPU 指标包含整个 enrolld 进程的开销，并未扣除空载成本。
+
+第 2、3 阶段的 `server_error_rate` 均为 0，`server_slo_good` 均为 1（`runs/t1-light/red.csv`），客户端也没有 HTTP 错误、超时、网络错误或丢弃（`steps.csv`）。表格保留工具原始输出：空载阶段以零请求为分母，产生 `NaN` 或 `+Inf`，不能解读为无限 CPU 开销；`all` 行仅汇总客户端有负载阶段，没有对应的服务端查询。客户端按完整阶段统计，Prometheus 查询去掉各阶段开头 5 秒，且 `rate()` 有抓取与外推误差，所以两侧 RPS 不必完全相等。服务端 p99 来自直方图桶内插值，而客户端使用实际样本，二者不应当作同一种精度的测量。
 
 ## 4. 任务 2：读路径
 

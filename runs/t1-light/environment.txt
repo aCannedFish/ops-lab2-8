@@ -1,0 +1,24 @@
+Captured: 2026-10-27T13:56:32+08:00
+go version go1.26.9 linux/amd64
+prometheus, version 3.13.4 (branch: HEAD, revision: 007a9e9ba628f815ce83e1ba9f29b97981996c3c)
+  build user:       root@f73b5a01ed25
+  build date:       20260929-13:32:05
+  go version:       go1.26.8
+  platform:         linux/amd64
+  tags:             netgo,builtinassets
+node_exporter, version 1.12.1 (branch: HEAD, revision: 6044da783597cc3b57aef7580ddcdcff58a4ee99)
+  build user:       root@3a6b59999579
+  build date:       20260714-12:05:11
+  go version:       go1.26.5
+  platform:         linux/amd64
+  tags:             unknown
+
+Process affinity:
+pid 4060945's current affinity list: 1
+pid 4060946's current affinity list: 0
+pid 4060947's current affinity list: 0
+
+Listening addresses:
+LISTEN 0      4096       127.0.0.1:9100       0.0.0.0:*    users:(("node_exporter",pid=4060946,fd=4))   
+LISTEN 0      4096       127.0.0.1:9090       0.0.0.0:*    users:(("prometheus",pid=4060947,fd=7))      
+LISTEN 0      4096       127.0.0.1:8080       0.0.0.0:*    users:(("enrolld",pid=4060945,fd=7))         
