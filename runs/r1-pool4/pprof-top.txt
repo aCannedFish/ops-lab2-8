@@ -1,0 +1,26 @@
+Fetching profile over HTTP from http://127.0.0.1:8080/debug/pprof/profile?seconds=20
+Saved profile in /home/ubuntu/pprof/pprof.enrolld.samples.cpu.001.pb.gz
+File: enrolld
+Build ID: 9850094f6f928d969b34b6cfef434e86694ed5aa
+Type: cpu
+Time: 2026-10-28 17:21:20 CST
+Duration: 20s, Total samples = 2.52s (12.60%)
+Showing nodes accounting for 2.32s, 92.06% of 2.52s total
+Dropped 66 nodes (cum <= 0.01s)
+Showing top 15 nodes out of 58
+      flat  flat%   sum%        cum   cum%
+     2.08s 82.54% 82.54%      2.08s 82.54%  main.spin
+     0.14s  5.56% 88.10%      0.14s  5.56%  internal/runtime/syscall/linux.Syscall6
+     0.02s  0.79% 88.89%      0.02s  0.79%  runtime.futex
+     0.02s  0.79% 89.68%      0.02s  0.79%  runtime.mallocgcTiny
+     0.01s   0.4% 90.08%      0.02s  0.79%  internal/poll.runtime_pollSetDeadline
+     0.01s   0.4% 90.48%      0.02s  0.79%  main.(*pool).query
+     0.01s   0.4% 90.87%      0.06s  2.38%  net.(*conn).Read
+     0.01s   0.4% 91.27%      0.04s  1.59%  net/http.(*connReader).backgroundRead
+     0.01s   0.4% 91.67%      0.06s  2.38%  runtime.netpoll
+     0.01s   0.4% 92.06%      0.03s  1.19%  sync.(*Cond).Wait
+         0     0% 92.06%      0.03s  1.19%  bufio.(*Reader).Peek
+         0     0% 92.06%      0.03s  1.19%  bufio.(*Reader).fill
+         0     0% 92.06%      0.11s  4.37%  bufio.(*Writer).Flush
+         0     0% 92.06%      0.03s  1.19%  encoding/json.(*Encoder).Encode
+         0     0% 92.06%      0.02s  0.79%  encoding/json.(*encodeState).marshal
