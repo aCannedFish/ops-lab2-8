@@ -1,0 +1,23 @@
+{
+  "local_revision": "25be2c0",
+  "remote_revision": "f80e4b0",
+  "normalized_sha256": {
+    "cmd/enrolld/commit.go": "32d384ac336b8663024b8d4264660f538fcf24b06fbf4dd5c7bbebf63984f46e",
+    "cmd/enrolld/main.go": "e073d5115f03639f047f757a8b3347f4ed794fdb96a6e661f9efa538ada7211a",
+    "cmd/enrolld/main_test.go": "ce2044acde2620cfe8633be2d607438637854f2afdb6263bc6aa5f12a4f43b1e",
+    "cmd/enrolld/pool.go": "721c2f2d05825fd67b85cf67cf759390e07343cafc9d49cbb86eb3d8b098755d",
+    "cmd/enrolld/procstat.go": "5ce38c1c31006f441e1a20ac558a207ab3b79ba65b341da22c226096fee1bd2a",
+    "cmd/loadgen/main.go": "8899f22c81165cf0fbb75607615968fdaaaf5dceb002af034b692e7276178026",
+    "cmd/loadgen/main_test.go": "941a113aec654fc2059fb53e74a820f40ec3cd339c683c2dee5f9ded1f2de0e1",
+    "cmd/promsteps/main.go": "aff87e37ee287966cbbfc1e188906ce7e1d0d42ec2e2dfe866bdaa720f4b3ec1",
+    "cmd/promsteps/main_test.go": "cd23c3743fb74d4595d5106aa7344f172d8ce4df7ee4750fae9bdc2b510de35c",
+    "go.mod": "f6789efb728899cd092767979b437d272b37e4fe7259ef87890bdb8b8d53af65",
+    "internal/metrics/metrics.go": "331440b375316e2f73fd92c5da3aec0a613d1d71096085d90a81d7d8bbb1035e",
+    "internal/metrics/metrics_test.go": "d9a0c80d67d450e3114940a7ff6ea25c32feaa0fbd928d76892efdc7938d5be9",
+    "scripts/get-tools.sh": "611d7205103ec4f357d35236f0d57e31664778ec4b647c1fa812a44fee2957c0",
+    "scripts/rates.sh": "955b16d7ba73b504c1d5aa5ac4371f8f8970dc0cdc58964378c99aa830823fd9",
+    "scripts/requery.sh": "1bdcdf7d4d6fd33b4933da2200136199e4266802ffc5dbbf201126da4923575d",
+    "scripts/run.sh": "2aa386c6dcfcc6928a8ba92ea0df86f8f4261db5fe385f24815c0ff73633df13",
+    "scripts/table.sh": "6b3a6abd7f8479b8ad9862a216d91bf1395d5cbda462b57f4a1245c7461792dc"
+  }
+}

@@ -1,0 +1,35 @@
+2026-10-29T17:02:18+08:00
+Local repository revision before measurement: 25be2c0
+Remote repository revision: f80e4b0
+All 17 source/script SHA256 values match the local snapshot (CRLF normalized).
+Start command: GOGC=400 GOMAXPROCS=1 taskset -c 1 bin/enrolld -sync each
+Load: GEN_CPUS=0 SLO=0.05; 100 rps, 60s, poisson, seed=1
+9f3b5c8b85ab9045a3eb61c51706ce70c4cdbf66497369c4609cbad40c27e957  bin/enrolld
+066aa00997306ef04a41a2c68a14c71751ddec0d714356b38170db95532cff41  bin/loadgen
+42c6d0176c04d550cb3f897a765a333cb1662febbe2020789e86de40ec5f298a  bin/promsteps
+prometheus, version 3.13.4 (branch: HEAD, revision: 007a9e9ba628f815ce83e1ba9f29b97981996c3c)
+  build user:       root@f73b5a01ed25
+  build date:       20260929-13:32:05
+  go version:       go1.26.8
+  platform:         linux/amd64
+  tags:             netgo,builtinassets
+node_exporter, version 1.12.1 (branch: HEAD, revision: 6044da783597cc3b57aef7580ddcdcff58a4ee99)
+  build user:       root@3a6b59999579
+  build date:       20260714-12:05:11
+  go version:       go1.26.5
+  platform:         linux/amd64
+  tags:             unknown
+    PID COMMAND         COMMAND
+ 846821 prometheus      tools/prometheus --config.file=deploy/prometheus.yml --storage.tsdb.path=/dev/shm/lab2-prom --web.listen-address=127.0.0.1:9090 --web.console.templates=deploy/consoles
+ 961091 enrolld         bin/enrolld -sync each
+4060946 node_exporter   tools/node_exporter --web.listen-address=127.0.0.1:9100
+pid 961091's current affinity list: 1
+pid 846821's current affinity list: 0
+pid 4060946's current affinity list: 0
+TARGET SOURCE    FSTYPE OPTIONS
+/      /dev/vda1 ext4   rw,relatime
+               total        used        free      shared  buff/cache   available
+Mem:            3531         862         508          68        2520        2669
+Swap:              0           0           0
+Runtime environment: ['GOGC=400', 'GOMAXPROCS=1']
+GOMEMLIMIT/GODEBUG absent above means they were not set in the service environment.
