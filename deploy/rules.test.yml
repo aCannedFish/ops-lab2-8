@@ -1,0 +1,74 @@
+rule_files:
+  - rules.yml
+evaluation_interval: 5s
+tests:
+  - name: "healthy and zero traffic do not alert"
+    interval: 5s
+    input_series:
+      - series: 'http_requests_total{job="enrolld",route="/api/courses/{id}",code="200"}'
+        values: '0+100x72'
+      - series: 'http_request_duration_seconds_bucket{job="enrolld",route="/api/courses/{id}",code="200",le="0.05"}'
+        values: '0+100x72'
+    alert_rule_test:
+      - eval_time: 6m
+        alertname: EnrolldReadSLOBurnRateHigh
+        exp_alerts: []
+  - name: "slow HTTP 200 burns budget"
+    interval: 5s
+    input_series:
+      - series: 'http_requests_total{job="enrolld",route="/api/courses/{id}",code="200"}'
+        values: '0+100x72'
+      - series: 'http_request_duration_seconds_bucket{job="enrolld",route="/api/courses/{id}",code="200",le="0.05"}'
+        values: '0+50x72'
+    alert_rule_test:
+      - eval_time: 10s
+        alertname: EnrolldReadSLOBurnRateHigh
+        exp_alerts: []
+      - eval_time: 6m
+        alertname: EnrolldReadSLOBurnRateHigh
+        exp_alerts:
+          - exp_labels: {"severity":"warning","service":"enrolld"}
+            exp_annotations: {"summary":"enrolld read SLO error budget burns above 14.4x","description":"Both 5m and 1m bad-request fractions exceed 14.4% for 15s. SLO: 99% HTTP 200 within 50ms; lab windows, server-side measurement."}
+  - name: "only HTTP 503 and missing good bucket still alerts"
+    interval: 5s
+    input_series:
+      - series: 'http_requests_total{job="enrolld",route="/api/courses/{id}",code="503"}'
+        values: '0+100x72'
+    alert_rule_test:
+      - eval_time: 10s
+        alertname: EnrolldReadSLOBurnRateHigh
+        exp_alerts: []
+      - eval_time: 6m
+        alertname: EnrolldReadSLOBurnRateHigh
+        exp_alerts:
+          - exp_labels: {"severity":"warning","service":"enrolld"}
+            exp_annotations: {"summary":"enrolld read SLO error budget burns above 14.4x","description":"Both 5m and 1m bad-request fractions exceed 14.4% for 15s. SLO: 99% HTTP 200 within 50ms; lab windows, server-side measurement."}
+  - name: "zero requests does not alert"
+    interval: 5s
+    input_series:
+      - series: 'http_requests_total{job="enrolld",route="/api/courses/{id}",code="200"}'
+        values: '0+0x72'
+      - series: 'http_request_duration_seconds_bucket{job="enrolld",route="/api/courses/{id}",code="200",le="0.05"}'
+        values: '0+0x72'
+    alert_rule_test:
+      - eval_time: 6m
+        alertname: EnrolldReadSLOBurnRateHigh
+        exp_alerts: []
+  - name: "absent target does not alert"
+    interval: 5s
+    input_series: []
+    alert_rule_test:
+      - eval_time: 6m
+        alertname: EnrolldReadSLOBurnRateHigh
+        exp_alerts: []
+  - name: "short window recovered while long window still bad"
+    interval: 5s
+    input_series:
+      - series: 'http_requests_total{job="enrolld",route="/api/courses/{id}",code="200"}'
+        values: '0+100x72'
+      - series: 'http_request_duration_seconds_bucket{job="enrolld",route="/api/courses/{id}",code="200",le="0.05"}'
+        values: '0+0x48 100+100x23'
+    alert_rule_test:
+      - eval_time: 6m
+        alertname: EnrolldReadSLOBurnRateHigh
+        exp_alerts: []

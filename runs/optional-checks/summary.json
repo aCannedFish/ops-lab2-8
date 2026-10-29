@@ -1,0 +1,55 @@
+{
+  "o3_transitions": [
+    {
+      "time": "2026-10-29T13:17:02.049020+08:00",
+      "state": "inactive",
+      "alerts": []
+    },
+    {
+      "time": "2026-10-29T13:18:42.097147+08:00",
+      "state": "pending",
+      "alerts": [
+        {
+          "labels": {
+            "alertname": "EnrolldReadSLOBurnRateHigh",
+            "service": "enrolld",
+            "severity": "warning"
+          },
+          "annotations": {
+            "description": "Both 5m and 1m bad-request fractions exceed 14.4% for 15s. SLO: 99% HTTP 200 within 50ms; lab windows, server-side measurement.",
+            "summary": "enrolld read SLO error budget burns above 14.4x"
+          },
+          "state": "pending",
+          "activeAt": "2026-10-29T05:18:41.616316969Z",
+          "value": "2.8873547349592442e+01"
+        }
+      ]
+    },
+    {
+      "time": "2026-10-29T13:18:57.106252+08:00",
+      "state": "firing",
+      "alerts": [
+        {
+          "labels": {
+            "alertname": "EnrolldReadSLOBurnRateHigh",
+            "service": "enrolld",
+            "severity": "warning"
+          },
+          "annotations": {
+            "description": "Both 5m and 1m bad-request fractions exceed 14.4% for 15s. SLO: 99% HTTP 200 within 50ms; lab windows, server-side measurement.",
+            "summary": "enrolld read SLO error budget burns above 14.4x"
+          },
+          "state": "firing",
+          "activeAt": "2026-10-29T05:18:41.616316969Z",
+          "value": "5.448877291228644e+01"
+        }
+      ]
+    },
+    {
+      "time": "2026-10-29T13:21:02.134988+08:00",
+      "state": "inactive",
+      "alerts": []
+    }
+  ],
+  "source_files_verified": 18
+}

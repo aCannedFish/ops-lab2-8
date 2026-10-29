@@ -308,7 +308,7 @@ p99 不能平均，这次正好有个现成例子：R1 九个阶段的 p99 直�
 |---|---|
 | O1 内存与 GC | 已完成：预测、两轮对照和原始数据见下文 O1 |
 | O2 网络 | <未做 / 两台主机的规格与拓扑、`runs/` 或日志、结论> |
-| O3 告警与看板 | <未做 / 规则文件、触发记录、看板说明> |
+| O3 告警与看板 | 已完成：`deploy/rules.yml`、`deploy/consoles/enrolld.html`、`deploy/DASHBOARD.md`；`runs/o3-burn/` 及 `runs/optional-checks/` 保存触发、解除与看板证据 |
 | O4 迁移到小组项目 | <未做 / 仓库链接、测了哪个资源、结论> |
 
 ### O1 内存与GC
@@ -334,6 +334,37 @@ GC 增量为各次 `metrics-end.txt − metrics-start.txt`，覆盖完整负载�
 
 ### O2 网络
 ### O3 告警与看板
+
+**测量前预测（2026-10-29 13:13 +08:00 写入，测量尚未开始，后续保留不改）：** 读路径 SLO 为“30 天内 99% 请求以 200 且不超过 50 ms 完成”，错误预算为 1%；服务端不良事件同时包括非 200 和慢请求。使用 5 分钟与 1 分钟两个窗口，不良率分别除以 0.01 得到燃烧率；两个窗口均超过 14.4、持续 15 秒才触发，且窗口内必须有请求。14.4 倍若持续，将在 30 天 ÷ 14.4 ≈ 50 小时耗尽预算（1 小时消耗约 2%）；为便于短实验，使用上述短窗口，不声称等同生产的 1 小时/5 分钟配置。默认 `-pool 4` 下依次以 100、461、100 请求/秒各运行 90 秒，预计中段池排队、慢请求比例增加，告警经历 inactive → pending → firing；末段恢复后待短窗口排空而解除。每 5 秒保存 `/api/v1/alerts`，并记录 `/api/v1/rules`。看板采用 Prometheus 原生 console，三行分别为服务 RED、资源 USE、SLO/预算，九格给出实际查询及数值；只监听回环地址，通过 SSH 转发访问，不额外暴露端口。
+
+测量前的完整记录快照及校验值保存在 `runs/optional-checks/prediction.md`、`prediction.sha256`，未修改快照中的历史内容；O1 最终结果以上文已合入的两轮对照为准。
+
+**实测：** 13:17:02–13:21:32 执行 `GEN_CPUS=0 SLO=0.05 scripts/run.sh o3-burn -url http://127.0.0.1:8080/api/courses/1 -rates 100,461,100 -step 90s -seed 1`。enrolld 为 `GOGC=100 GOMAXPROCS=1 taskset -c 1 bin/enrolld -sync each`，其余参数默认；节点与分核同 O1。表格由 `scripts/table.sh runs/o3-burn ok_rps error_rate p99_ms server_slo_good pool_in_use_avg pool_wait_p99_ms svc_cpu_busy` 生成（副本 `runs/o3-burn/table.md`）：
+
+| step | target_rps | ok_rps | error_rate | p99_ms | server_slo_good | pool_in_use_avg | pool_wait_p99_ms | svc_cpu_busy |
+|---|---|---|---|---|---|---|---|---|
+| 1 | 100 | 99.7 | 0.0000 | 14.69 | 1 | 1.01176 | 3.31594 | 0.0635 |
+| 2 | 461 | 379.0 | 0.1831 | 1012.16 | 0 | 4 | 1950.12 | 0.230625 |
+| 3 | 100 | 99.9 | 0.0000 | 270.59 | 1 | 1.07059 | 2.58843 | 0.062375 |
+| all | - | 192.9 | 0.1281 | 1011.96 | - | - | - | - |
+
+第 2 阶段共发出 **41756** 个请求，**7647** 个返回 503，没有客户端超时、网络错误、丢弃或压测警告（`runs/o3-burn/steps.csv`）；池占满 4 个连接，而服务核 CPU 仅约 **23.1%**，说明此次确为池饱和。错误预算不仅被 18.31% 的 503 消耗，大量慢 200 也不达标：客户端 `slo_good=0.0023`，服务端去掉开头 5 秒后的 `server_slo_good=0`。降载后第 3 阶段客户端 p99 仍为 **270.59 ms**，因为完整阶段包含清理上一阶段积压的早期请求；服务端去除开头 5 秒后的 SLI 恢复为 1，不能据此说客户端一降载就立即恢复。
+
+**告警状态链（均为 +08:00，5 秒轮询首次观察时间，不等同于精确的状态切换时刻）：**
+
+- **13:17:02 inactive**：`/api/v1/alerts` 的 alerts 数组为空，`rules-inactive.json` 确认规则已加载且状态 inactive。
+- **13:18:42 pending**：规则 `activeAt=2026-10-29T05:18:41.616316969Z`（本地 13:18:41.616），5m 燃烧率约 **28.87 倍**。
+- **13:18:57 firing**：5m 燃烧率约 **54.49 倍**，满足 `for: 15s`；距中段过载开始 13:18:32 约 25 秒，包含窗口积累、规则评估和持续时间。若这种燃烧率一直维持，30 天预算约 **13.21 小时**耗尽；这只是外推，不是实测持续时间。
+- **13:21:02 inactive**：降载约 60 秒后，短窗口排空，告警解除；并不表示此前消耗的预算已返还，也不要求 5m 窗口同时恢复健康。
+
+原始 API 证据在 `runs/optional-checks/alerts.jsonl`、`alerts-pending.json`、`alerts-firing.json`、`alerts-final.json`；规则状态及 `health=ok` 见 `rules-*.json`。重算后的 O3 状态链保存在 `summary.json`，可由同目录 `summarize.py` 复现。预测的触发与恢复顺序成立；本次没有配置 Alertmanager，验证的是 Prometheus 告警状态，不声称已发送通知。
+
+**九格看板：** 实现为 `deploy/consoles/enrolld.html`，九格分别是读请求 RPS、5xx 比例、服务端 p99；服务核 CPU 忙碌、连接池等待 p99、连接池超时率；50 ms 成功率、5m 预算燃烧率、firing 告警数。每格的完整 PromQL、单位、窗口、启动命令及边界均见 [`deploy/DASHBOARD.md`](deploy/DASHBOARD.md)，页面中也可展开查询并跳转 Prometheus 时间序列图。已实际请求看板并核对九个已渲染的数值与九个查询链接，触发时的 HTML 保存于 `runs/optional-checks/console-firing.html`，恢复后的页面见 `console-final.html`。看板不是端到端观测，也没有用无流量的空值伪造 SLO 达标。
+
+访问远程看板：先运行 `ssh -N -L 19090:127.0.0.1:9090 se-devops`，再打开 <http://127.0.0.1:19090/consoles/enrolld.html>。Prometheus 实际从 `/home/ubuntu/ops-lab2-8/deploy/prometheus.yml` 加载 `rules.yml`，并以 `--web.console.templates=deploy/consoles` 启动；保留原 `/dev/shm/lab2-prom` 数据，没有清空 TSDB。
+
+**校验与收尾：** 远程 `make build test`、`promtool check config`、`promtool test rules` 全部通过；六个规则测试覆盖健康、慢 200、仅 503/缺少 good 桶、零流量、目标序列缺失、短窗口恢复，并检查持续时间未满足时不能 firing（`deploy/rules.test.yml`，输出见 `runs/optional-checks/build-test.txt`、`promtool-check.txt`、`promtool-test.txt`）。实验结束后恢复原 enrolld 的 `-sync interval`、默认 GOGC、绑核 1 和 `GOMAXPROCS=1`（`restored-config.json`）；保留告警与看板供检查。8080、9090、9100 始终仅监听回环地址，未新增安全组规则，也未删除原有选课日志或必做实验数据。
+
 ### O4 迁移到小组项目
 
 ## 8. 成员分工

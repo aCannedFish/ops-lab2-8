@@ -1,0 +1,9 @@
+console-initial.html: 9 rendered panels, values and PromQL graph links OK
+console-firing.html: 9 rendered panels, values and PromQL graph links OK
+console-final.html: 9 rendered panels, values and PromQL graph links OK
+O3 stage table matches raw CSV files and LAB2.md.
+Prediction checksum and 18 measured source-file checksums verified.
+Recorded alert lifecycle: inactive -> pending -> firing -> inactive; final rule health OK.
+Recorded service restoration matches original configuration except PID and start time.
+Upstream O1 measurements, queries and LAB2.md O1 section preserved unchanged.
+Promtool config check and all six rule test cases rechecked successfully on se-devops in an isolated temporary directory; running services unchanged.

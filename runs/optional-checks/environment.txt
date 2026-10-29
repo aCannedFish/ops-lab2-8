@@ -1,0 +1,31 @@
+2026-10-29T13:17:19+08:00
+Linux 6.8.0-146-generic x86_64
+go version go1.26.9 linux/amd64
+prometheus, version 3.13.4 (branch: HEAD, revision: 007a9e9ba628f815ce83e1ba9f29b97981996c3c)
+  build user:       root@f73b5a01ed25
+  build date:       20260929-13:32:05
+  go version:       go1.26.8
+  platform:         linux/amd64
+  tags:             netgo,builtinassets
+node_exporter, version 1.12.1 (branch: HEAD, revision: 6044da783597cc3b57aef7580ddcdcff58a4ee99)
+  build user:       root@3a6b59999579
+  build date:       20260714-12:05:11
+  go version:       go1.26.5
+  platform:         linux/amd64
+  tags:             unknown
+pid 847828's current affinity list: 1
+pid 846821's current affinity list: 0
+pid 4060946's current affinity list: 0
+pid 847961's current affinity list: 0
+LISTEN 0      4096       127.0.0.1:9100       0.0.0.0:*    users:(("node_exporter",pid=4060946,fd=4))   
+LISTEN 0      4096       127.0.0.1:9090       0.0.0.0:*    users:(("prometheus",pid=846821,fd=7))       
+LISTEN 0      4096       127.0.0.1:8080       0.0.0.0:*    users:(("enrolld",pid=847828,fd=7))          
+               total        used        free      shared  buff/cache   available
+Mem:            3531         806         203          72        2883        2724
+Swap:              0           0           0
+2026-10-29T13:17:19+08:00
+step  target_rps  svc_cpu_busy  all_cpu_busy  cpu_steal  cpu_iowait  procs_running_avg  cpu_psi_some  mem_available_min_mb  swap_in_per_s  disk_w_per_s  disk_wkb_per_s  disk_w_await_ms  disk_f_per_s  disk_f_await_ms  disk_aqu_sz  disk_util
+1     100         0.0472        0.0419        0          0.0002      1.18182            0.040832      2733.81               0              4.96          35.2            0.608871         0.4           0                0.00304      0.00062
+完成：runs/o1-gogc400
+== loadgen（结果写进 runs/o3-burn/）
+loadgen：GET http://127.0.0.1:8080/api/courses/1，3 个阶段 × 1m30s，到达过程 poisson，超时 2s，GOMAXPROCS=1

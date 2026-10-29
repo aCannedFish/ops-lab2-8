@@ -1,0 +1,32 @@
+groups:
+  - name: enrolld-read-slo
+    interval: 5s
+    rules:
+      # SLO: 99% of read requests return 200 within 50 ms; budget = 1%.
+      # Short lab windows: 5m AND 1m, not the production 1h/5m pair.
+      - alert: EnrolldReadSLOBurnRateHigh
+        expr: |
+          (
+            (
+              1 -
+              (sum(rate(http_request_duration_seconds_bucket{job="enrolld",route="/api/courses/{id}",code="200",le="0.05"}[5m])) or vector(0))
+              / sum(rate(http_requests_total{job="enrolld",route="/api/courses/{id}"}[5m]))
+            ) / 0.01 > 14.4
+          )
+          and
+          (
+            (
+              1 -
+              (sum(rate(http_request_duration_seconds_bucket{job="enrolld",route="/api/courses/{id}",code="200",le="0.05"}[1m])) or vector(0))
+              / sum(rate(http_requests_total{job="enrolld",route="/api/courses/{id}"}[1m]))
+            ) / 0.01 > 14.4
+          )
+          and (sum(rate(http_requests_total{job="enrolld",route="/api/courses/{id}"}[5m])) > 0)
+          and (sum(rate(http_requests_total{job="enrolld",route="/api/courses/{id}"}[1m])) > 0)
+        for: 15s
+        labels:
+          severity: warning
+          service: enrolld
+        annotations:
+          summary: "enrolld read SLO error budget burns above 14.4x"
+          description: "Both 5m and 1m bad-request fractions exceed 14.4% for 15s. SLO: 99% HTTP 200 within 50ms; lab windows, server-side measurement."

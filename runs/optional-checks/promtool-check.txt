@@ -1,0 +1,7 @@
+Checking /home/ubuntu/ops-lab2-8/deploy/prometheus.yml
+  SUCCESS: 1 rule files found
+ SUCCESS: /home/ubuntu/ops-lab2-8/deploy/prometheus.yml is valid prometheus config file syntax
+
+Checking /home/ubuntu/ops-lab2-8/deploy/rules.yml
+  SUCCESS: 1 rules found
+

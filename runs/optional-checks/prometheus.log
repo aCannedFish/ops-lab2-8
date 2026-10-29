@@ -1,0 +1,31 @@
+time=2026-10-29T13:14:28.459+08:00 level=INFO source=main.go:1730 msg="updated GOGC" old=100 new=75
+time=2026-10-29T13:14:28.460+08:00 level=INFO source=main.go:789 msg="Leaving GOMAXPROCS=1: CPU quota undefined" component=automaxprocs
+time=2026-10-29T13:14:28.460+08:00 level=INFO source=memlimit.go:198 msg="GOMEMLIMIT is updated" component=automemlimit package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=3332759961 previous=9223372036854775807
+time=2026-10-29T13:14:28.460+08:00 level=INFO source=main.go:896 msg="Starting Prometheus Server" mode=server version="(version=3.13.4, branch=HEAD, revision=007a9e9ba628f815ce83e1ba9f29b97981996c3c)"
+time=2026-10-29T13:14:28.460+08:00 level=INFO source=main.go:901 msg="operational information" build_context="(go=go1.26.8, platform=linux/amd64, user=root@f73b5a01ed25, date=20260929-13:32:05, tags=netgo,builtinassets)" host_details="(Linux 6.8.0-146-generic #146-Ubuntu SMP PREEMPT_DYNAMIC Thu Sep  3 16:12:30 UTC 2026 x86_64 ecs-249f (none))" fd_limits="(soft=65535, hard=65535)" vm_limits="(soft=unlimited, hard=unlimited)"
+time=2026-10-29T13:14:28.662+08:00 level=INFO source=web.go:727 msg="Start listening for connections" component=web address=127.0.0.1:9090
+time=2026-10-29T13:14:28.664+08:00 level=INFO source=main.go:1462 msg="Starting TSDB ..."
+time=2026-10-29T13:14:28.664+08:00 level=INFO source=repair.go:54 msg="Found healthy block" component=tsdb mint=1793080455050 maxt=1793080800000 ulid=01M5Y92FQKJHPGWBEM2C5YGAX0
+time=2026-10-29T13:14:28.664+08:00 level=INFO source=repair.go:54 msg="Found healthy block" component=tsdb mint=1793080800050 maxt=1793145600000 ulid=01M60E29XMWB5Y11RFD6EKTWPF
+time=2026-10-29T13:14:28.664+08:00 level=INFO source=repair.go:54 msg="Found healthy block" component=tsdb mint=1793145600050 maxt=1793210400000 ulid=01M62BVV35FSDQZMDWQGZYA6Y4
+time=2026-10-29T13:14:28.664+08:00 level=INFO source=repair.go:54 msg="Found healthy block" component=tsdb mint=1793232000050 maxt=1793239200000 ulid=01M62SK8WWNXZZNHNAX8ZM682R
+time=2026-10-29T13:14:28.664+08:00 level=INFO source=repair.go:54 msg="Found healthy block" component=tsdb mint=1793239200050 maxt=1793246400000 ulid=01M630F04WTTT48MBANM15DFBG
+time=2026-10-29T13:14:28.664+08:00 level=INFO source=repair.go:54 msg="Found healthy block" component=tsdb mint=1793210400050 maxt=1793232000000 ulid=01M630F0KHY0EDK0P7F7WD00AT
+time=2026-10-29T13:14:28.672+08:00 level=INFO source=head.go:709 msg="Replaying on-disk memory mappable chunks if any" component=tsdb
+time=2026-10-29T13:14:28.673+08:00 level=INFO source=head.go:795 msg="On-disk memory mappable chunks replay completed" component=tsdb duration=1.76466ms
+time=2026-10-29T13:14:28.673+08:00 level=INFO source=head.go:803 msg="Replaying WAL, this may take a while" component=tsdb
+time=2026-10-29T13:14:28.679+08:00 level=INFO source=tls_config.go:354 msg="Listening on" component=web address=127.0.0.1:9090
+time=2026-10-29T13:14:28.679+08:00 level=INFO source=tls_config.go:357 msg="TLS is disabled." component=web http2=false address=127.0.0.1:9090
+time=2026-10-29T13:14:28.682+08:00 level=INFO source=head.go:862 msg="WAL checkpoint loaded" component=tsdb
+time=2026-10-29T13:14:28.736+08:00 level=INFO source=head.go:898 msg="WAL segment loaded" component=tsdb segment=22 maxSegment=25 duration=53.35396ms
+time=2026-10-29T13:14:28.817+08:00 level=INFO source=head.go:898 msg="WAL segment loaded" component=tsdb segment=23 maxSegment=25 duration=80.756811ms
+time=2026-10-29T13:14:28.839+08:00 level=INFO source=head.go:898 msg="WAL segment loaded" component=tsdb segment=24 maxSegment=25 duration=22.450108ms
+time=2026-10-29T13:14:28.839+08:00 level=INFO source=head.go:898 msg="WAL segment loaded" component=tsdb segment=25 maxSegment=25 duration=110.16µs
+time=2026-10-29T13:14:28.839+08:00 level=INFO source=head.go:935 msg="WAL replay completed" component=tsdb checkpoint_replay_duration=9.084514ms wal_replay_duration=156.77359ms wbl_replay_duration=149ns chunk_snapshot_load_duration=0s mmap_chunk_replay_duration=1.76466ms total_replay_duration=167.648384ms
+time=2026-10-29T13:14:28.842+08:00 level=INFO source=main.go:1483 msg="filesystem information" fs_type=TMPFS_MAGIC
+time=2026-10-29T13:14:28.842+08:00 level=INFO source=main.go:1486 msg="TSDB started"
+time=2026-10-29T13:14:28.842+08:00 level=INFO source=main.go:1684 msg="Loading configuration file" filename=deploy/prometheus.yml
+time=2026-10-29T13:14:28.843+08:00 level=INFO source=main.go:1100 msg="TSDB retention updated" duration=15d size=0B percentage=0
+time=2026-10-29T13:14:28.844+08:00 level=INFO source=main.go:1723 msg="Completed loading of configuration file" db_storage=29.5µs remote_storage=1.77µs web_handler=350ns query_engine=660ns scrape=653.25µs scrape_sd=27.73µs notify=1.01µs notify_sd=530ns rules=430.101µs tracing=3.8µs filename=deploy/prometheus.yml totalDuration=2.10231ms
+time=2026-10-29T13:14:28.844+08:00 level=INFO source=main.go:1447 msg="Server is ready to receive web requests."
+time=2026-10-29T13:14:28.844+08:00 level=INFO source=manager.go:211 msg="Starting rule manager..." component="rule manager"

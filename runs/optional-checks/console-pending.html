@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta http-equiv="refresh" content="5">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>enrolld · 三行九格</title>
+<style>
+body{font:16px system-ui,sans-serif;background:#101827;color:#e2e8f0;margin:2rem}
+main{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+section{background:#1e293b;border:1px solid #475569;border-radius:8px;padding:1rem}
+h2{font-size:1rem;color:#93c5fd}h3{font-size:1.1rem}.value{font-size:2rem;margin:1rem 0}
+a{color:#7dd3fc}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:.8rem}
+@media(max-width:800px){main{grid-template-columns:1fr}}
+</style></head><body>
+<h1>enrolld · 三行九格</h1>
+<p>服务 RED / 资源 USE / SLO 与错误预算 · 每 5 秒刷新 · enrolld CPU=1 · <a href="/alerts">告警详情</a></p>
+<p>服务端 SLI 不含建连、网络和进入 handler 前的排队；不是端到端 SLO。NaN 表示窗口内无请求，不能当作 100% 成功。</p>
+<main>
+<section><h2>服务 · Rate</h2><h3>读请求完成率</h3>
+
+<p class="value">153.5</p>
+<p>req/s</p><a href="/graph?g0.expr=sum%28rate%28http_requests_total%7Bjob%3D%22enrolld%22%2Croute%3D%22%2Fapi%2Fcourses%2F%7Bid%7D%22%7D%5B1m%5D%29%29&amp;g0.tab=0">打开 Prometheus 时间序列图</a>
+<details><summary>PromQL</summary><pre>sum(rate(http_requests_total{job=&#34;enrolld&#34;,route=&#34;/api/courses/{id}&#34;}[1m]))</pre></details></section>
+<section><h2>服务 · Errors</h2><h3>读请求 5xx 比例</h3>
+
+<p class="value">4.721</p>
+<p>%（不含慢请求）</p><a href="/graph?g0.expr=100&#43;%2A&#43;%28sum%28rate%28http_requests_total%7Bjob%3D%22enrolld%22%2Croute%3D%22%2Fapi%2Fcourses%2F%7Bid%7D%22%2Ccode%3D~%225..%22%7D%5B1m%5D%29%29&#43;or&#43;vector%280%29%29&#43;%2F&#43;sum%28rate%28http_requests_total%7Bjob%3D%22enrolld%22%2Croute%3D%22%2Fapi%2Fcourses%2F%7Bid%7D%22%7D%5B1m%5D%29%29&amp;g0.tab=0">打开 Prometheus 时间序列图</a>
+<details><summary>PromQL</summary><pre>100 * (sum(rate(http_requests_total{job=&#34;enrolld&#34;,route=&#34;/api/courses/{id}&#34;,code=~&#34;5..&#34;}[1m])) or vector(0)) / sum(rate(http_requests_total{job=&#34;enrolld&#34;,route=&#34;/api/courses/{id}&#34;}[1m]))</pre></details></section>
+<section><h2>服务 · Duration</h2><h3>服务端读请求 p99</h3>
+
+<p class="value">1952</p>
+<p>ms（直方图估计）</p><a href="/graph?g0.expr=1000&#43;%2A&#43;histogram_quantile%280.99%2C&#43;sum&#43;by&#43;%28le%29&#43;%28rate%28http_request_duration_seconds_bucket%7Bjob%3D%22enrolld%22%2Croute%3D%22%2Fapi%2Fcourses%2F%7Bid%7D%22%7D%5B1m%5D%29%29%29&amp;g0.tab=0">打开 Prometheus 时间序列图</a>
+<details><summary>PromQL</summary><pre>1000 * histogram_quantile(0.99, sum by (le) (rate(http_request_duration_seconds_bucket{job=&#34;enrolld&#34;,route=&#34;/api/courses/{id}&#34;}[1m])))</pre></details></section>
+<section><h2>资源 · Utilization</h2><h3>服务核 CPU 忙碌</h3>
+
+<p class="value">8.073</p>
+<p>%（CPU 1，排除 idle/iowait）</p><a href="/graph?g0.expr=100&#43;%2A&#43;sum%28rate%28node_cpu_seconds_total%7Bjob%3D%22node%22%2Ccpu%3D%221%22%2Cmode%21~%22idle%7Ciowait%22%7D%5B1m%5D%29%29&amp;g0.tab=0">打开 Prometheus 时间序列图</a>
+<details><summary>PromQL</summary><pre>100 * sum(rate(node_cpu_seconds_total{job=&#34;node&#34;,cpu=&#34;1&#34;,mode!~&#34;idle|iowait&#34;}[1m]))</pre></details></section>
+<section><h2>资源 · Saturation</h2><h3>连接池等待 p99</h3>
+
+<p class="value">1801</p>
+<p>ms</p><a href="/graph?g0.expr=1000&#43;%2A&#43;histogram_quantile%280.99%2C&#43;sum&#43;by&#43;%28le%29&#43;%28rate%28db_pool_wait_seconds_bucket%7Bjob%3D%22enrolld%22%7D%5B1m%5D%29%29%29&amp;g0.tab=0">打开 Prometheus 时间序列图</a>
+<details><summary>PromQL</summary><pre>1000 * histogram_quantile(0.99, sum by (le) (rate(db_pool_wait_seconds_bucket{job=&#34;enrolld&#34;}[1m])))</pre></details></section>
+<section><h2>资源 · Errors</h2><h3>读路径连接池超时</h3>
+
+<p class="value">7.245</p>
+<p>req/s（503；本示例对应池超时）</p><a href="/graph?g0.expr=sum%28rate%28http_requests_total%7Bjob%3D%22enrolld%22%2Croute%3D%22%2Fapi%2Fcourses%2F%7Bid%7D%22%2Ccode%3D%22503%22%7D%5B1m%5D%29%29&#43;or&#43;vector%280%29&amp;g0.tab=0">打开 Prometheus 时间序列图</a>
+<details><summary>PromQL</summary><pre>sum(rate(http_requests_total{job=&#34;enrolld&#34;,route=&#34;/api/courses/{id}&#34;,code=&#34;503&#34;}[1m])) or vector(0)</pre></details></section>
+<section><h2>SLO · Good</h2><h3>读请求成功且 ≤50 ms</h3>
+
+<p class="value">55.18</p>
+<p>%（1m）</p><a href="/graph?g0.expr=100&#43;%2A&#43;%28sum%28rate%28http_request_duration_seconds_bucket%7Bjob%3D%22enrolld%22%2Croute%3D%22%2Fapi%2Fcourses%2F%7Bid%7D%22%2Ccode%3D%22200%22%2Cle%3D%220.05%22%7D%5B1m%5D%29%29&#43;or&#43;vector%280%29%29&#43;%2F&#43;sum%28rate%28http_requests_total%7Bjob%3D%22enrolld%22%2Croute%3D%22%2Fapi%2Fcourses%2F%7Bid%7D%22%7D%5B1m%5D%29%29&amp;g0.tab=0">打开 Prometheus 时间序列图</a>
+<details><summary>PromQL</summary><pre>100 * (sum(rate(http_request_duration_seconds_bucket{job=&#34;enrolld&#34;,route=&#34;/api/courses/{id}&#34;,code=&#34;200&#34;,le=&#34;0.05&#34;}[1m])) or vector(0)) / sum(rate(http_requests_total{job=&#34;enrolld&#34;,route=&#34;/api/courses/{id}&#34;}[1m]))</pre></details></section>
+<section><h2>SLO · Burn</h2><h3>错误预算燃烧率</h3>
+
+<p class="value">31.17</p>
+<p>倍（5m；阈值 14.4）</p><a href="/graph?g0.expr=%281&#43;-&#43;%28sum%28rate%28http_request_duration_seconds_bucket%7Bjob%3D%22enrolld%22%2Croute%3D%22%2Fapi%2Fcourses%2F%7Bid%7D%22%2Ccode%3D%22200%22%2Cle%3D%220.05%22%7D%5B5m%5D%29%29&#43;or&#43;vector%280%29%29&#43;%2F&#43;sum%28rate%28http_requests_total%7Bjob%3D%22enrolld%22%2Croute%3D%22%2Fapi%2Fcourses%2F%7Bid%7D%22%7D%5B5m%5D%29%29%29&#43;%2F&#43;0.01&amp;g0.tab=0">打开 Prometheus 时间序列图</a>
+<details><summary>PromQL</summary><pre>(1 - (sum(rate(http_request_duration_seconds_bucket{job=&#34;enrolld&#34;,route=&#34;/api/courses/{id}&#34;,code=&#34;200&#34;,le=&#34;0.05&#34;}[5m])) or vector(0)) / sum(rate(http_requests_total{job=&#34;enrolld&#34;,route=&#34;/api/courses/{id}&#34;}[5m]))) / 0.01</pre></details></section>
+<section><h2>SLO · Alert</h2><h3>当前 firing 告警</h3>
+
+<p class="value">0</p>
+<p>0=未触发，1=触发</p><a href="/graph?g0.expr=sum%28ALERTS%7Balertname%3D%22EnrolldReadSLOBurnRateHigh%22%2Calertstate%3D%22firing%22%7D%29&#43;or&#43;vector%280%29&amp;g0.tab=0">打开 Prometheus 时间序列图</a>
+<details><summary>PromQL</summary><pre>sum(ALERTS{alertname=&#34;EnrolldReadSLOBurnRateHigh&#34;,alertstate=&#34;firing&#34;}) or vector(0)</pre></details></section>
+</main></body></html>
