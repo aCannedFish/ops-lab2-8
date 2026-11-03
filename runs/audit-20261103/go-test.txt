@@ -1,0 +1,5 @@
+go test -count=1 ./...
+ok  	enroll-lab/cmd/enrolld	0.861s
+ok  	enroll-lab/cmd/loadgen	3.163s
+ok  	enroll-lab/cmd/promsteps	0.007s
+ok  	enroll-lab/internal/metrics	0.004s

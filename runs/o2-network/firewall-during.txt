@@ -1,0 +1,6 @@
+-P INPUT ACCEPT
+-A INPUT -p tcp -m tcp --dport 8080 -j LAB2_O2
+-N LAB2_O2
+-A LAB2_O2 -i lo -j ACCEPT
+-A LAB2_O2 -s 192.168.0.142/32 -j ACCEPT
+-A LAB2_O2 -p tcp -j REJECT --reject-with tcp-reset

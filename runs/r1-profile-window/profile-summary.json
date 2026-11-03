@@ -1,0 +1,10 @@
+{
+  "requests": 6115.0,
+  "process_cpu_seconds": 3.3320969999999996,
+  "cpu_ms_per_request": 0.5449054783319706,
+  "spin_samples_seconds": 2.48,
+  "total_samples_seconds": 3,
+  "spin_fraction": 0.8266666666666667,
+  "spin_ms_per_request": 0.45045519542109563,
+  "other_ms_per_request": 0.0944502829108749
+}

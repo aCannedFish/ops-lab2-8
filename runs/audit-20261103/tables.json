@@ -1,0 +1,37 @@
+[
+  {
+    "run": "runs/t1-light",
+    "match": true,
+    "rows": 4
+  },
+  {
+    "run": "runs/r1-pool4",
+    "match": true,
+    "rows": 10
+  },
+  {
+    "run": "runs/r2-pool41",
+    "match": true,
+    "rows": 8
+  },
+  {
+    "run": "runs/w1-each",
+    "match": true,
+    "rows": 8
+  },
+  {
+    "run": "runs/w2-group",
+    "match": true,
+    "rows": 8
+  },
+  {
+    "run": "runs/w3-interval",
+    "match": true,
+    "rows": 4
+  },
+  {
+    "run": "runs/o3-burn",
+    "match": true,
+    "rows": 4
+  }
+]

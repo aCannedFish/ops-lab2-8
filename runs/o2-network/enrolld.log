@@ -1,0 +1,2 @@
+2026/11/03 13:19:02 enrolld 监听 0.0.0.0:8080；GOMAXPROCS=1；读：work=200000、pool=4、db-ms=10；写：sync=interval，数据目录 data
+2026/11/03 13:24:17 已停止

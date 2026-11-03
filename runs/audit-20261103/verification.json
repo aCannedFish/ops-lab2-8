@@ -1,0 +1,88 @@
+{
+  "existing_evidence_files": 214,
+  "existing_evidence_changed": [],
+  "tables": [
+    {
+      "run": "runs/t1-light",
+      "match": true
+    },
+    {
+      "run": "runs/r1-pool4",
+      "match": true
+    },
+    {
+      "run": "runs/r2-pool41",
+      "match": true
+    },
+    {
+      "run": "runs/w1-each",
+      "match": true
+    },
+    {
+      "run": "runs/w2-group",
+      "match": true
+    },
+    {
+      "run": "runs/w3-interval",
+      "match": true
+    },
+    {
+      "run": "runs/o2-network",
+      "match": true
+    },
+    {
+      "run": "runs/o2-network-2cpu",
+      "match": true
+    },
+    {
+      "run": "runs/o3-burn",
+      "match": true
+    }
+  ],
+  "predictions": [
+    {
+      "name": "R1",
+      "unchanged": true
+    },
+    {
+      "name": "R2",
+      "unchanged": true
+    },
+    {
+      "name": "W1",
+      "unchanged": true
+    },
+    {
+      "name": "W2",
+      "unchanged": true
+    },
+    {
+      "name": "**首轮测量前预测（2026-10-29 16:5",
+      "unchanged": true
+    },
+    {
+      "name": "**反序复测前预测（2026-10-29 17:0",
+      "unchanged": true
+    },
+    {
+      "name": "**测量前预测（2026-10-29 13:13 ",
+      "unchanged": true
+    }
+  ],
+  "question_prompts_preserved": true,
+  "o4_blank": true,
+  "restoration": [
+    {
+      "run": "o2-network",
+      "rules_restored": true,
+      "config_restored": true
+    },
+    {
+      "run": "o2-network-2cpu",
+      "rules_restored": true,
+      "config_restored": true
+    }
+  ],
+  "possible_public_ip_files": [],
+  "possible_secret_files": []
+}

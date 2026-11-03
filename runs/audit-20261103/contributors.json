@@ -1,0 +1,80 @@
+[
+  {
+    "sha": "701fc3a43aa880ff915bf0ffb274d67aceb17f25",
+    "login": "CharonRyui",
+    "author": "Charon Ryui",
+    "subject": "feat: implement O3 SLO burn-rate alerts and dashboard"
+  },
+  {
+    "sha": "225e444a494e254739f3ef480c8c26bab543af94",
+    "login": "VigilLover",
+    "author": "wolf_lumine",
+    "subject": "docs: complete O1 memory and GC measurements"
+  },
+  {
+    "sha": "25be2c0b1c23d6f2fc9238dfca2d459409a217ff",
+    "login": "Mikujoker",
+    "author": "mikujoker",
+    "subject": "docs: answer task 4 analysis questions"
+  },
+  {
+    "sha": "4ce878a78ca2e6fec6156a1002bfd95b17bcb9bd",
+    "login": "1JI0O",
+    "author": "1ji0o",
+    "subject": "docs: complete task 3 write-path measurements and comparisons"
+  },
+  {
+    "sha": "6bacec95e6b3d2e536d64e67ab120ac718dc8f3a",
+    "login": "1JI0O",
+    "author": "1ji0o",
+    "subject": "docs: record W1 results and predict group commit before W2"
+  },
+  {
+    "sha": "7d5a80563f7e12c9f828300c179093b9f6a8b4f0",
+    "login": "1JI0O",
+    "author": "1ji0o",
+    "subject": "docs: predict task 3 each-sync capacity before W1"
+  },
+  {
+    "sha": "f80e4b014120efa3be00130508d5697777b7b505",
+    "login": "aCannedFish",
+    "author": "YGT",
+    "subject": "docs: record R2 pool-41 results"
+  },
+  {
+    "sha": "2ec3f7c4560911102dc8e2b4823fc200d2ffe092",
+    "login": "aCannedFish",
+    "author": "YGT",
+    "subject": "docs: record R1 results, pprof, and R2 prediction"
+  },
+  {
+    "sha": "b03ef7e727ed18c4f4054b2ea3edc9a44b8a1119",
+    "login": "aCannedFish",
+    "author": "YGT",
+    "subject": "docs: write task 2 read-path prediction before R1"
+  },
+  {
+    "sha": "ce0a5386be6e41f43af133a453cd89ad18877dae",
+    "login": "CharonRyui",
+    "author": "Charon Ryui",
+    "subject": "docs: complete task2 measurement"
+  },
+  {
+    "sha": "7930186da7aedc46c944f8bd00b5202ba90138e5",
+    "login": "CharonRyui",
+    "author": "Charon Ryui",
+    "subject": "chore: sync lab requirement"
+  },
+  {
+    "sha": "79dffbfa539bcb81278b99dbd270ad6f464b4da8",
+    "login": "aCannedFish",
+    "author": "YGT",
+    "subject": "docs: complete LAB2 task 0 baseline"
+  },
+  {
+    "sha": "e640fe25848262e633ddc6e45d1a911ddcf7284b",
+    "login": "aCannedFish",
+    "author": "Guanting Yu",
+    "subject": "Initial commit"
+  }
+]
