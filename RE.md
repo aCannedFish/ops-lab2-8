@@ -1,1314 +1,723 @@
 # Lab2 复现手册
 
-本文用于第 8 组实验 2 的现场复现与答辩。实验要求见 [指导书](lab-2.html)，提交的数据和结论见 [LAB2.md](LAB2.md)。文中的历史结果来自该报告及 `runs/`；重新测量时记录新结果，并解释与历史数据的差异。
+本手册按指导书的操作顺序组织，使用仓库已有的 `run.sh`、`rates.sh`、`table.sh` 和 `promsteps`。统一在主机 A 的 `~/lab2` 操作，使用默认端口 8080、9090、9100；结束后停止实验进程。实验要求见 [指导书](lab-2.html)，本组结果见 [LAB2.md](LAB2.md)。
 
-导航：[环境准备](#环境准备) · [基线测量](#基线测量) · [指标流水](#指标流水) · [读路径](#读路径) · [写路径](#写路径) · [数据分析](#数据分析) · [选做实验](#选做实验) · [现场演示](#现场演示) · [故障排查](#故障排查) · [归档收尾](#归档收尾)。
+任务 1～4 分别由四位成员负责，可以按顺序交接服务和监控。每节说明接收状态、具体操作和交出状态。新结果使用 `re-` 前缀，避免覆盖已有证据；再次复现时换一个名字即可。
 
-完整流程依次为：环境检查 → fsync 基线 → 指标流水线 → 读路径 → 写路径 → 数据分析 → O1、O2、O3。只做现场演示时，完成环境准备后转到[现场演示](#现场演示)。O4 按本组安排暂不做。
+课件引用按 PDF 阅读器页码计算，包含封面。L-06 主要解释运行时、线程和连接池，L-07 主要解释资源上限、排队、存储与网络。
 
-## 实验全貌
+## 任务交接
 
-本实验要回答三个问题：资源最多能处理多少请求，怎样判断它已经饱和，怎样在延迟目标下确定可用容量。
-
-| 阶段 | 做什么 | 为什么做 | 主要知识 |
+| 任务 | 成员 | 接收什么 | 交出什么 |
 |---|---|---|---|
-| 任务 0 | 测主机与串行 fsync | 为后续预测建立本机基线 | CPU 时间、I/O 等待、持久化 |
-| 任务 1 | 抓取指标，做低负载压测 | 测每请求 CPU 和连接占用时间 | RED、USE、Counter、Histogram、PromQL |
-| R1 | 用 4 个连接逐档加压 | 观察连接池先饱和 | 容量换算、排队、尾延迟 |
-| pprof | 在约 0.8 倍上限时采样 | 拆分计算和框架开销 | CPU profiling、测量窗口 |
-| R2 | 扩池后再次加压 | 观察瓶颈是否转到 CPU | 瓶颈迁移、内核与运行时队列 |
-| W1 | 每笔写入后 fsync | 测串行同步提交上限 | 锁、页缓存、磁盘延迟 |
-| W2 | 改为组提交 | 在保留同步确认的条件下提高吞吐 | 批处理、成本摊销 |
-| W3 | 每秒同步一次 | 量化延迟和持久性的取舍 | 确认语义、故障丢失窗口 |
-| O1 | 对比 GOGC=100 与 400 | 观察内存和 GC 成本交换 | 堆、RSS、GC CPU、尾延迟 |
-| O2 | 两台主机传输大响应 | 测实际网络路径，排除回环影响 | 带宽、重传、发送队列、协议栈 CPU |
-| O3 | 用过载触发燃烧率告警 | 将请求质量转为可观测告警 | SLI、SLO、错误预算、多窗口告警 |
+| 任务 1 | CharonRyui | 已有仓库、工具和任务 0 基线 | 默认 enrolld、Prometheus、node_exporter；低负载数据 |
+| 任务 2 | aCannedFish | 任务 1 的三个进程和每请求开销 | R1、pprof、R2 数据；`-pool 41` 的 enrolld，监控保持运行 |
+| 任务 3 | 1JI0O | 监控进程；任务 0 的 fsync、任务 2 的 CPU 数据 | W1/W2/W3 数据；`-sync interval` 的 enrolld |
+| 任务 4 | Mikujoker | 前三项保存的 CSV、日志和预测 | 四道分析题；分析本身不要求服务继续运行 |
 
-读请求依次执行 `spin` 计算、等待连接、占用连接并休眠 10 ms。写请求追加日志，确认时机由 `each`、`group`、`interval` 决定。“数据库”只有连接并发限制，没有真实 SQL、数据库锁或数据库 CPU。
+服务器进程可以在成员之间继续使用。变量只属于设置它的 Shell：沿用同一个终端可以保留，重新 SSH 登录后需要重新设置。`GEN_CPUS=0` 在每个压测终端设置；写路径用 `SLO=0.02`，读路径用默认 0.05。
 
-```mermaid
-flowchart LR
-    L[loadgen 开环到达] --> H[HTTP handler]
-    H --> R[读：计算 → 等连接 → 占连接]
-    H --> W[写：追加 → 按模式同步]
-    R --> M[服务指标 /metrics]
-    W --> M
-    N[node_exporter 主机指标] --> P[Prometheus]
-    M --> P
-    P --> Q[promsteps 按阶段查询]
-    L --> C[steps.csv]
-    Q --> D[red.csv / use.csv]
-    C --> T[table.sh 与分析]
-    D --> T
-```
+若某位成员单独复现任务 2 或 3，先按“任务 1”的启动命令启动三个进程，再从仓库读取已提交的前置数据即可，无需重做全部前置测量。
 
-## 环境准备
+## 开始之前
 
-### 主机与目录
+### 主机与终端
 
-| 位置 | 用途 | 已有位置 |
-|---|---|---|
-| Mac | 阅读报告、传文件、提交 Git | `~/Documents/ops-lab2-8` |
-| A：`se-devops` | enrolld、监控和必做压测 | 原服务工作目录 `/home/ubuntu/lab2` |
-| B：`se-devops2` | O2 的负载端 | 无外网，通过 Mac 或 A 传入二进制 |
+| 名称 | 含义 |
+|---|---|
+| 主机 A：`se-devops` | 运行 enrolld、监控和必做压测；工作目录 `~/lab2` |
+| 主机 B：`se-devops2` | 只在 O2 中运行 loadgen；工作目录 `~/lab2-o2` |
+| 终端 A | SSH 到主机 A，前台运行 enrolld |
+| 终端 B | SSH 到主机 A，运行 node_exporter 和 Prometheus |
+| 终端 C | SSH 到主机 A，执行压测、查询和制表 |
 
-A、B 的内网地址分别为 `192.168.0.134`、`192.168.0.142`，同属一个 VPC。SSH 连接使用 Mac 上已有配置。密码和密钥不写入文档、脚本或实验输出。
+“终端 B”仍在主机 A 上；“主机 B”是另一台服务器。必做实验的三个终端都连接 `se-devops`。
 
-截至 2026-11-03，A 上有 8080/9090/9100 和 8081/9091/9101 两套进程。原 9090 进程加载的目标与磁盘上后来修改的配置文件不同。下面从本地提交导出一份新源码，在新目录使用以下端口：
-
-| 组件 | 本手册端口 | 原实验端口 |
-|---|---|---|
-| enrolld | 18080 | 8080 |
-| Prometheus | 19090 | 9090 |
-| node_exporter | 19100 | 9100 |
-
-程序、参数和采集方式保持一致；端口仅用于区分实例。原来的服务与证据继续保留。不要同时运行两组压测。启动前用 `ss -H -ltn '( sport = :18080 or sport = :19090 or sport = :19100 )'` 检查端口，结果应为空；已有监听时先确认占用者。
-
-### 准备源码
-
-在 Mac 执行。保留这个终端，后面的文件传输继续使用其中的变量。
+在三个终端各执行：
 
 ```bash
-cd ~/Documents/ops-lab2-8
-git status --short
+ssh se-devops
+cd ~/lab2
+export PATH=/home/ubuntu/apps/go/bin:$PATH
+```
+
+只在终端 C 执行一次准备：
+
+```bash
 git pull --ff-only
-
-REPRO_TAG=$(date +%Y%m%d-%H%M%S)
-REPRO_DIR="/home/ubuntu/lab2-repro-$REPRO_TAG"
-B_REPRO_DIR="/home/ubuntu/lab2-client-$REPRO_TAG"
-
-# 只导出已提交的代码、配置和工具；历史实验数据留在原仓库。
-git archive HEAD Makefile go.mod cmd internal scripts deploy |
-  ssh se-devops "mkdir '$REPRO_DIR' && tar -xf - -C '$REPRO_DIR'"
-git rev-parse HEAD |
-  ssh se-devops "cat > '$REPRO_DIR/SOURCE_REVISION'"
-printf 'A 工作目录：%s\nB 工作目录：%s\n' "$REPRO_DIR" "$B_REPRO_DIR"
-printf 'export REPRO_TAG="%s"\nexport REPRO_DIR="%s"\nexport B_REPRO_DIR="%s"\n' \
-  "$REPRO_TAG" "$REPRO_DIR" "$B_REPRO_DIR" > /tmp/lab2-repro-session.env
-
-ssh -t se-devops "cd '$REPRO_DIR' && exec bash"
-```
-
-新开的 Mac 终端先执行 `source /tmp/lab2-repro-session.env`，恢复这三个路径变量。最后一条会进入 A，并停在新目录。下文标注“A”的命令在这个终端执行。若本地存在未提交改动，先确认要复现哪个提交；`git archive HEAD` 不包含未提交文件。
-
-在 A 执行：
-
-```bash
-export PATH=/home/ubuntu/apps/go/bin:$PATH
-go version
-for command in make python3 curl taskset vmstat mpstat iostat pidstat sar ss; do
-  command -v "$command"
-done
-
-# 复用已校验的监控二进制，不改动原服务的配置。
-ln -s /home/ubuntu/lab2/tools tools
-make build test fmt-check vet
-
-mkdir -p runtime runs data
-sed -i 's/127.0.0.1:8080/127.0.0.1:18080/; s/127.0.0.1:9100/127.0.0.1:19100/' \
-  deploy/prometheus.yml
-```
-
-若新主机缺少 sysstat，可执行 `sudo apt-get update`、`sudo apt-get install -y sysstat`。Go 需要 1.26 或更高版本；本组使用 1.26.9。若没有已有 `tools/`，在具备外网的 A 执行 `scripts/get-tools.sh`，由脚本下载并校验版本。B 不需要安装 Go。
-
-### 公共命令
-
-在 A 创建会话文件。它设置本次复现的目录、端口，并提供启动与停止函数。每次服务使用一个新数据目录，写实验无需删除旧日志。
-
-```bash
-cat > env.sh <<'SH'
-# 本次复现的环境与进程管理；从复现目录 source 本文件。
-export LAB_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-export LAB_TAG="${LAB_ROOT##*/}"
-export PATH=/home/ubuntu/apps/go/bin:$PATH
-export SVC=http://127.0.0.1:18080
-export PROM=http://127.0.0.1:19090
+make build test
+mkdir -p data
 export GEN_CPUS=0
-export SLO=0.05
-export LC_ALL=C
-export S_TIME_FORMAT=ISO
-cd "$LAB_ROOT"
-
-# 只停止本目录记录的进程，等待其退出后再允许重启。
-stop_owned() {
-    local name="$1" pid
-    if [ ! -s "runtime/$name.pid" ]; then
-        return 0
-    fi
-    pid=$(cat "runtime/$name.pid")
-    if kill -0 "$pid" 2>/dev/null; then
-        kill -TERM "$pid" || return 1
-        for _ in {1..100}; do
-            if ! kill -0 "$pid" 2>/dev/null; then
-                break
-            fi
-            sleep 0.1
-        done
-        if kill -0 "$pid" 2>/dev/null; then
-            echo "$name 尚未退出，请检查进程 $pid" >&2
-            return 1
-        fi
-    fi
-    rm -f "runtime/$name.pid"
-}
-
-# 启动独立 enrolld，保留日志并等待健康检查成功。
-start_svc() {
-    local name="$1"
-    shift
-    stop_owned enrolld || return 1
-    export DATA="$LAB_ROOT/data/$name"
-    if [ -e "$DATA" ]; then
-        echo "$DATA 已存在，请换一个实验名" >&2
-        return 1
-    fi
-    mkdir -p "$DATA"
-    nohup env -u GOMEMLIMIT -u GODEBUG \
-      GOGC="${LAB_GOGC:-100}" GOMAXPROCS="${LAB_PROCS:-1}" \
-      taskset -c "${LAB_SVC_CPUS:-1}" bin/enrolld \
-      -addr "${LAB_ADDR:-127.0.0.1:18080}" -data "$DATA" "$@" \
-      > "runtime/$name-enrolld.log" 2>&1 < /dev/null &
-    echo "$!" > runtime/enrolld.pid
-    for _ in {1..50}; do
-        if curl -fsS -m 1 "$SVC/healthz" >/dev/null 2>&1; then
-            curl -fsS "$SVC/config"
-            return 0
-        fi
-        sleep 0.2
-    done
-    cat "runtime/$name-enrolld.log" >&2
-    return 1
-}
-
-# 用指定的独立 TSDB 启动 Prometheus；原 TSDB 文件不会删除。
-start_prom() {
-    local suffix="$1"
-    stop_owned prometheus || return 1
-    nohup taskset -c 0 tools/prometheus \
-      --config.file=deploy/prometheus.yml \
-      --storage.tsdb.path="/dev/shm/$LAB_TAG-$suffix" \
-      --web.listen-address=127.0.0.1:19090 \
-      --web.console.templates=deploy/consoles \
-      > "runtime/prometheus-$suffix.log" 2>&1 < /dev/null &
-    echo "$!" > runtime/prometheus.pid
-    for _ in {1..50}; do
-        if curl -fsS -m 1 "$PROM/-/ready" >/dev/null 2>&1; then
-            return 0
-        fi
-        sleep 0.2
-    done
-    cat "runtime/prometheus-$suffix.log" >&2
-    return 1
-}
-
-# 等待服务发现和首次抓取，确认两个目标均为 up 后再加压。
-wait_targets() {
-    for _ in {1..60}; do
-        if curl -fsS -m 2 "$PROM/api/v1/targets" 2>/dev/null |
-          python3 -c '
-import json
-import sys
-
-targets = json.load(sys.stdin)["data"]["activeTargets"]
-ready = (
-    len(targets) == 2
-    and {target["labels"]["job"] for target in targets} == {"enrolld", "node"}
-    and all(target["health"] == "up" for target in targets)
-)
-sys.exit(0 if ready else 1)
-' 2>/dev/null; then
-            return 0
-        fi
-        sleep 1
-    done
-    echo "抓取目标尚未就绪，请检查 runtime/ 下的日志" >&2
-    return 1
-}
-SH
-source ./env.sh
+unset SLO
 ```
 
-后续命令默认在同一 A 终端中执行。新开 SSH 终端时，进入打印出的复现目录，重新 `source ./env.sh`。若要继续采集一个已经启动的服务，还需从 `/config` 的 `data` 字段恢复 `DATA`：
+本组主机已经安装 sysstat 和监控工具。新环境缺少工具时，才执行 `sudo apt install -y sysstat` 和 `scripts/get-tools.sh`。
+
+2026-11-03 整理后，主机 A 的 `~/lab2` 已同步默认配置，遗留实验进程已停止。首次启动前可检查：
 
 ```bash
-export DATA=$(curl -fsS "$SVC/config" |
-  python3 -c '
-import json
-import sys
-print(json.load(sys.stdin)["data"])
-')
+pgrep -a 'enrolld|prometheus|node_exporter|loadgen'
 ```
 
-进程 PID 文件只用于当前复现会话。机器重启后重新检查进程，再启动新会话，不使用旧 PID 文件停止其他进程。
+没有输出就直接开始。有输出时先核对进程参数，避免同时运行两次压测或重复启动监控。无需改端口、创建新仓库或生成环境脚本。
 
-## 基线测量
+### 默认配置
 
-### 操作目的
+| 组件 | 地址或参数 |
+|---|---|
+| enrolld | `127.0.0.1:8080`，绑核 1 |
+| Prometheus | `127.0.0.1:9090`，绑核 0 |
+| node_exporter | `127.0.0.1:9100`，绑核 0 |
+| loadgen | 绑核 0，默认泊松到达、每阶段 30 秒 |
+| 应用数据 | `data/`，位于真实云盘 |
+| 监控数据 | `/dev/shm/lab2-prom`，位于内存 |
+| 读路径 | `-work 200000 -pool 4 -db-ms 10` |
+| 写路径 | 默认 `-sync each` |
 
-先测本机实际性能，再预测容量。CPU 型号不能直接推出一次请求耗时；云盘标称带宽也不能直接推出一次 fsync 延迟。
+监控数据放在内存中，可减少 Prometheus 写盘对写路径实验的干扰。重启 Prometheus 并复用原路径会保留数据；主机重启会丢失 `/dev/shm` 中的数据。
 
-A 执行，监控和服务尚未启动时完成这一节：
+## 任务 0
+
+任务 0 建立环境与 fsync 基线，由 aCannedFish 完成。后面的成员可以直接使用仓库中的记录。
+
+### 基线操作
+
+终端 C 查看环境：
 
 ```bash
-mkdir -p runs/re-t0 data/re-t0
-{
-  date -Is
-  cat /etc/os-release
-  uname -r
-  lscpu
-  lscpu -e
-  free -m
-  findmnt -T data/re-t0
-  lsblk -o NAME,SIZE,TYPE,ROTA,FSTYPE,MOUNTPOINTS
-  go version
-} > runs/re-t0/host.txt
+lscpu
+lscpu -e
+free -m
+uname -r
+cat /etc/os-release
+findmnt -T data
+lsblk
+```
 
-# vmstat、iostat 第一份通常是开机以来的累计统计；比较后续间隔样本。
-vmstat -w 1 12 > runs/re-t0/vmstat-idle.log &
-VM_PID=$!
-iostat -dx -y vda 1 11 > runs/re-t0/iostat-idle.log &
-IO_PID=$!
-wait "$VM_PID" "$IO_PID"
+确认 `data/` 在 `/dev/vda1` 的 ext4 上，不能放在 tmpfs。连续测三次 fsync：
 
-for trial in 1 2 3; do
-  bin/enrolld -data data/re-t0 -bench-fsync 2000
+```bash
+mkdir -p runs/re-t0
+for i in 1 2 3; do
+  bin/enrolld -bench-fsync 2000
 done | tee runs/re-t0/bench-fsync-2000.txt
-
-vmstat -t -w 1 > runs/re-t0/vmstat-fsync.log &
-VM_PID=$!
-iostat -dx -y -t vda 1 > runs/re-t0/iostat-fsync.log &
-IO_PID=$!
-bin/enrolld -data data/re-t0 -bench-fsync 5000 |
-  tee runs/re-t0/bench-fsync-5000.txt
-kill "$VM_PID" "$IO_PID"
-wait "$VM_PID" "$IO_PID" 2>/dev/null || true
 ```
 
-`vda` 是本组系统盘。换主机时，按 `findmnt` 和 `lsblk` 的结果修改。数据目录必须在块设备上；tmpfs 的 fsync 不代表真实磁盘持久化。
+终端 A 运行 `vmstat -w 1`，终端 B 运行 `iostat -dx 1 vda`，先观察约 10 秒空载；随后在终端 C 执行：
 
-### 如何解释
+```bash
+bin/enrolld -bench-fsync 5000 | tee runs/re-t0/bench-fsync-5000.txt
+```
 
-| 指标 | 含义 | 本组负载时的典型现象 |
-|---|---|---|
-| `r` | 正在运行或等待 CPU 的任务数 | 不高 |
-| `b` | 不可中断睡眠任务数，常见原因是 I/O | 约 1 |
-| `us`、`sy` | 用户态、内核态 CPU 时间比例 | 合计约 6% |
-| `wa` | 被记为 I/O 等待的 CPU 时间比例 | 约 43%～46% |
-| `st` | 虚拟机未得到的宿主机 CPU 时间 | 本组样本为 0 |
-| `w/s`、`wkB/s` | 写请求完成率、写入字节速率 | 约 2200 次/秒、12000 KiB/s |
-| `w_await`、`f_await` | 单个写请求、flush 请求的平均响应时间 | 约 0.45、0.04 ms |
-| `aqu-sz` | 平均未完成 I/O 数，包含正在处理的请求 | 约 1 |
-| `%util` | 设备被记为忙碌的时间比例 | 约 94% |
+比较负载期间与空载时的读数。完成后在终端 A、B 按 Ctrl-C，停止两个观察工具。需要保留工具输出时，在原命令后接 `| tee runs/re-t0/vmstat.log` 或 `| tee runs/re-t0/iostat.log`。
 
-本组三次 fsync 均值为 1.304、1.379、1.406 ms，平均 1.363 ms。一个写者每次同步一条记录的粗略上限为：
+### 原理与追问
+
+本组三次 fsync 均值为 1.304、1.379、1.406 ms，平均 1.363 ms。因此一个写者串行 fsync 的粗略上限为：
 
 \[
-C_{fsync}=\frac{1000}{1.363}\approx734\text{ 次/秒}
+C_{fsync}=1000/1.363\approx734\text{ 次/秒}
 \]
 
-这只计 fsync，完整写请求还需要 write、锁切换、HTTP 和运行时开销。单次设备请求的 await 与整个 fsync 的耗时有不同的统计边界。
+L-07 第 13～16 页区分了 IOPS、吞吐量和延迟。一次小写入后的同步提交主要受同步延迟限制，不能仅用磁盘 MB/s 估算 TPS。
 
-### 常见追问
-
-| 追问 | 回答要点 |
+| 观测项 | 含义与本组现象 |
 |---|---|
-| CPU 很空，为什么吞吐上不去？ | 一个写者必须等待当前 fsync 完成才能继续；等待磁盘不会持续消耗 CPU。 |
-| `%util=100%` 就是磁盘完全饱和吗？ | 它说明设备持续忙碌。设备可能并行处理请求，还要结合吞吐平台、队列、延迟和工作负载判断。 |
-| `aqu-sz=1` 是否说明一个请求在排队？ | 它包含正在处理的请求，不能直接解释为一个纯等待请求。 |
-| `ROTA=1` 能证明云盘是 HDD 吗？ | 这是虚拟块设备报告的属性，后端介质需要查实际云盘规格。 |
+| `r` | 可运行任务数，用于观察等待 CPU 的压力 |
+| `b`、`wa` | 不可中断睡眠任务和 I/O 等待时间；负载时约为 1、43%～46% |
+| `us`、`sy` | 用户态与内核态 CPU 时间；本组 fsync 负载时合计约 6% |
+| `w/s`、`wkB/s` | 每秒完成写请求数、写入速率 |
+| `w_await`、`f_await` | 单个设备写请求、flush 请求的平均响应时间 |
+| `aqu-sz` | 平均未完成 I/O 数，包含正在处理的请求 |
+| `%util` | 设备忙碌时间比例；本组约 94% |
 
-## 指标流水
+解释时注意：工具启动后的第一份报告通常是开机以来的统计，比较时取后续间隔样本。CPU 空闲仍可能吞吐受限，因为写者在等磁盘。`aqu-sz=1` 不等于一个请求纯粹在排队；高 `%util` 也要结合吞吐平台、延迟和工作负载判断。
 
-### 启动监控
+## 任务 1
 
-在 A 执行：
+负责人：CharonRyui。目标是启动指标流水线，测出低负载下的每请求开销。接收任务 0 的环境与基线文件，本任务负责首次启动三个服务。
+
+### 启动进程
+
+终端 A：
 
 ```bash
-start_svc re-t1 -pool 4 -sync each
-nohup taskset -c 0 tools/node_exporter \
-  --web.listen-address=127.0.0.1:19100 \
-  > runtime/node-exporter.log 2>&1 < /dev/null &
-echo "$!" > runtime/node-exporter.pid
-start_prom main
-
-# 等待两个目标实际抓取成功。
-wait_targets
-curl -fsS "$PROM/api/v1/targets" |
-  python3 -c '
-import json
-import sys
-for target in json.load(sys.stdin)["data"]["activeTargets"]:
-    print(target["labels"]["job"], target["scrapeUrl"], target["health"], target["lastError"])
-'
+taskset -c 1 bin/enrolld
 ```
 
-结果应只有本次 Prometheus 的两个目标：18080 的 enrolld、19100 的 node，均为 `up`。检查实际 `scrapeUrl`，不要仅看进程是否存在。
+启动日志应显示监听 `127.0.0.1:8080`、`GOMAXPROCS=1`、连接池大小 4。该进程保持前台运行。
 
-### 低负载测量
+终端 B：
 
 ```bash
-scripts/run.sh re-t1 \
-  -url "$SVC/api/courses/1" -rates 0,50,100 -step 30s -seed 1
-scripts/table.sh runs/re-t1 \
+taskset -c 0 tools/node_exporter --web.listen-address=127.0.0.1:9100 \
+  > data/node_exporter.log 2>&1 &
+NODE_PID=$!
+taskset -c 0 tools/prometheus --config.file=deploy/prometheus.yml \
+  --storage.tsdb.path=/dev/shm/lab2-prom \
+  --web.listen-address=127.0.0.1:9090 \
+  --web.console.templates=deploy/consoles
+```
+
+最后一个参数用于仓库已有的 O3 看板，其余与指导书一致。`NODE_PID` 只保存在终端 B，结束时用于停止后台 node_exporter。
+
+终端 C 检查目标：
+
+```bash
+curl -s 127.0.0.1:9090/api/v1/targets | grep -o '"health":"[a-z]*"'
+curl -s 127.0.0.1:8080/api/courses/1
+curl -s 127.0.0.1:8080/metrics | grep -E '^(# TYPE )?http_request_duration_seconds'
+```
+
+两个目标都为 `up` 后再加压。刚启动时若显示 `unknown`，等几秒重查；若为 `down`，查看 `/api/v1/targets` 的 `lastError` 和实际抓取地址。
+
+### 运行与制表
+
+终端 C：
+
+```bash
+export GEN_CPUS=0
+unset SLO
+scripts/run.sh re-t1-light -url http://127.0.0.1:8080/api/courses/1 -rates 0,50,100
+scripts/table.sh runs/re-t1-light \
   ok_rps mean_ms p99_ms server_rps server_mean_ms server_p99_ms \
   cpu_ms_per_req db_query_mean_ms
-
-curl -fsS "$SVC/metrics" > runs/re-t1/histogram-sample.txt
-curl -fsS "$PROM/api/v1/targets" > runs/re-t1/targets.json
-cp deploy/queries-red.txt deploy/queries-use.txt runs/re-t1/
-cp SOURCE_REVISION runs/re-t1/
 ```
 
-零负载阶段用于观察空载开销。比例指标出现 `NaN` 或 `+Inf` 是零分母的结果。不能把它解释为请求有无限 CPU 成本，也不能补成 100% 达标。
+四条 RED/SLI 查询已经填写在 [queries-red.txt](deploy/queries-red.txt)，无需重新编写。`run.sh` 同时保存配置、客户端结果、服务与资源 CSV，以及 vmstat、mpstat、iostat、pidstat 原始日志。
 
-`run.sh` 会生成以下证据：
+### 应当会讲
 
-| 文件 | 能回答的问题 |
+| 概念 | 本实验中的解释 |
 |---|---|
-| `meta.txt` | 用了什么参数、CPU、磁盘、请求和阶段配置？ |
-| `steps.csv`、`loadgen.log` | 用户看到的吞吐、错误、延迟如何？压测端有没有失速？ |
-| `red.csv` | 服务完成了多少请求，平均和尾延迟如何？ |
-| `use.csv` | 哪项主机资源繁忙或有等待？ |
-| `vmstat/mpstat/iostat/pidstat.log` | Prometheus 异常时，有没有独立的系统证据？ |
-| `metrics-start.txt`、`metrics-end.txt` | 累计计数增加了多少，进程是否重启？ |
+| RED | 请求速率、错误比例、耗时，从服务请求看问题 |
+| USE | 利用率、饱和度、错误，从每项资源看问题 |
+| Counter | 累计事件数，`rate()` 换算为每秒增长量 |
+| Gauge | 当前状态，如连接池占用，对采样值取平均 |
+| Histogram | `_bucket{le="…"}` 记录不超过边界的累计次数，`_sum` 是耗时总和 |
+| 服务端平均耗时 | duration 的 sum 增量 ÷ count 增量 |
+| 服务端 p99 | 先按 `le` 聚合各状态码的桶，再用 `histogram_quantile` 插值 |
+| 服务端 SLI | 200 且不超过 50 ms 的计数 ÷ 全部请求计数 |
 
-从源码导出的目录没有 `.git`，`meta.txt` 的提交字段会写“无”。使用保存的 `SOURCE_REVISION` 记录对应源提交。
+本组 T1 第 3 档测得：每请求 CPU 为 0.539766 ms，每次占连接为 10.4262 ms。CPU 时间是实际执行成本；占连接时间包含休眠等待，不能互换。L-06 第 16、19 页用同样的区分推算线程池和连接池上限。
 
-### 查询原理
+零负载行出现 `NaN` 或 `+Inf`，表示零请求分母下该指标无定义。没有 5xx 时查询分子可能没有序列，`or vector(0)` 用来补零；没有流量时不能据此得出 100% 达标。
 
-四条查询已经在 [queries-red.txt](deploy/queries-red.txt) 中实现。`${route}`、`${window}`、`${slo}` 由 promsteps 替换。在 Prometheus 输入框中查询时，先将它们替换为具体值。以读路径 25 秒窗口为例：
+压测采用开环：按计划发送，不等待前一个请求返回。服务变慢时到达不会自动下降，能够暴露排队。泊松到达带来随机波动，因此实际发送率不必等于目标 RPS。
 
-```promql
-sum(rate(http_requests_total{route="/api/courses/{id}"}[25s]))
+### 交给任务 2
 
-(sum(rate(http_requests_total{route="/api/courses/{id}",code=~"5.."}[25s])) or vector(0))
-/ sum(rate(http_requests_total{route="/api/courses/{id}"}[25s]))
+保持终端 A、B 中的三个进程运行。交出 `runs/re-t1-light/`，特别是 `red.csv`、`steps.csv` 和 `meta.txt`。下一位成员若使用新终端 C，需要重新 SSH、进入 `~/lab2`、设置 Go 的 PATH、`export GEN_CPUS=0` 并 `unset SLO`。
 
-1000 * histogram_quantile(0.99,
-  sum by (le) (rate(http_request_duration_seconds_bucket{route="/api/courses/{id}"}[25s])))
+## 任务 2
 
-(sum(rate(http_request_duration_seconds_bucket{route="/api/courses/{id}",code="200",le="0.05"}[25s])) or vector(0))
-/ sum(rate(http_requests_total{route="/api/courses/{id}"}[25s]))
-```
+负责人：aCannedFish。接收默认的 enrolld、两个监控进程，以及任务 1 的每请求开销。开始前在终端 C 执行 `curl -s 127.0.0.1:8080/config`，确认 `pool=4`、`work=200000`、`db_ms=10`。若服务已停止，按任务 1 的命令启动；若池大小已改变，在终端 A 按 Ctrl-C 后执行 `taskset -c 1 bin/enrolld`。
 
-Counter 是累计事件数，`rate()` 求单位时间内的增长速率并处理计数器重置。Gauge 是当前状态，例如池占用；对它取 `avg_over_time()`。Histogram 的 `_bucket{le="…"}` 是“耗时不超过该边界”的累计计数，`+Inf` 桶覆盖全部观测，`_sum` 是耗时总和，`_count` 是观测次数。
+### R1 预测
 
-p99 查询先按 `le` 合并不同状态码的桶，再做桶内插值。SLI 的 50 ms 恰好是桶边界，可直接用达标桶计数除以总数，无需先算 p99。`or vector(0)` 只处理没有 5xx 或没有 good 序列的情况，分母仍保持实际请求数。
-
-### 测量口径
-
-| 项目 | 客户端 | 服务端 |
-|---|---|---|
-| 吞吐 | 成功 2xx 数 ÷ 阶段时长 | handler 完成请求计数的速率，包含失败状态 |
-| 错误率 | 非 2xx、超时和网络错误 ÷ 实际发送数 | 本组查询只计 5xx 比例 |
-| 延迟样本 | 只统计成功请求 | 直方图包含各状态码 |
-| 计时边界 | 计划发送时刻至读完响应体 | 进入 handler 至 handler 返回 |
-| 阶段归属 | 计划发送时间 | 指标记录的完成时间 |
-| 统计窗口 | 完整阶段 | 去掉开头 5 秒 |
-
-本组 T1 第 3 档的连接占用为 10.4262 ms，每请求 CPU 为 0.539766 ms。两者分别用于推算连接池与 CPU 容量。CPU 时间是进程消耗的执行时间；连接占用时间包含休眠等待，两者不能互换。
-
-### 常见追问
-
-| 追问 | 回答要点 |
-|---|---|
-| 为什么用开环？ | 到达不等待前一个请求返回，服务变慢时负载不会自动减小，能暴露积压。必须检查发送滞后。 |
-| 泊松到达是什么？ | 相邻到达间隔服从指数分布，用于模拟独立用户的随机到达。目标 RPS 是期望值，每阶段实际发送量会波动。 |
-| 什么是 RED、USE？ | RED 从请求看速率、错误、耗时；USE 从资源看利用率、饱和度、错误。结合两者定位请求慢在哪里。 |
-| 为什么绑核？ | 减少负载端与服务端争用逻辑 CPU。两者仍共享内存带宽和缓存，虚拟机拓扑也未必等同宿主机分配。 |
-| Prometheus 重启会清空数据吗？ | 单纯重启进程并复用 TSDB 路径会保留数据。主机重启会丢失 `/dev/shm`，换路径或清空目录也会失去原数据。 |
-
-## 读路径
-
-### 预测 R1
-
-本组历史换算为：
+用任务 1 的测量值计算：
 
 \[
-C_{pool}=4/0.0104262\approx384\text{ req/s},\quad
+C_{pool}=4/0.0104262\approx384\text{ req/s}
+\]
+
+\[
 C_{CPU}=1/0.000539766\approx1853\text{ req/s}
 \]
 
-连接池先达到上限。预测应写在加压之前，包括 p99 从哪里开始超过 50 ms。预测错误可由结果解释，不能测完后改成实测值。
+连接池先满。本组历史预测 p99 在约 290 请求/秒开始超过 50 ms，实际首次超过是在 342.4 请求/秒。复现前先记录本轮预测，保留已有历史预测。若本轮 T1 的开销明显变化，按同一公式替换下面的 384。
 
-在 A 根据本次 T1 生成基准并保存预测：
+### R1 测量
 
-```bash
-python3 - <<'PY' > runtime/read.env
-import csv
-from pathlib import Path
-rows = list(csv.DictReader(Path('runs/re-t1/red.csv').open()))
-row = next(r for r in rows if r['target_rps'] == '100')
-hold_ms = float(row['db_query_mean_ms'])
-cpu_ms = float(row['cpu_ms_per_req'])
-print(f'R1_BASE={round(4 * 1000 / hold_ms)}')
-print(f'T1_HOLD_MS={hold_ms}')
-print(f'T1_CPU_MS={cpu_ms}')
-print(f'T1_CPU_CAP={round(1000 / cpu_ms)}')
-PY
-source runtime/read.env
-{
-  date -Is
-  cat runtime/read.env
-  printf '预测：连接池先满；p99 在约 0.75 倍池上限附近越过 50 ms。\n'
-} | tee runtime/r1-prediction.txt
-```
-
-这里的 0.75 是待验证假设。若当前 T1 的 CPU 上限反而更低，应先说明环境变化，再调整实验设计。
-
-### R1 加压
-
-T1 服务继续运行，池大小仍为 4。
+终端 A 保持默认服务，终端 C：
 
 ```bash
-RATES=$(scripts/rates.sh "$R1_BASE")
-scripts/run.sh re-r1 -url "$SVC/api/courses/1" \
-  -rates "$RATES" -step 30s -seed 1
-cp runtime/r1-prediction.txt runs/re-r1/
-scripts/table.sh runs/re-r1 \
+export GEN_CPUS=0
+unset SLO
+RATES=$(scripts/rates.sh 384)
+scripts/run.sh re-r1-pool4 -url http://127.0.0.1:8080/api/courses/1 -rates "$RATES"
+scripts/table.sh runs/re-r1-pool4 \
   ok_rps error_rate p99_ms server_mean_ms inflight_avg cpu_ms_per_req \
-  pool_in_use_avg pool_wait_p99_ms sched_wait_p99_ms svc_cpu_busy
+  pool_in_use_avg pool_wait_p99_ms sched_wait_p99_ms svc_cpu_busy procs_running_avg
 ```
 
-本组历史结果：最高成功吞吐 384.4 请求/秒；池平均占用达到 4，等待 p99 升至约 994 ms；服务核忙碌仅 20.25%。这说明连接池限制了吞吐。p99≤50 ms 的最高阶段是 311.1 请求/秒，约占预测上限的 81%。
-
-平均利用率未到 100% 时，随机到达仍会短时占满连接，后来的请求必须排队。尾延迟因此会在吞吐上限之前上升。按 `上限×0.7` 留余量是经验起点，具体容量要由延迟目标和到达波动验证。
+历史最大成功吞吐为 384.4 请求/秒，池平均占用为 4，等待 p99 约 994 ms，而服务核忙碌仅 20.25%。判断依据是池占满、等待增加、吞吐进入平台；低 CPU 利用率不能排除连接池饱和。
 
 ### CPU 剖析
 
-在 A 执行。profile 的下载与计数读取放在同一窗口，解析 profile 在加压结束后进行。
+按指导书在约 0.8 倍上限处采样。终端 C：
 
 ```bash
-PROFILE_RATE=$(scripts/rates.sh "$R1_BASE" 0.8)
-scripts/run.sh re-profile -url "$SVC/api/courses/1" \
-  -rates "$PROFILE_RATE" -step 40s -seed 1 \
-  > runtime/profile-run.log 2>&1 &
-RUN_PID=$!
+taskset -c "$GEN_CPUS" bin/loadgen -url http://127.0.0.1:8080/api/courses/1 \
+  -rates "$(scripts/rates.sh 384 0.8)" -step 40s > /dev/null 2>&1 &
+LG=$!
 sleep 10
-curl -fsS "$SVC/metrics" > runs/re-profile/profile-start.txt
-curl -fsS "$SVC/debug/pprof/profile?seconds=20" > runs/re-profile/profile.pb.gz
-curl -fsS "$SVC/metrics" > runs/re-profile/profile-end.txt
-wait "$RUN_PID"
-go tool pprof -top -nodecount=15 bin/enrolld \
-  runs/re-profile/profile.pb.gz | tee runs/re-profile/pprof-top.txt
+go tool pprof -top -nodecount=15 \
+  'http://127.0.0.1:8080/debug/pprof/profile?seconds=20' \
+  | tee runs/re-r1-pool4/pprof-top.txt
+wait "$LG"
 ```
 
-用同一窗口的计数差计算每请求 CPU：
+`main.spin` 是读路径上的纯计算。其余采样落在 HTTP、JSON、系统调用、内存分配和调度上。pprof 的百分比表示 CPU 样本分布，不表示端到端延迟占比。
 
-```bash
-python3 - <<'PY'
-from pathlib import Path
-root = Path('runs/re-profile')
-def read_metrics(name):
-    result = {}
-    for line in (root / name).read_text().splitlines():
-        if line and not line.startswith('#'):
-            fields = line.split()
-            if len(fields) == 2:
-                result[fields[0]] = float(fields[1])
-    return result
-start = read_metrics('profile-start.txt')
-end = read_metrics('profile-end.txt')
-requests = sum(value - start.get(key, 0) for key, value in end.items()
-               if key.startswith('http_requests_total{route="/api/courses/{id}"'))
-cpu = end['process_cpu_seconds_total'] - start['process_cpu_seconds_total']
-print(f'requests={requests:.0f}, cpu_seconds={cpu:.6f}, cpu_ms_per_req={1000*cpu/requests:.6f}')
-PY
-```
+可用相同目标负载阶段的每请求 CPU 乘以 spin 比例作近似拆分。本组历史比例为 82.54%；另有同一计数窗口内的补测，见 [profile 结果](runs/r1-profile-window/profile-summary.json)：6115 个请求消耗 3.332097 CPU 秒，每请求约 0.545 ms，其中 spin 约 0.450 ms、其余约 0.094 ms。
 
-再将每请求 CPU 乘以 `main.spin` 的 flat% 得到计算部分的估计，其余为 HTTP、JSON、系统调用、调度和内存等成本。采样比例有误差，不能当作每个请求的精确拆账。
+### R2 预测
 
-本组 11 月 3 日的同窗口补测完成 6115 个请求，消耗 3.332097 CPU 秒，每请求 0.545 ms；spin 占 82.67%，约 0.450 ms，其余约 0.094 ms。证据见 [profile 结果](runs/r1-profile-window/profile-summary.json)。
-
-### 预测 R2
-
-从 R1 选负载较高、无错误、无发送警告且池尚未占满的阶段，重新估计 CPU 上限。按公式将池容量设为 CPU 上限的约两倍：
+从 R1 中选取尚未饱和、负载较高的阶段。本组采用第 6 档的 0.515729 CPU ms/请求和 10.5539 ms 连接占用，得到：
 
 \[
-C=\frac{1000}{\text{cpu\_ms\_per\_req}},\qquad
-P_2=\left\lceil2C\times\frac{\text{db\_query\_mean\_ms}}{1000}\right\rceil
+C=1000/0.515729\approx1939\text{ req/s}
 \]
 
-本组使用 R1 第 6 档，得到 C≈1939、P2=41。下面自动选择候选阶段，输出后仍需对照表格检查：
+\[
+P_2=\lceil2\times1939\times0.0105539\rceil=41
+\]
+
+池容量设为预计 CPU 上限的约两倍，以便观察 CPU 先饱和。先写下 C、P2 和预测，再开始 R2；本轮数据不同时替换 1939 和 41。
+
+### R2 测量
+
+终端 A 按 Ctrl-C，等旧服务退出后启动：
 
 ```bash
-python3 - <<'PY' > runtime/r2.env
-import csv
-import math
-from pathlib import Path
-root = Path('runs/re-r1')
-red = {r['step']: r for r in csv.DictReader((root/'red.csv').open())}
-steps = list(csv.DictReader((root/'steps.csv').open()))
-candidates = [s for s in steps if s['step'] != 'all'
-              and float(s['error_rate']) == 0 and not s['warn']
-              and float(red[s['step']]['pool_in_use_avg']) < 3.95]
-selected = max(candidates, key=lambda s: float(s['target_rps']))
-row = red[selected['step']]
-capacity = round(1000 / float(row['cpu_ms_per_req']))
-pool = math.ceil(2 * capacity * float(row['db_query_mean_ms']) / 1000)
-print(f'R2_SOURCE_STEP={selected["step"]}')
-print(f'R2_C={capacity}')
-print(f'R2_POOL={pool}')
-PY
-source runtime/r2.env
-{
-  date -Is
-  cat runtime/r2.env
-  printf '预测：扩大连接池后，CPU 先满，goroutine 调度等待上升。\n'
-} | tee runtime/r2-prediction.txt
+taskset -c 1 bin/enrolld -pool 41
 ```
 
-### R2 加压
+终端 C：
 
 ```bash
-start_svc re-r2 -pool "$R2_POOL" -sync each
-RATES=$(scripts/rates.sh "$R2_C" 0.3 0.6 0.8 0.9 1.0 1.1 1.25 1.5)
-scripts/run.sh re-r2 -url "$SVC/api/courses/1" \
-  -rates "$RATES" -step 30s -seed 1
-cp runtime/r2-prediction.txt runs/re-r2/
-scripts/table.sh runs/re-r2 \
+RATES=$(scripts/rates.sh 1939 0.3 0.6 0.8 0.9 1.0 1.1 1.25 1.5)
+scripts/run.sh re-r2-pool41 -url http://127.0.0.1:8080/api/courses/1 -rates "$RATES"
+scripts/table.sh runs/re-r2-pool41 \
   ok_rps error_rate p99_ms cpu_cores cpu_ms_per_req cpu_wait_threads \
   sched_wait_p99_ms pool_in_use_avg svc_cpu_busy procs_running_avg cpu_psi_some
 ```
 
-本组最高健康阶段为 2130.8 请求/秒，服务核忙碌约 93.75%，池等待很短。目标升至 2424 后服务核接近满载、调度等待剧增，客户端错误率约 70.6%，工具停止后续阶段。
+历史最高健康阶段为 2130.8 请求/秒，服务核忙碌约 93.75%。目标升到 2424 后 CPU 接近满载，调度等待和错误率剧增，工具停止后续档位。
 
-第 7 档还有独立的测量问题：发送滞后 p99=31.91 ms；25 秒内只有三次 enrolld 抓取成功。`cpu_cores=0.128813` 不能解释为 CPU 很空。同期 `pidstat`、`mpstat` 证明服务已满载，原始结果仍保留。
+该过载档还出现 31.91 ms 的发送滞后，25 秒内只有三次 enrolld 指标抓取成功。因此服务端 `cpu_cores=0.128813` 失真，不能解释为 CPU 空闲；同期 pidstat、mpstat 显示满载。复现时同时检查 `steps.csv` 的 `warn`、目标 `up` 和原始工具日志。
 
-复现时可在当前阶段结束时间检查抓取覆盖。下例自动取最后一个实际阶段：
+### 课程联系
 
-```bash
-END=$(python3 - <<'PY'
-import csv
-rows = [r for r in csv.DictReader(open('runs/re-r2/steps.csv')) if r['step'] != 'all']
-print(rows[-1]['end_unix'])
-PY
-)
-for query in \
-  'avg_over_time(up{job="enrolld"}[25s])' \
-  'count_over_time(process_cpu_seconds_total{job="enrolld"}[25s])'; do
-  curl -fsSG "$PROM/api/v1/query" \
-    --data-urlencode "query=$query" --data-urlencode "time=$END"
-  printf '\n'
-done
-```
-
-### 常见追问
-
-| 追问 | 回答要点 |
+| 追问 | 回答 |
 |---|---|
-| 为什么扩池后吞吐没有按池大小同比增加？ | 扩池只解除连接并发限制，随后由 CPU 等其他资源决定上限。 |
-| `GOMAXPROCS=1` 是否只有一个线程？ | 它限制同时执行 Go 代码的线程数量，进程仍有多个 OS 线程。goroutine 可排在运行时队列中。 |
-| CPU PSI 不高，能排除 CPU 饱和吗？ | PSI 观察内核任务等待，不能完整表示 Go 运行时的可运行 goroutine 队列。还需看服务核和调度延迟。 |
-| 这与 Tomcat 有何相似？ | 请求可在线程池或应用队列中等待，内核运行队列无法直接表示全部应用层积压。 |
-| 为什么查询占用大于 10 ms？ | 休眠到期后还要重新获得执行机会，并完成连接释放等操作。 |
-| 为什么低负载预测偏低？ | 固定成本被摊薄、调度和缓存状态变化会改变单请求 CPU；本组只证实了开销随负载下降，未分别量化每个原因。 |
-| 等待会“稀释”每请求 CPU 吗？ | 指标是 CPU 增量除以请求增量，等待不会直接增加分母。过载时应检查完成统计、窗口和抓取失败。 |
+| 为什么不是线程池先满？ | L-06 第 31 页要求分别算上限。本例池容量约 384、CPU 约 1853，连接池更低。Go 的并发单位也不同于 Tomcat 平台线程。 |
+| 扩大连接池为什么有效？ | R1 的等待发生在池前；扩池解除这层限制，之后由 CPU 限制。对应 L-06 第 32～33 页的瓶颈迁移。 |
+| 真实数据库能一直扩池吗？ | 不能。L-06 第 19 页指出数据库自身并行能力有限。示例只休眠，没有模拟数据库 CPU、锁和磁盘竞争。 |
+| `GOMAXPROCS=1` 是否只有一个线程？ | 它限制同时执行 Go 代码的线程数，进程仍可有多个 OS 线程。goroutine 在运行时内排队，内核队列不能反映全部积压。见 L-06 第 13、17～18 页。 |
+| 为什么未到上限，p99 已上升？ | 随机到达会短时占满资源。L-07 第 6 页用排队模型说明接近满负载时等待增长，需要预留容量。 |
+| 低负载开销能精确预测上限吗？ | 固定成本、缓存和调度随负载变化。本组每请求 CPU 随负载下降，所以低负载预测偏保守。 |
 
-## 写路径
+### 交给任务 3
 
-### 预测 W1
+保留 R2 服务和两个监控进程，交出 R1、R2、pprof 结果。明确告知下一位成员：当前 enrolld 是 `-pool 41`，仍为默认 each 模式；写路径需要停止它并按任务 3 的命令重启。
 
-A 执行，从本次三次基线取均值：
+## 任务 3
 
-```bash
-python3 - <<'PY' > runtime/write.env
-import re
-from pathlib import Path
-text = Path('runs/re-t0/bench-fsync-2000.txt').read_text()
-means = [float(x) for x in re.findall(r'mean\s+([0-9.]+)', text)]
-assert len(means) == 3
-mean = sum(means) / len(means)
-print(f'FSYNC_MEAN_MS={mean:.6f}')
-print(f'WRITE_BASE={round(1000 / mean)}')
-PY
-source runtime/write.env
-{
-  date -Is
-  cat runtime/write.env
-  printf '预测：each 先受串行 fsync 限制；HTTP 和 write 会使实测低于粗略上限。\n'
-} | tee runtime/w1-prediction.txt
-```
+负责人：1JI0O。接收监控进程、任务 0 的 fsync 基线和任务 2 的 CPU 拆分。可以使用仓库已提交的 `runs/t0-baseline/`、`runs/r1-pool4/` 数据，不依赖上一位成员的 Shell 变量。
 
-在预测文件补上本次 pprof 中“非 spin CPU × 预测 TPS ÷ 1000”的核数估计。历史预测为 734×0.0915/1000≈0.067 核，实际 W1 达到约 0.130 核，说明读路径剩余成本低估了 write/fsync 开销。
+若终端 C 是新开的，先执行“开始之前”的 SSH、目录和 PATH 命令。若监控已停止，按任务 1 的终端 B 命令启动。开始写实验前，终端 A 停止旧 enrolld。
 
-### 三种模式
+### W1 预测
 
-| 模式 | 代码行为 | 成功响应意味着什么 |
-|---|---|---|
-| each | 互斥锁内 write，然后 fsync | 本次记录已等到同步完成 |
-| group | 后台取当前排队记录，合并 write、fsync，再通知等待者 | 所在批次已等到同步完成 |
-| interval | write 后返回，后台按周期 fsync | 已写页缓存，尚可能未持久化 |
+本组 fsync 平均 1.363 ms，each 粗略上限为 734 TPS。按非 spin 开销 0.0915 ms/请求估计 CPU 需求：
 
-组提交没有为了攒批额外设置定时等待；当前实现每批最多 1024 条。负载增加时，在前一批同步期间到来的记录自然形成下一批。
+\[
+734\times0.0915/1000\approx0.067\text{ 核}
+\]
+
+这个估计未充分包含 write/fsync 系统调用，实测约 0.130 核。预测应先写下，再讨论偏差。L-07 第 14 页给出按同步延迟和次数推算写上限的方法。
 
 ### W1 测量
 
-```bash
-export SLO=0.02
-BODY='{"student":"s{{seq}}","course":"c1"}'
-WRITE_COLS=(ok_rps error_rate p99_ms server_p99_ms cpu_cores
-  fsync_per_s fsync_mean_ms batch_mean svc_cpu_busy cpu_iowait
-  disk_w_per_s disk_w_await_ms disk_f_per_s disk_f_await_ms disk_aqu_sz disk_util)
+下面的 `rm` 只清空用于压测的选课日志；需要保存旧日志时先另存。终端 A：
 
-start_svc re-w1 -sync each
-RATES=$(scripts/rates.sh "$WRITE_BASE" 0.2 0.4 0.6 0.8 0.9 1.0 1.1 1.2)
-scripts/run.sh re-w1 -url "$SVC/api/enroll" -body "$BODY" \
-  -rates "$RATES" -step 30s -seed 1
-cp runtime/w1-prediction.txt runs/re-w1/
-scripts/table.sh runs/re-w1 "${WRITE_COLS[@]}"
+```bash
+rm -f data/enroll.log
+taskset -c 1 bin/enrolld -sync each
 ```
 
-本组最大客户端成功吞吐为 729.5 TPS，服务端同期约 704 TPS。继续加压后 fsync 速率不再增加，排队和客户端超时迅速增加。单写者串行同步提交达到上限。
+终端 C：
 
-客户端按计划发送阶段归属请求，阶段结束后完成的成功请求也归入该阶段。服务端统计完成时间窗口，因此 729.5 和 704 的差异不能全部归因于测量误差。
+```bash
+export GEN_CPUS=0
+export SLO=0.02
+B='{"student":"s{{seq}}","course":"c1"}'
+RATES=$(scripts/rates.sh 734 0.2 0.4 0.6 0.8 0.9 1.0 1.1 1.2)
+scripts/run.sh re-w1-each -url http://127.0.0.1:8080/api/enroll -body "$B" -rates "$RATES"
+scripts/table.sh runs/re-w1-each \
+  ok_rps error_rate p99_ms server_p99_ms cpu_cores \
+  fsync_per_s fsync_mean_ms batch_mean svc_cpu_busy cpu_iowait \
+  disk_w_per_s disk_w_await_ms disk_f_per_s disk_f_await_ms disk_aqu_sz disk_util
+```
+
+本组客户端最大成功吞吐为 729.5 TPS，服务端同期约 704 TPS，p99 已达 1175.70 ms。继续加压后 fsync 速率不再增加，客户端大量超时，说明串行同步提交达到上限。
 
 ### W2 测量
 
-先查看 W1 接近上限阶段的 fsync 均值、p99，再写预测。历史上在 734 TPS 下预测成功吞吐约 734、平均批量约 1.5、p99 约 15 ms。理由是一次 fsync 期间平均到来约 `734×0.001393≈1.02` 条新记录；到达与批次边界会影响实际批量。
+先预测 group 的吞吐、批量和 p99。本组在 734 TPS 目标下预测约 734 TPS、1.5 条/批、15 ms。一次 fsync 期间平均到来约 `734×0.001393≈1.02` 条新记录，等待期间的记录可合成下一批。
+
+终端 A 按 Ctrl-C，等 each 服务退出后执行：
 
 ```bash
-{
-  date -Is
-  printf '目标基准为 %s TPS。\n' "$WRITE_BASE"
-  printf '预测：group 将减少每请求 fsync 次数，成功吞吐接近到达率，排队延迟下降。\n'
-  printf '采用本组历史数据提出本轮假设：batch_mean 约 1.5，p99 约 15 ms；同步期间到来的请求会合并。\n'
-} > runtime/w2-prediction.txt
-# 若本次 W1 的 fsync 耗时与历史值明显不同，先调整上述两个预测值。
-
-start_svc re-w2 -sync group
-RATES=$(scripts/rates.sh "$WRITE_BASE" 0.4 0.8 1.0 1.5 2 3 4)
-scripts/run.sh re-w2 -url "$SVC/api/enroll" -body "$BODY" \
-  -rates "$RATES" -step 30s -seed 1
-cp runtime/w2-prediction.txt runs/re-w2/
-scripts/table.sh runs/re-w2 "${WRITE_COLS[@]}"
+rm -f data/enroll.log
+taskset -c 1 bin/enrolld -sync group
 ```
 
-历史上同为 734 TPS 目标，W1 p99=1175.70 ms，W2 p99=8.72 ms，平均批量为 1.41283。W2 最高成功吞吐为 2927.5 TPS，p99=10.46 ms；这是测到的最高档，尚未达到 group 的最终上限。
+终端 C 沿用本任务的 `GEN_CPUS=0`、`SLO=0.02` 和请求体变量 `B`：
+
+```bash
+RATES=$(scripts/rates.sh 734 0.4 0.8 1.0 1.5 2 3 4)
+scripts/run.sh re-w2-group -url http://127.0.0.1:8080/api/enroll -body "$B" -rates "$RATES"
+scripts/table.sh runs/re-w2-group \
+  ok_rps error_rate p99_ms fsync_per_s fsync_mean_ms batch_mean cpu_cores disk_util
+```
+
+同为 734 TPS 目标，本组 W2 实测批量 1.41283，p99 为 8.72 ms。最高档成功吞吐为 2927.5 TPS，p99 为 10.46 ms。group 将多条记录共享一次 fsync，仍在同步完成后确认。
 
 ### W3 测量
 
+终端 A 按 Ctrl-C，等 group 服务退出后执行：
+
 ```bash
-start_svc re-w3 -sync interval -sync-interval 1s
-RATES=$(scripts/rates.sh "$WRITE_BASE" 0.4 1.5 4)
-scripts/run.sh re-w3 -url "$SVC/api/enroll" -body "$BODY" \
-  -rates "$RATES" -step 30s -seed 1
-scripts/table.sh runs/re-w3 "${WRITE_COLS[@]}"
-export SLO=0.05
+rm -f data/enroll.log
+taskset -c 1 bin/enrolld -sync interval
 ```
 
-历史最高同档下，W3 p99 为 1.92 ms，W2 为 10.46 ms；W3 每秒约一次 fsync。成功响应提前到了页缓存写入完成，机器掉电可能丢失尚未同步的已确认记录。默认周期为一秒，实际窗口还受到调度、同步耗时和同步失败影响。
+终端 C 继续沿用本任务的三个变量：
 
-### 常见追问
+```bash
+RATES=$(scripts/rates.sh 734 0.4 1.5 4)
+scripts/run.sh re-w3-interval -url http://127.0.0.1:8080/api/enroll -body "$B" -rates "$RATES"
+scripts/table.sh runs/re-w3-interval \
+  ok_rps error_rate mean_ms p99_ms fsync_per_s batch_mean cpu_cores disk_util
+unset SLO
+```
 
-| 追问 | 回答要点 |
+最后的 `unset SLO` 恢复读路径默认的 50 ms。最高同档下，本组 W3 p99 为 1.92 ms，W2 为 10.46 ms。W3 每秒约一次 fsync，成功响应时记录可能仍在页缓存。
+
+### 课程联系
+
+| 追问 | 回答 |
 |---|---|
-| group 是否牺牲持久性？ | 本实现仍等所在批次 fsync 成功后返回，合并的是同步次数。底层存储须正确履行同步语义。 |
-| 为什么相同 `%util`，吞吐相差四倍？ | 同样一次 fsync 可以确认不同数量的记录。磁盘忙碌比例不等于业务吞吐。 |
-| 三次 write 的 await 加两次 flush 的 await 能还原 fsync 吗？ | 不行。设备请求可能重叠，采样窗口不同，fsync 还包含文件系统处理。 |
-| W3 吞吐与 W2 相近，是否上限相同？ | 两者只是都跟上了当前到达率，需要继续加压才能比较最终上限。 |
-| 强制杀进程能模拟掉电吗？ | 不能。杀进程后操作系统和页缓存仍存在，内核仍可能写回数据。 |
-| 选课记录选哪种？ | 本实验支持 group：同步确认、较低尾延迟、较高吞吐。interval 适合允许近期数据丢失或可可靠重放的场景。 |
+| each 的锁与磁盘有什么关系？ | each 在互斥锁内执行 write 和 fsync，持锁期间包含磁盘等待。对应 L-07 第 25 页“磁盘慢使锁持有时间延长”。 |
+| 课件算出 250 TPS，本组为何约 734？ | L-07 第 14、25 页采用 2 ms、每事务两次 fsync 的设定；本组 each 每条一次，平均约 1.363 ms。输入条件不同。 |
+| group 是否等于定时攒批？ | 本实现取走当前排队记录，没有额外攒批定时器，每批最多 1024 条；前一批同步期间到来的请求形成下一批。 |
+| `%util` 相近，吞吐为什么相差四倍？ | 每次同步确认的记录数不同。忙碌时间不能直接换成业务 TPS。 |
+| 应用 fsync 与设备 await 为什么不同？ | 应用同步包含文件系统处理和多次 I/O；await 按单个设备请求计。请求可能重叠，不能简单相加。 |
+| interval 的一秒是否严格丢失上限？ | 默认周期是一秒，实际风险窗口还受调度、同步耗时和同步失败影响。本实验未模拟掉电。 |
+| 选课记录应选哪种？ | 本组数据支持 group：同步后确认，同时减少排队。interval 适合允许近期数据丢失或可可靠重放的场景。 |
 
-## 数据分析
+### 交给任务 4
 
-### 资源账
+交出 W1/W2/W3 的 CSV、日志和预测。当前 enrolld 为 interval、默认池大小 4，监控仍可保留给选做实验；终端 C 的 SLO 已恢复默认。任务 4 只分析已保存数据，不要求保留这些进程。
 
-答辩时按“容量 ÷ 每请求占用”计算，并同时说明占用的单位。
+## 任务 4
 
-| 资源 | 容量单位 | 每请求占用 | 换算 |
-|---|---|---|---|
-| CPU | 可用核数 | CPU 秒/请求 | 核数 ÷ CPU 秒/请求 |
-| 连接池 | 连接数 | 连接占用秒/请求 | 连接数 ÷ 占用秒/请求 |
-| 串行 fsync | 一个同步写者 | 秒/次同步 | 1 ÷ 同步秒数；group 再乘平均批量 |
-| 网络 | bit/s | bit/响应 | 可用带宽 ÷ 响应体 bit 数，另计协议开销 |
+负责人：Mikujoker。直接读取仓库中的结果，不需要继承上一位成员的变量，也不需要重新启动服务器。下面使用已提交的历史目录；分析本轮复现时，将目录换成三位成员交出的 `re-` 目录。
 
-“上限”描述资源接近饱和时的处理能力，“容量”还要满足错误率和延迟目标。R1 的 384.4 请求/秒已经有少量 503 且 p99 约一秒；50 ms 目标下只测到 311.1 请求/秒。
+### 整理数据
 
-### 利特尔定律
+在自己的 Mac 仓库执行：
+
+```bash
+cd ~/Documents/ops-lab2-8
+git pull --ff-only
+scripts/table.sh runs/r1-pool4 \
+  ok_rps p99_ms server_rps server_mean_ms inflight_avg pool_in_use_avg svc_cpu_busy
+scripts/table.sh runs/r2-pool41 \
+  ok_rps p99_ms cpu_ms_per_req sched_wait_p99_ms svc_cpu_busy
+scripts/table.sh runs/w1-each ok_rps p99_ms fsync_per_s batch_mean disk_util
+scripts/table.sh runs/w2-group ok_rps p99_ms fsync_per_s batch_mean disk_util
+scripts/table.sh runs/w3-interval ok_rps p99_ms fsync_per_s batch_mean disk_util
+```
+
+每题先明确数据出处、测量位置和窗口，再给出结论。需要额外查询时，只要原 Prometheus TSDB 仍在，可在主机 A 用 `scripts/requery.sh runs/<名字>` 重算；该命令会更新对应 CSV，修改前保留旧结果。
+
+### 问题一
+
+资源上限按“容量 ÷ 每请求占用”计算。L-06 第 31 页的资源表和 L-07 第 25 页的资源账都要求逐项比较，不能凭 CPU、内存、带宽三个百分比猜瓶颈。
+
+| 资源 | 本组计算 | 实测与结论 |
+|---|---|---|
+| R1 连接池 | `4÷0.0104262≈384 req/s` | 最高成功吞吐 384.4，池先饱和 |
+| R2 CPU | `1÷0.000515729≈1939 req/s` | 最高健康阶段 2130.8，实测单请求 CPU 降低 |
+| W1 串行同步 | `1000÷1.363≈734 TPS` | 客户端最高 729.5，服务端同期约 704 |
+
+L-07 第 6 页用 M/M/1 模型说明排队趋势：平均响应时间为 `服务时间÷(1−利用率)`。利用率从 0.5 升到 0.9 时，均值从两倍服务时间升到十倍。课件的“上限×0.7”用于预留余量。本例有四个连接和近似固定的休眠时间，不满足该模型的全部假设，不能直接用它计算 R1 的 p99。
+
+R1 满足 p99≤50 ms 的最高阶段为 311.1 请求/秒，占预测上限约 81%。上限与满足延迟目标的容量不同；后者还取决于目标和到达波动。
+
+### 问题二
+
+L-06 第 16 页的 Little's Law 为：
 
 \[
 L=\lambda W
 \]
 
-L 是平均在途数，λ 是同一系统边界内的平均流率，W 是平均逗留时间。三个量应针对相同请求集合和稳定窗口。使用毫秒时要除以 1000。
+三个量应对应相同系统边界和近似稳定窗口，W 必须取平均耗时。用 `server_rps×server_mean_ms÷1000` 计算 R1 的在途数：
 
-在 A 核对本轮 R1：
+| R1 阶段 | λW | inflight_avg | 相对实测差异 |
+|---|---|---|---|
+| 3 | 2.759 | 2.16 | +27.7% |
+| 6 | 7.550 | 6.52 | +15.8% |
+| 9 | 464.608 | 463.6 | +0.2% |
 
-```bash
-python3 - <<'PY'
-import csv
-for row in csv.DictReader(open('runs/re-r1/red.csv')):
-    if row['step'] in ('3', '6', '9'):
-        predicted = float(row['server_rps']) * float(row['server_mean_ms']) / 1000
-        measured = float(row['inflight_avg'])
-        print(row['step'], f'lambda_W={predicted:.3f}', f'inflight={measured:.3f}',
-              f'difference={(predicted/measured-1)*100:.1f}%')
-PY
-```
+在途数较小、采样只有约 25 次时，瞬时采样均值容易波动；窗口切换和 rate 外推也会带来差异。p99 只描述尾部位置，代入后不再是平均在途数。
 
-历史三个阶段为 2.759 对 2.16、7.550 对 6.52、464.608 对 463.6。小在途数、有限采样、阶段切换和速率外推会造成偏差。p99 是分布尾部的位置，无法代替平均时间 W。
+解释 R2 时区分两层排队：内核观察可运行 OS 线程，Go 还会在运行时队列中等待执行 goroutine。L-06 第 13、17～18 页说明并发模型改变等待位置，但 CPU、连接池和锁的上限仍然存在。
 
-### 延迟与分位数
+### 问题三
 
-客户端包含发送滞后、网络和内核收发、进入 handler 前的调度、读完响应体等时间。服务端计时开始后发生的调度等待仍包含在 handler 耗时中。
+比较相同目标到达率下的各模式。历史 734 TPS 档，W1 p99=1175.70 ms，W2 p99=8.72 ms；W2 的批量约 1.41。更高负载下批量继续增加，从而摊薄同步开销。
 
-服务端 p99 有时更大，是因为两端样本集合、窗口不同，且直方图按桶内分布插值。R1 第 9 阶段客户端为 1012.18 ms，服务端为 1987.34 ms，宽达一秒的桶造成明显误差。W1 的 5000 ms 对应 p99 落入 +Inf 桶后的返回边界，不能当作精确尾延迟。
+L-07 第 14 页区分 write 返回与 fsync 返回，第 25 页进一步说明锁持有期间的 I/O 等待。group 保留同步后确认；interval 提前确认，代价是掉电时可能丢失尚未同步的记录。不能把 W3 的低延迟直接描述成无代价的优化。
 
-在 A 比较平均 p99 和总样本 p99：
+### 问题四
 
-```bash
-python3 - <<'PY'
-import csv
-rows = list(csv.DictReader(open('runs/re-r1/steps.csv')))
-steps = [r for r in rows if r['step'] != 'all']
-combined = next(r for r in rows if r['step'] == 'all')
-print('阶段 p99 的平均：', sum(float(r['p99_ms']) for r in steps) / len(steps))
-print('合并样本的 p99：', combined['p99_ms'])
-PY
-```
+| 口径 | 客户端 | 服务端 |
+|---|---|---|
+| 吞吐 | 成功 2xx 数 ÷ 阶段时长 | 完成计数的速率，含失败状态 |
+| 延迟样本 | 只统计成功请求 | 直方图包含各状态码 |
+| 计时 | 计划发送至读完响应体 | 进入 handler 至 handler 返回 |
+| 窗口 | 完整阶段 | 去掉前 5 秒 |
 
-历史结果为 358.47 ms 对 1011.35 ms。正确合并方法是合并原始样本再排序，或合并同桶边界、互不重叠窗口的桶计数增量后计算分位数。只剩各阶段 p99 时，无法恢复总体 p99；按请求数加权平均 p99 也不成立。
+客户端还包含发送滞后、网络传输、内核排队和进入 handler 前的等待。handler 内发生的调度等待仍在服务端计时中。
 
-### 错误预算
+L-06 第 22 页强调平均值无法表示尾部。各阶段 p99 也不能直接平均：本组 R1 的阶段 p99 平均为 358.47 ms，总样本重新计算为 1011.35 ms。正确做法是合并原始样本，或合并相同桶边界、互不重叠窗口的桶计数增量后再算分位数。
 
-本实验读 SLO 为 30 天内 99% 的请求在 50 ms 内成功。错误预算比例为 1%。
+服务端直方图 p99 有桶内插值误差。R1 第 9 档服务端为 1987.34 ms、客户端为 1012.18 ms，宽桶是主要原因；W1 的 5000 ms 对应 p99 落入 +Inf 桶后的有限边界返回值。
 
-\[
-\text{燃烧率}=\frac{1-\text{SLI}}{1-0.99},\qquad
-\text{耗尽时间}\approx\frac{30\text{ 天}}{\text{燃烧率}}
-\]
+SLO=99% 时，预算比例为 1%。R1 第一个不达标阶段的客户端 SLI=0.9664，因此燃烧率为 `(1−0.9664)÷0.01=3.36`。若流量水平和不良率持续，30 天预算约 `30÷3.36=8.93` 天耗尽。端到端 SLI 应尽量靠近用户，服务端埋点用于评价本服务处理质量。
 
-第二个公式假定后续流量水平和不良率持续不变。请求型预算取决于请求量，不能无条件当作固定的停机时长。
+### 完成交接
 
-历史 R1 首个不达标阶段是第 6 档：客户端 SLI=0.9664，燃烧率 3.36，约 8.93 天耗尽预算；服务端 SLI=0.960663，约 3.9337 倍、7.63 天。两种口径分别计算，不能混用分子分母。
-
-对外承诺的 SLI 应尽量靠近用户，例如入口或客户端。服务端埋点适合判断 handler 处理质量，但看不到未到达服务的请求和部分网络故障。相关原理见 [Google SRE](https://sre.google/workbook/implementing-slos/)；直方图合并见 [Prometheus](https://prometheus.io/docs/practices/histograms/)。
+把分析与引用整理进 LAB2，并核对数字能在 CSV 或日志中找到。原始输出、历史预测保持原样。若后面不再做选做实验，通知前面成员按“结束实验”停止服务；已保存的 CSV 不依赖进程继续运行。
 
 ## 选做实验
 
+选做可接着任务 3 做，沿用两个监控进程；每次只在终端 A 停止并重启 enrolld。单独做选做时，先按任务 1 启动服务和监控。终端 C 重新设置 `export GEN_CPUS=0`、`unset SLO`，使用默认 50 ms 阈值。
+
 ### O1 内存
 
-目的：在同一分配速率下，比较 GC 频次、GC CPU、RSS 与 p99。每次 `/api/report?mb=4` 分配 4 MiB，100 请求/秒对应名义分配速率 400 MiB/s；临时对象可回收，RSS 通常不会按该速率持续增长。
+负责人：VigilLover。先记录预测：GOGC=400 允许更大的堆增长空间，预计 GC 次数和 GC CPU 减少、RSS 增加；p99 变化由实测判断。
 
-在 A 记录预测，再依次跑 100→400→400→100。每次启动全新服务进程，以减少前一次堆状态的影响。
+终端 A 按 Ctrl-C 停止原服务，启动第一组：
 
 ```bash
-{
-  date -Is
-  printf '预测：GOGC=400 比 100 的 GC 次数与 GC CPU 更低，RSS 更高；p99 的变化由实测判断。\n'
-  printf '固定 100 req/s、60 秒、4 MiB/请求，反序再做一轮。\n'
-} > runtime/o1-prediction.txt
+GOGC=100 taskset -c 1 bin/enrolld
+```
 
-export SLO=0.05
-for item in 100-first 400-first 400-repeat 100-repeat; do
-  gc=${item%%-*}
-  name="re-o1-$item"
-  LAB_GOGC="$gc" start_svc "$name" -sync each
-  scripts/run.sh "$name" -url "$SVC/api/report?mb=4" \
-    -rates 100 -step 60s -seed 1
-  cp runtime/o1-prediction.txt "runs/$name/"
-  cp deploy/queries-o1-gc.txt "runs/$name/"
-  # O1 查询文件包含原 RED 查询，并增加 GC、RSS、heap。
-  bin/promsteps -steps "runs/$name/steps.csv" -prom "$PROM" \
-    -queries deploy/queries-o1-gc.txt \
-    -var route=/api/report -var slo=0.05 -var cpus=1 -var disk=vda \
+终端 C：
+
+```bash
+scripts/run.sh re-o1-gc100 -url 'http://127.0.0.1:8080/api/report?mb=4' -rates 100 -step 60s
+```
+
+第一组结束，终端 A 按 Ctrl-C，启动第二组：
+
+```bash
+GOGC=400 taskset -c 1 bin/enrolld
+```
+
+终端 C：
+
+```bash
+scripts/run.sh re-o1-gc400 -url 'http://127.0.0.1:8080/api/report?mb=4' -rates 100 -step 60s
+for name in re-o1-gc100 re-o1-gc400; do
+  bin/promsteps -steps "runs/$name/steps.csv" \
+    -queries deploy/queries-o1-gc.txt -var route=/api/report -var slo=0.05 \
     > "runs/$name/red.csv"
-  scripts/table.sh "runs/$name" ok_rps p99_ms gc_cycles_delta gc_cpu_delta_s rss_avg_mib
+  scripts/table.sh "runs/$name" ok_rps p99_ms rss_avg_mib
+  grep -E '^go_gc_(cycles_total|cpu_seconds_total) ' "runs/$name/metrics-start.txt" "runs/$name/metrics-end.txt"
 done
 ```
 
-PromQL 的 `increase()` 会进行外推，覆盖去掉前 5 秒的窗口。若要与 LAB2 的 GC 增量表采用相同口径，使用起止 `/metrics` 的直接差值：
+最后两项 GC 计数用结束值减开始值。RSS 用阶段均值，p99 用客户端结果。`queries-o1-gc.txt` 包含原 RED 查询，另外增加内存与 GC 查询；不需要改服务代码。若做反序复测，按 400→100 再运行一遍，结果目录增加 `-repeat` 后缀。
 
-```bash
-python3 - <<'PY'
-import csv
-from pathlib import Path
+历史两轮均观察到 GC 次数减少约 75%、GC CPU 减少约 72%，RSS 从约 11 MiB 增至 25.4 MiB，p99 降低约 63%～65%。L-06 第 7、12 页说明堆只是进程内存的一部分，堆大小和 GC 成本需要权衡；本次 Go 实验体现相同的取舍，但 GC CPU 不等于 JVM 的 STW 暂停时间，也不能由 GOGC 推出 RSS 的固定倍数。
 
-def counters(path):
-    return {parts[0]: float(parts[1])
-            for line in path.read_text().splitlines()
-            if line and not line.startswith('#')
-            for parts in [line.split()] if len(parts) == 2}
-
-for name in ('100-first', '400-first', '400-repeat', '100-repeat'):
-    root = Path('runs') / f're-o1-{name}'
-    start = counters(root/'metrics-start.txt')
-    end = counters(root/'metrics-end.txt')
-    red = next(csv.DictReader((root/'red.csv').open()))
-    step = next(csv.DictReader((root/'steps.csv').open()))
-    print(name,
-          'GC=', end['go_gc_cycles_total'] - start['go_gc_cycles_total'],
-          'GC_CPU_s=', end['go_gc_cpu_seconds_total'] - start['go_gc_cpu_seconds_total'],
-          'RSS_MiB=', red['rss_avg_mib'], 'p99_ms=', step['p99_ms'])
-PY
-```
-
-历史两轮中，GC 次数减少约 75%，GC CPU 减少约 72%，RSS 从约 11 MiB 增至 25.4 MiB，p99 降低约 63%～65%。这是以更多内存换取更少回收开销，未测吞吐上限。
-
-GOGC 调节堆增长目标，目标还受存活对象、GC roots 和内存限制影响；`GOGC=400` 不表示 RSS 必须是原来的四倍。RSS 包含进程实际驻留的多种内存，GC 回收对象后也不一定立即归还给操作系统。GC CPU 表示累计执行成本，不能当作 STW 暂停时间。与 JVM 的联系是堆空间和回收成本之间的取舍，具体回收器机制并不相同。参见 [Go GC 指南](https://go.dev/doc/gc-guide)。
+完成后终端 A 按 Ctrl-C。下一项直接启动普通 `taskset` 命令即可，前面的 `GOGC=400` 只作用于那次服务进程。
 
 ### O2 网络
 
-目的：使用真实内网传输大响应，观察吞吐平台、发送队列、重传及两端 CPU。回环压测不经过物理网络路径，无法代替此实验。
+目的：让 B 直接请求 A 的大响应接口，观察实际内网路径。先记录带宽需求和饱和预期，再开始测量。
 
-单响应 256 KiB=262144 字节。仅响应体的带宽需求为：
+两台主机内网地址为 A=`192.168.0.134`、B=`192.168.0.142`。指导书要求云安全组只允许 B 访问 A 的 8080；本组历史实验采用主机防火墙隔离，差异已记入 LAB2。若按历史方式复现，在当前主机防火墙允许内网通信的基础上，终端 C 临时拒绝其他来源访问实验端口：
+
+```bash
+sudo iptables -I INPUT 1 ! -i lo -p tcp --dport 8080 ! -s 192.168.0.142/32 -j REJECT --reject-with tcp-reset
+sudo ip6tables -I INPUT 1 ! -i lo -p tcp --dport 8080 -j REJECT --reject-with tcp-reset
+```
+
+第一条只限制 IPv4 的其他来源，第二条防止双栈监听通过 IPv6 绕过限制。它们不改 SSH 或监控端口。若需要严格按指导书验收，还需在云控制台核对对应安全组规则。
+
+终端 A 确认旧服务已退出，启动：
+
+```bash
+taskset -c 1 bin/enrolld -addr 0.0.0.0:8080
+```
+
+终端 C 保存 A 的网络采样：
+
+```bash
+mkdir -p runs/re-o2
+sar -n DEV,ETCP 1 > runs/re-o2/sar.log &
+SAR_PID=$!
+```
+
+另开一个终端登录主机 B。B 已有从 A 复制的 Linux loadgen，无需安装 Go 或从外网克隆仓库：
+
+```bash
+ssh se-devops2
+cd ~/lab2-o2
+mkdir -p runs/re-o2
+taskset -c 0,1 ./loadgen -url 'http://192.168.0.134:8080/api/export?kb=256' \
+  -rates 100,250,400,500,700,1000,1500,2500 -step 30s \
+  -out runs/re-o2/steps.csv 2>&1 | tee runs/re-o2/loadgen.log
+```
+
+加压期间，在终端 C 查看并保存 TCP 状态：
+
+```bash
+ss -tin '( sport = :8080 and dst 192.168.0.142 )' | tee runs/re-o2/ss.txt
+```
+
+重点看发送队列、RTT 和 retrans。可以在低负载、高负载各执行一次，用不同文件名保存。O2 直接运行 loadgen，因为 `run.sh` 要求负载端与服务端在同一台主机。
+
+B 完成后，在终端 C 停止 sar，在终端 A 按 Ctrl-C 关闭对外监听，再由终端 C 撤销本次两条规则：
+
+```bash
+kill "$SAR_PID"
+sudo iptables -D INPUT ! -i lo -p tcp --dport 8080 ! -s 192.168.0.142/32 -j REJECT --reject-with tcp-reset
+sudo ip6tables -D INPUT ! -i lo -p tcp --dport 8080 -j REJECT --reject-with tcp-reset
+```
+
+若高负载时单服务核满载，可按本组已经完成的对照再测一组：A 用 `GOMAXPROCS=2 taskset -c 0,1 bin/enrolld -addr 0.0.0.0:8080`，B 用 800、1000、1200 请求/秒，每档 45 秒；重新设置并清理临时访问规则，使用新的结果目录。答辩时也可直接展示已提交的双核对照，不必每次重跑。
+
+L-07 第 18～21 页要求分开核算往返和字节数：
 
 \[
-B=r\times262144\times8\text{ bit/s}
+\text{网络耗时}\approx\text{往返次数}\times RTT+\frac{\text{数据量}}{\text{带宽}}
 \]
 
-1000 请求/秒约为 2.097 Gbit/s。`sar` 的 txkB/s 以 KiB/s 表示，因此换算为 Gbit/s 时乘 1024×8，再除以 10⁹；应用成功吞吐只计算完整成功响应，接口字节计数还包含其他流量和协议处理。
+\[
+\text{带宽需求}=r\times256\times1024\times8\text{ bit/s}
+\]
 
-#### 准备 B
-
-在 Mac 终端执行：
-
-```bash
-source /tmp/lab2-repro-session.env
-ssh se-devops2 "mkdir '$B_REPRO_DIR'"
-ssh se-devops "cat '$REPRO_DIR/bin/loadgen'" > "/tmp/loadgen-$REPRO_TAG"
-scp "/tmp/loadgen-$REPRO_TAG" "se-devops2:$B_REPRO_DIR/loadgen"
-ssh se-devops2 "chmod +x '$B_REPRO_DIR/loadgen'; command -v sar; command -v mpstat"
-```
-
-#### 采集 A
-
-以下脚本在 A 的复现目录创建。它只管理 18080 的实验监听与临时防火墙规则，不停止原 8080 服务。当前本组采用主机防火墙完成隔离，与指导书指定的云安全组操作不同；若现场按指导书逐项验收，应同时在云控制台核对仅 B 的内网地址获准访问实验端口，并在结束后撤销临时安全组规则。
-
-```bash
-cat > runtime/o2-server.sh <<'SH'
-#!/usr/bin/env bash
-# 在 A 采集网络负载，退出时关闭实验服务并撤销临时规则。
-set -euo pipefail
-source "$(dirname "$0")/../env.sh"
-name=${1:?用法：o2-server.sh 实验名 CPU列表 GOMAXPROCS}
-cpus=${2:-1}
-procs=${3:-1}
-run_dir="$LAB_ROOT/runs/$name"
-mkdir "$run_dir"
-collectors=()
-chain=LAB2_REPRO
-sudo -v
-sudo iptables -N "$chain"
-
-# 先停服务，再移除防火墙；保留所有实验文件。
-cleanup() {
-    stop_owned enrolld || true
-    for pid in "${collectors[@]}"; do
-        kill "$pid" 2>/dev/null || true
-    done
-    sudo -n iptables -D INPUT -p tcp --dport 18080 -j "$chain" 2>/dev/null || true
-    sudo -n iptables -F "$chain"
-    sudo -n iptables -X "$chain"
-    sudo -n ip6tables -D INPUT -p tcp --dport 18080 \
-      -m comment --comment lab2-repro -j REJECT --reject-with tcp-reset 2>/dev/null || true
-    ss -ltn '( sport = :18080 )' > "$run_dir/listen-after.txt"
-    date -Is > "$run_dir/completed.txt"
-}
-trap cleanup EXIT
-trap 'exit 130' INT
-trap 'exit 143' TERM
-
-sudo iptables -A "$chain" -i lo -j ACCEPT
-sudo iptables -A "$chain" -s 192.168.0.142/32 -j ACCEPT
-sudo iptables -A "$chain" -p tcp -j REJECT --reject-with tcp-reset
-sudo iptables -I INPUT 1 -p tcp --dport 18080 -j "$chain"
-# 阻止双栈监听通过 IPv6 绕过上述 IPv4 来源限制。
-sudo ip6tables -I INPUT 1 -p tcp --dport 18080 \
-  -m comment --comment lab2-repro -j REJECT --reject-with tcp-reset
-sudo iptables -S "$chain" > "$run_dir/firewall.txt"
-
-LAB_ADDR=0.0.0.0:18080 LAB_PROCS="$procs" LAB_SVC_CPUS="$cpus" \
-  start_svc "$name" -sync interval
-pid=$(cat runtime/enrolld.pid)
-curl -fsS "$SVC/config" > "$run_dir/config.json"
-curl -fsS "$SVC/metrics" > "$run_dir/metrics-start.txt"
-cp SOURCE_REVISION "$run_dir/"
-date -Is > "$run_dir/started.txt"
-
-sar -n DEV,EDEV,TCP,ETCP 1 > "$run_dir/sar.log" &
-collectors+=($!)
-mpstat -P ALL 1 > "$run_dir/mpstat.log" &
-collectors+=($!)
-pidstat -h -u -r -w -p "$pid" 1 > "$run_dir/pidstat.log" &
-collectors+=($!)
-(
-  while true; do
-    date -Is
-    ss -tin '( sport = :18080 and dst 192.168.0.142 )'
-    sleep 3
-  done
-) > "$run_dir/ss.log" &
-collectors+=($!)
-printf 'A 已就绪，请在 B 开始加压；完成后创建 %s/DONE\n' "$run_dir"
-# 最长开放十分钟，控制端失联时也会自动收尾。
-for _ in {1..600}; do
-    [ ! -e "$run_dir/DONE" ] || break
-    sleep 1
-done
-curl -fsS "$SVC/metrics" > "$run_dir/metrics-end.txt"
-SH
-
-# 先写预测，再启动等待 B 的采集进程。
-{
-  date -Is
-  printf '预测：低档吞吐跟随到达率，约 2.1 Gbit/s 附近开始排队；同时检查两端 CPU。\n'
-} > runtime/o2-prediction.txt
-bash runtime/o2-server.sh re-o2 1 1
-```
-
-脚本前台等待 B 完成；这个 A 终端暂时不要输入其他命令。sudo 如需认证，在终端交互输入。
-
-#### 加压 B
-
-从另一个 Mac 终端连接 B，进入前面打印出的 B 工作目录。创建以下脚本；路径只需替换在 `cd` 命令中，不需要在脚本正文中修改。
-
-```bash
-# 在 Mac 执行，恢复准备阶段保存的路径。
-source /tmp/lab2-repro-session.env
-ssh -t se-devops2 "cd '$B_REPRO_DIR' && exec bash"
-```
-
-进入 B 后执行：
-
-```bash
-cat > run-network.sh <<'SH'
-#!/usr/bin/env bash
-# B 直接运行负载端，保存原始结果和本机网络、CPU 采样。
-set -euo pipefail
-name=${1:?用法：run-network.sh 实验名 到达率列表 阶段时长}
-rates=${2:?缺少到达率}
-step=${3:-30s}
-mkdir "$name"
-export LC_ALL=C S_TIME_FORMAT=ISO
-sar -n DEV,EDEV,TCP,ETCP 1 > "$name/sar.log" &
-sar_pid=$!
-mpstat -P ALL 1 > "$name/mpstat.log" &
-mpstat_pid=$!
-trap 'kill "$sar_pid" "$mpstat_pid" 2>/dev/null || true' EXIT
-curl -fsS --max-time 5 http://192.168.0.134:18080/config > "$name/config.json"
-date -Is > "$name/started.txt"
-env GOMAXPROCS=2 taskset -c 0,1 ./loadgen \
-  -url 'http://192.168.0.134:18080/api/export?kb=256' \
-  -rates "$rates" -step "$step" -seed 1 -out "$name/steps.csv" \
-  > "$name/loadgen.log" 2>&1
-date -Is > "$name/completed.txt"
-cat "$name/loadgen.log"
-SH
-bash run-network.sh re-o2 100,250,400,500,700,1000,1500,2500 30s
-```
-
-B 完成后，在 Mac 通知 A 收尾并收集证据：
-
-```bash
-source /tmp/lab2-repro-session.env
-ssh se-devops "touch '$REPRO_DIR/runs/re-o2/DONE'"
-# A 终端返回提示符、出现 completed.txt 后再复制。
-ssh se-devops "test -f '$REPRO_DIR/runs/re-o2/completed.txt'"
-cd ~/Documents/ops-lab2-8
-scp -r "se-devops:$REPRO_DIR/runs/re-o2" runs/
-mkdir -p runs/re-o2/client
-scp -r "se-devops2:$B_REPRO_DIR/re-o2/." runs/re-o2/client/
-python3 scripts/summarize-network.py runs/re-o2
-scripts/table.sh runs/re-o2 \
-  ok_rps error_rate p99_ms a_tx_gbps a_cpu_pct b_cpu_pct retrans_per_s
-```
-
-`completed.txt` 尚不存在时，等 A 的采集脚本结束后再复制。先完成 A 的收尾，避免拷贝仍在追加的日志。`summarize-network.py` 支持原始 `ss.log` 和无损压缩的 `ss.log.gz`。
-
-#### 双核对照
-
-在 A 返回提示符后，先记录新预测，然后运行：
-
-```bash
-{
-  date -Is
-  printf '预测：扩大服务核数后若带宽平台仍相近，则单服务核不足不能单独解释原平台；关注过载时协议栈 CPU。\n'
-} > runtime/o2-2cpu-prediction.txt
-bash runtime/o2-server.sh re-o2-2cpu 0,1 2
-```
-
-B 执行：
-
-```bash
-bash run-network.sh re-o2-2cpu 800,1000,1200 45s
-```
-
-Mac 使用相同收尾、复制和汇总命令，将实验名全部替换为 `re-o2-2cpu`。把两份预测文件一并保存到各自结果目录。
-
-#### 如何解释
-
-本组首轮 700 请求/秒时 p99=8.17 ms，发送约 1.482 Gbit/s；1000 请求/秒时 p99 升至 565.86 ms，发送约 2.128 Gbit/s。继续加压后带宽平台约 2.1 Gbit/s，超时与重传增加。双核对照的 800 档 p99=8.42 ms；1000、1200 档仍出现明显排队，1200 档整机 CPU 也已接近满载。
-
-| 追问 | 回答要点 |
-|---|---|
-| 为什么不用 run.sh？ | 它通过 `/config` 的 PID 在本机采集服务进程，要求 loadgen 与 enrolld 同机。O2 的客户端在 B，需分别采集。 |
-| 重传是网卡故障吗？ | 重传可由丢包、拥塞、限速或接收端压力引起，应结合队列、吞吐和 CPU 判断。 |
-| 2.1 Gbit/s 是 A 网卡规格吗？ | 这是当前 A→B 路径的有效发送平台。双机单向测试无法单独区分 A 出口、B 入口、云网络配额及协议栈限制。 |
-| 扩到两核为什么仍会过载？ | 网络资源仍有限，更多连接和重传又增加协议栈与应用的 CPU 成本。 |
-| 安全组和主机防火墙相同吗？ | 都可限制流量，作用层和管理位置不同。本组实际做了主机防火墙隔离，不能用它证明云安全组规则已配置。 |
+1000 请求/秒仅响应体就需要约 2.097 Gbit/s。历史测量在约 2.1 Gbit/s 附近形成平台，随后队列、重传和延迟上升。双核对照仍有相近平台，且高负载时 CPU 也饱和，因此结果限定为当前 A→B 路径的有效容量。PPS、连接数和协议栈 CPU 也可能成为限制，不能把平台直接当作 A 网卡的标称速率。
 
 ### O3 告警
 
-先确认所有前面实验的 CSV 已保存。为避免前面读路径过载残留在 5 分钟窗口中，本节让“本次复现的 Prometheus”使用一个新的 TSDB；原来的 TSDB 目录仍保留。
+负责人：CharonRyui。沿用默认端口的 Prometheus，配置和九格看板已经在仓库中。终端 A 停止上一服务后执行 `taskset -c 1 bin/enrolld`，恢复池大小 4、each 模式。终端 C 确认 `unset SLO`，预测告警经历 inactive→pending→firing→inactive。
 
-在 A 执行：
+若刚做过读路径过载，先让上一轮的 5 分钟窗口过去，并确认当前规则为 inactive。无需换端口、换 TSDB 或重启监控。
+
+终端 C 校验规则：
 
 ```bash
-export SLO=0.05
-unset LAB_ADDR LAB_PROCS LAB_SVC_CPUS LAB_GOGC
-start_svc re-o3 -pool 4 -sync each
-start_prom o3
-
 tools/prometheus-3.13.4.linux-amd64/promtool check config deploy/prometheus.yml
 tools/prometheus-3.13.4.linux-amd64/promtool test rules deploy/rules.test.yml
-wait_targets
-curl -fsS "$PROM/api/v1/rules" > runtime/o3-rules-before.json
-{
+curl -s 127.0.0.1:9090/api/v1/rules
+```
+
+记录告警状态并压测：
+
+```bash
+while true; do
   date -Is
-  printf '预测：100→461→100 req/s 时，告警经历 inactive→pending→firing→inactive。\n'
-  printf '规则要求 5m、1m 燃烧率都超过 14.4，持续 15 秒。\n'
-} > runtime/o3-prediction.txt
-```
-
-在加压前启动告警轮询：
-
-```bash
-python3 -u - <<'PY' > runtime/o3-alerts.jsonl &
-import datetime
-import json
-import os
-import time
-import urllib.request
-url = os.environ['PROM'] + '/api/v1/alerts'
-while True:
-    with urllib.request.urlopen(url, timeout=3) as response:
-        alerts = json.load(response)
-    print(json.dumps({'time': datetime.datetime.now().astimezone().isoformat(),
-                      'response': alerts}), flush=True)
-    time.sleep(5)
-PY
+  curl -s 127.0.0.1:9090/api/v1/alerts
+  printf '\n'
+  sleep 5
+done > runs/re-o3-alerts.log &
 ALERT_PID=$!
-scripts/run.sh re-o3 -url "$SVC/api/courses/1" \
-  -rates 100,461,100 -step 90s -seed 1
-# 留出短窗口恢复时间，再停止轮询。
-sleep 60
-kill "$ALERT_PID"
-wait "$ALERT_PID" 2>/dev/null || true
-cp runtime/o3-alerts.jsonl runtime/o3-prediction.txt runtime/o3-rules-before.json runs/re-o3/
-curl -fsS "$PROM/api/v1/rules" > runs/re-o3/rules-after.json
-curl -fsS "$PROM/consoles/enrolld.html" > runs/re-o3/console-after.html
+scripts/run.sh re-o3 -url http://127.0.0.1:8080/api/courses/1 -rates 100,461,100 -step 90s
+curl -s 127.0.0.1:9090/api/v1/alerts
 ```
 
-输出状态变化：
+最后确认告警解除，再执行 `kill "$ALERT_PID"`。若最后一阶段结束时还没解除，保留轮询，待短窗口恢复后再停。
+
+在 Mac 用仓库默认端口建立隧道：
 
 ```bash
-python3 - <<'PY'
-import json
-previous = None
-for line in open('runs/re-o3/o3-alerts.jsonl'):
-    row = json.loads(line)
-    states = sorted({a['state'] for a in row['response']['data']['alerts']})
-    state = ','.join(states) or 'inactive'
-    if state != previous:
-        print(row['time'], state)
-        previous = state
-PY
+ssh -N -L 9090:127.0.0.1:9090 se-devops
 ```
 
-若复现时 461 请求/秒不足以使当前主机过载，应依据本轮 R1 提高到达率，先记录变更原因，再用新实验名运行。不要通过修改历史结果来得到预期状态。
+浏览器访问 <http://127.0.0.1:9090/consoles/enrolld.html>，告警页为 <http://127.0.0.1:9090/alerts>。完整查询见 [看板说明](deploy/DASHBOARD.md)。
 
-在 Mac 开一个新终端建立隧道：
-
-```bash
-ssh -N -L 29090:127.0.0.1:19090 se-devops
-```
-
-浏览器打开 <http://127.0.0.1:29090/consoles/enrolld.html>，告警页面为 <http://127.0.0.1:29090/alerts>。九格查询见 [看板说明](deploy/DASHBOARD.md)；其默认端口说明对应原部署，本次使用上面的隧道地址。
-
-第一行是 RED：吞吐、5xx、p99；第二行观察 CPU、池等待、池超时；第三行是 SLI、燃烧率和 firing 告警数。逐格展开查询，说明分子、分母、窗口与单位。
-
-#### 告警原理
-
-不良请求同时包括失败请求和超过 50 ms 的慢请求。SLO=99%，允许不良率为 1%；当前不良率为 14.4% 时，燃烧率为 14.4 倍。若这种速率持续，30 天预算约 50 小时耗尽，一小时消耗约 2%。
-
-规则用长窗口判断持续影响，用短窗口确认问题仍在发生，两者均超阈值并持续 15 秒才进入 firing。本实验为了缩短演示，使用 5m/1m；这些窗口不能直接等同生产的 1h/5m 组合。规则和通知是两个步骤，本实验验证 Prometheus 状态，没有部署 Alertmanager 通知链。原理参见 [SRE 告警章节](https://sre.google/workbook/alerting-on-slos/)。
-
-| 追问 | 回答要点 |
+| 追问 | 回答 |
 |---|---|
-| 为什么错误率很低也会告警？ | 慢 200 同样是不达标请求，预算依据好请求比例，不只看 5xx。 |
-| `pending` 是什么？ | 条件已经成立，但尚未持续满足 `for: 15s`。 |
-| 为什么恢复约一分钟就解除？ | 短窗口恢复后 AND 条件不成立，长窗口可以仍包含此前的不良请求。 |
-| 告警解除是否预算恢复？ | 解除只说明当前条件不再满足，过去的不良事件仍计入其所属预算窗口。 |
-| 没有告警就代表健康吗？ | 还需检查流量和抓取目标。当前规则不负责宕机告警，应另设 `up == 0` 等监控。 |
+| 为什么慢 200 也告警？ | SLO 要求成功且不超过 50 ms，慢请求同样消耗错误预算。 |
+| 为什么使用两个窗口？ | 长窗口判断影响，短窗口确认问题仍在发生；两个条件持续满足 15 秒才 firing。 |
+| 14.4 倍代表什么？ | 不良率为允许比例的 14.4 倍；若持续，30 天预算约 50 小时耗尽。 |
+| 解除是否代表预算恢复？ | 解除表示当前条件不再满足，之前的不良事件仍在其所属预算窗口中。 |
+| 是否已经发送通知？ | 本实验验证的是 Prometheus 告警状态，没有部署 Alertmanager 通知链。 |
 
-## 现场演示
+## 现场分工
 
-### 时间安排
+默认按任务 1→2→3→4 顺序演示。每位成员先说明接收状态，再执行自己的命令；不用重新搭建环境。
 
-提前完成环境准备、构建和监控启动。以下时间不包括文件传输和安装依赖。老师指定某一项时，直接跳到对应阶段。
-
-| 时间 | 演示内容 | 要说明的结论 |
+| 成员 | 建议现场内容 | 讲解重点 |
 |---|---|---|
-| 0～2 分钟 | 查看源码版本、目标状态、分核、数据盘 | 测量对象与环境明确 |
-| 2～3 分钟 | 一次 fsync 基线，展示历史三次结果 | 从耗时换算串行写上限 |
-| 3～5 分钟 | R1 三档读负载 | 池等待增加，CPU 仍空闲 |
-| 5～7 分钟 | R2 接近 CPU 上限的档位 | 扩池后瓶颈转移 |
-| 7～10 分钟 | each/group 同档对照 | 同步保证相同，批量降低等待 |
-| 10～16 分钟 | O3 的三阶段及恢复 | 错误预算转为告警状态 |
-| 16～20 分钟 | 展示 O1/O2 数据，核算 Little's Law 与 p99 | 解释测量位置、成本交换和边界 |
+| 任务 1 | 启动服务和监控，运行 0/50/100 三档 | 指标从哪里来、CPU 时间与连接占用的区别 |
+| 任务 2 | R1 用 100/307/461，R2 用 1939/2133/2424；展示已有 pprof | 连接池饱和、扩池后的 CPU 饱和、采样异常 |
+| 任务 3 | each、group、interval 各测 734 TPS 一档 | 相同到达率下的延迟、批量和持久性 |
+| 任务 4 | 用前三项 CSV 计算资源账、Little's Law 和预算 | 数字出处、测量口径、结论成立条件 |
 
-### 演示命令
+现场缩短阶段数量时仍保留每阶段 30 秒，只修改 `-rates` 和实验名。完整证据使用 LAB2 中已经保存的全阶段结果；老师指定重跑哪一档时，按对应 `meta.txt` 参数执行。
 
-这是独立的短流程，不能与完整流程同时运行。下面使用本组历史基准，目的是快速演示已知现象；若当前主机性能变化，按实测调整。所有结果使用 `demo-` 新名字，完整流程的 `re-` 数据保留。
+## 常见故障
 
-A 执行：
+| 现象 | 处理 |
+|---|---|
+| 新终端找不到 go | `export PATH=/home/ubuntu/apps/go/bin:$PATH` |
+| 端口被占用 | 用 `pgrep -a` 或 `ss -ltnp` 核对已有进程，复用或停止后重启；保持默认端口 |
+| 抓取目标 unknown/down | 等待首次抓取，随后检查 targets 的 scrapeUrl、lastError 和启动日志 |
+| run.sh 报结果目录已存在 | 换实验名，保留原始数据 |
+| 服务端数据突降但 CPU 很忙 | 检查抓取成功率，再与 pidstat、mpstat 对照 |
+| 发送滞后警告 | 检查 loadgen 的 CPU、lag_p99_ms；该档尾延迟不宜用于精确容量推算 |
+| 后续阶段没有执行 | 查看 `-stop-below` 保护是否触发，记录实际完成档位 |
+| 从写路径切回读路径，SLI 异常 | 在压测终端 `unset SLO`，恢复 50 ms |
+| B 无法访问 A:8080 | 检查 A 的监听地址、私网路由、安全组和主机防火墙 |
+| 新一轮数据与历史不同 | 核对参数、绑核、版本及其他负载，保留结果并解释波动 |
 
-```bash
-# 展示对象、核心数和数据盘。
-cat SOURCE_REVISION
-lscpu -e
-findmnt -T data
-curl -fsS "$PROM/api/v1/targets"
-mkdir -p data/demo-bench
-bin/enrolld -data data/demo-bench -bench-fsync 2000
+## 结束实验
 
-# R1：健康、中间负载、过载。
-export SLO=0.05
-start_svc demo-r1 -pool 4 -sync each
-scripts/run.sh demo-r1 -url "$SVC/api/courses/1" \
-  -rates 100,307,461 -step 30s -seed 1
-scripts/table.sh runs/demo-r1 \
-  ok_rps error_rate p99_ms pool_in_use_avg pool_wait_p99_ms svc_cpu_busy
+完成所有测量后关闭本次进程即可，CSV 与原始日志已经保存。
 
-# R2：池扩大为 41，观察 CPU 与运行时等待。
-start_svc demo-r2 -pool 41 -sync each
-scripts/run.sh demo-r2 -url "$SVC/api/courses/1" \
-  -rates 1939,2133,2424 -step 30s -seed 1
-scripts/table.sh runs/demo-r2 \
-  ok_rps error_rate p99_ms sched_wait_p99_ms pool_in_use_avg svc_cpu_busy
+1. 终端 A 按 Ctrl-C，等待 enrolld 显示已停止。
+2. 终端 B 按 Ctrl-C 停止 Prometheus，再执行 `kill "$NODE_PID"` 停止 node_exporter。
+3. 停止 O2/O3 的采集和轮询，撤销 O2 临时访问规则，关闭 Mac 上的 SSH 隧道。
+4. 终端 C 检查 `pgrep -a 'enrolld|prometheus|node_exporter|loadgen'`，应没有本次遗留进程。
 
-# 写路径：相同目标 734 TPS 下比较确认延迟。
-export SLO=0.02
-BODY='{"student":"s{{seq}}","course":"c1"}'
-start_svc demo-each -sync each
-scripts/run.sh demo-each -url "$SVC/api/enroll" -body "$BODY" \
-  -rates 294,734 -step 30s -seed 1
-start_svc demo-group -sync group
-scripts/run.sh demo-group -url "$SVC/api/enroll" -body "$BODY" \
-  -rates 294,734 -step 30s -seed 1
-for name in demo-each demo-group; do
-  scripts/table.sh "runs/$name" ok_rps p99_ms fsync_per_s batch_mean disk_util
-done
-export SLO=0.05
-```
+若终端 B 已关闭，`NODE_PID` 不会出现在新 Shell 中；先用 `pgrep -a -x node_exporter` 核对进程，再按实际 PID 执行 `kill`。不必删除 TSDB、工具或历史数据来释放端口。
 
-随后执行 O3 一节，使用新的 `re-o3` 名字和独立 TSDB。O3 如果已经做过，换一个服务名、run 名和 TSDB 后缀，避免重复名字及旧窗口干扰。
-
-### 讲解顺序
-
-面对老师指定的数据表，按以下顺序讲述：
-
-1. 说明请求接口、参数、绑核、到达率、阶段时长和延迟目标。
-2. 写出资源容量除以每请求占用的预测公式，指出预测先饱和的资源。
-3. 先看成功吞吐是否跟随到达率，再看错误率和 p99。
-4. 找到对应资源的利用率与等待证据，用第二种工具交叉核对。
-5. 解释改动后结果如何变化，以及代价是什么。
-6. 检查压测警告、抓取覆盖和计量口径，限定结论适用范围。
-
-本组读路径的口头讲解示例：
-
-> 低负载测得每次占连接约 10.43 ms，4 个连接对应约 384 请求/秒。R1 的吞吐在这个量级进入平台，池占满、等待上升，服务核忙碌只有约 20%，因此先限制吞吐的是连接池。扩池至 41 后，最高健康阶段达到约 2131 请求/秒，CPU 接近满载；继续加压出现运行时调度等待和错误。过载档还发生指标抓取失败，所以精确数值采用健康阶段，过载判断由系统日志交叉确认。
-
-写路径的口头讲解示例：
-
-> fsync 基线约 1.36 ms，因此串行 each 模式的粗略上限约 734 TPS。实测接近这个量级后延迟迅速上升。group 将同一批记录共享一次 fsync，在相同 734 TPS 到达率下，把 p99 从约 1176 ms 降到约 8.72 ms，仍然等同步完成才确认。interval 更快，但确认时数据可能只在页缓存，掉电可能丢失已确认记录。
-
-## 故障排查
-
-| 现象 | 先检查什么 | 处理方式 |
-|---|---|---|
-| SSH 能连，`go` 找不到 | `echo "$PATH"` | `export PATH=/home/ubuntu/apps/go/bin:$PATH` |
-| 启动后端口被占用 | `ss -ltnp`、本目录 PID 文件 | 只停止本次复现进程；不要批量 `pkill enrolld` |
-| Prometheus 抓错服务 | `/api/v1/targets` 的 scrapeUrl、`/api/v1/status/config` | 以运行时加载配置为准，修改复现目录配置后重启自己的监控 |
-| `promtool` 找不到 | 解压后的工具目录 | 使用 `tools/prometheus-3.13.4.linux-amd64/promtool`，下载脚本未创建 `tools/promtool` 链接 |
-| run.sh 拒绝实验名 | `runs/<名字>` 是否已存在 | 使用新名字；不要覆盖历史证据 |
-| 查询返回多条序列 | 是否抓了多个实例、是否漏聚合 | 检查 job/instance 标签和 `sum by (le)` |
-| `red.csv` 为空或数值突降 | `up`、抓取成功次数、采集日志 | 结合 pidstat/mpstat；不要用稀疏抓取推算精确容量 |
-| 修改查询后需要重算 | 原 TSDB 是否仍可用、PROM 是否指向它 | 先复制旧 CSV，再执行 `scripts/requery.sh runs/<名字>` |
-| 阶段提前停止 | `loadgen.log` 和 `-stop-below` | 成功返回不足一半时属于工具保护机制，记录实际停止档位 |
-| 发送滞后警告 | `lag_p99_ms`、负载端 CPU | 本工具超过 2 ms 就告警；检查负载端资源，降低压力或单独复测 |
-| CPU 警告 | `gen_cpu_pct` 与可用核数 | 100% 表示一个核；阈值是 GOMAXPROCS×100% 的 80% |
-| O2 B 无法连接 | A 是否已启动、来源规则、云安全组、私网地址 | 只放通 B 到实验端口，监控端口保持回环 |
-| O2 内存或日志增长 | 在途请求、`ss.log`、重传 | 保留自动停止条件，完成后发 DONE，必要时无损压缩 ss 日志 |
-| O3 一开始就 pending | 当前 TSDB 是否含前一轮过载窗口 | 用新的实验 TSDB，或等待历史窗口退出后再做独立实验 |
-| O3 始终不触发 | 实际负载是否超过本轮池容量、规则是否加载 | 先看 SLI、窗口流量和规则 health，再调整实验到达率 |
-| 数据较历史变化 | CPU steal、并行任务、版本、参数、云盘状态 | 保留新旧结果，按同一口径解释，不要求逐位相同 |
-
-重算查询示例，在 A 执行，且 PROM 必须指向保存了该次数据的 TSDB：
+整合人沿用 Mac 推送流程，从主机 A 取回新结果。例如：
 
 ```bash
-cp runs/re-r1/red.csv runs/re-r1/red-before-requery.csv
-cp runs/re-r1/use.csv runs/re-r1/use-before-requery.csv
-scripts/requery.sh runs/re-r1
-```
-
-`start_prom o3` 后查询的是新的 O3 TSDB。如果要重查前面的实验，先结束 O3，再执行 `start_prom main`，重新打开原复现 TSDB；不要清空其目录。
-
-## 归档收尾
-
-### 保存证据
-
-在 Mac 执行，将本次新运行目录复制回来：
-
-```bash
-source /tmp/lab2-repro-session.env
 cd ~/Documents/ops-lab2-8
-mkdir -p "reproductions/$REPRO_TAG"
-scp -r "se-devops:$REPRO_DIR/runs" "reproductions/$REPRO_TAG/"
-scp -r "se-devops:$REPRO_DIR/runtime" "reproductions/$REPRO_TAG/"
-scp "se-devops:$REPRO_DIR/SOURCE_REVISION" "reproductions/$REPRO_TAG/"
+scp -r se-devops:/home/ubuntu/lab2/runs/re-t1-light runs/
 ```
 
-O2 的 B 侧文件按前面的方法单独收集到对应 `client/`。也可将已经在 Mac 汇总好的 `runs/re-o2*` 目录复制进本次归档。归档时检查配置、预测、版本、原始日志、CSV 和表格是否齐全。`runs/` 不应包含密码、密钥或主机公网 IP；选择性记录相关信息，不要导出整份环境变量或 SSH 配置。
+其他任务替换目录名即可。O2 的客户端结果另从 B 的 `~/lab2-o2/runs/re-o2/` 取回，与 A 的日志放在一起。主机 A 的仓库没有 GitHub 写凭据，不要求各成员在 A 上直接 push。
 
-### 停止进程
+## 参考定位
 
-在 A 执行：
-
-```bash
-stop_owned enrolld
-stop_owned prometheus
-stop_owned node-exporter
-ss -ltn '( sport = :18080 or sport = :19090 or sport = :19100 )'
-```
-
-如果 O2 脚本仍运行，先创建它的 DONE 文件或在其终端按 Ctrl-C，让清理函数退出。确认临时 INPUT 跳转、IPv4 链和 IPv6 拒绝规则都已撤销。B 的负载脚本结束后会停止自己的采集器；若中途终端断开，用 `pgrep -af 'loadgen|sar|mpstat'` 检查本次进程。
-
-关闭 Mac 上的 SSH 隧道。现场检查结束前保留源码、二进制、TSDB 与实验输出；不要运行会删除证据的通配清理命令。
-
-## 原理索引
-
-答辩中解释实现时，可以打开以下文件定位具体代码，而不必凭记忆描述。
-
-| 文件 | 关键实现 |
+| 材料 | 本手册使用的内容 |
 |---|---|
-| [main.go](cmd/enrolld/main.go) | 参数默认值、路由、RED 埋点、读写 handler、大响应与内存分配接口 |
-| [pool.go](cmd/enrolld/pool.go) | channel 限制连接数、获取超时、连接等待和占用的分开计时 |
-| [commit.go](cmd/enrolld/commit.go) | each/group/interval 的确认顺序、1024 条批量上限、fsync 基线 |
-| [procstat.go](cmd/enrolld/procstat.go) | 进程 CPU、RSS、线程等待、Go 调度和 GC 指标 |
-| [metrics.go](internal/metrics/metrics.go) | Counter、Gauge、Histogram 及 Prometheus 文本输出 |
-| [loadgen](cmd/loadgen/main.go) | 泊松到达、计划时间计时、阶段归属、最近秩分位数、警告和停止条件 |
-| [promsteps](cmd/promsteps/main.go) | 去掉前 5 秒、在阶段结束时间查询、变量替换 |
-| [run.sh](scripts/run.sh) | 配置快照、绑核、系统工具采集和阶段查询 |
-| [rules.yml](deploy/rules.yml) | 双窗口燃烧率和持续时间 |
+| L-06 第 7、12～13 页 | RSS、堆与 GC、Go 的 M:N 调度 |
+| L-06 第 16～19 页 | Little's Law、排队位置、连接池上限 |
+| L-06 第 22、30～33 页 | 尾延迟、逐项计算上限、扩池后的瓶颈迁移 |
+| L-07 第 5～6、9 页 | 资源三问、排队余量、CPU 容量换算 |
+| L-07 第 13～16、25～27 页 | IOPS 与吞吐量、fsync、锁持有时间和持久性 |
+| L-07 第 18～22 页 | RTT、带宽、PPS、连接、重传和最小实验设计 |
+| [pool.go](cmd/enrolld/pool.go) | 等连接与占连接的分开计时 |
+| [commit.go](cmd/enrolld/commit.go) | 三种提交模式及 fsync 基线 |
+| [procstat.go](cmd/enrolld/procstat.go) | CPU、RSS、Go 调度与 GC 指标 |
+| [loadgen](cmd/loadgen/main.go) | 开环到达、阶段归属、分位数与停止条件 |
+| [run.sh](scripts/run.sh) | 配置记录、系统工具采集、阶段查询 |
+| [rules.yml](deploy/rules.yml) | 燃烧率告警条件 |
 
-技术解释核对了以下原始资料，课程要求与本组实际数值仍以指导书、源码和 `runs/` 为准：
-
-- [Prometheus 直方图](https://prometheus.io/docs/practices/histograms/)：桶计数、分位数误差与聚合。
-- [Prometheus 查询函数](https://prometheus.io/docs/prometheus/latest/querying/functions/)：rate、increase 和 histogram_quantile。
-- [Google SRE 的 SLI](https://sre.google/workbook/implementing-slos/)：用户体验、测量位置和错误预算。
-- [Google SRE 的告警](https://sre.google/workbook/alerting-on-slos/)：燃烧率、多窗口与响应速度。
-- [Go GC 指南](https://go.dev/doc/gc-guide)：GOGC、内存和 CPU 成本。
-- [Linux PSI](https://www.kernel.org/doc/html/latest/accounting/psi.html)：some/full 压力指标与内核任务等待。
+课件中的 Tomcat、MySQL 数字是教学设定，本组的 384 req/s、1939 req/s、734 TPS 等数值来自实际测量，答辩时分别说明。分位数和 SLI 的补充解释可参阅 [Prometheus 直方图文档](https://prometheus.io/docs/practices/histograms/)与 [Google SRE](https://sre.google/workbook/implementing-slos/)。

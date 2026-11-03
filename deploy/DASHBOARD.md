@@ -4,7 +4,7 @@
 
 ## 访问
 
-远程本次实际启动目录为 `/home/ubuntu/ops-lab2-8`，命令为：
+当前复现统一使用主机 A 的 `/home/ubuntu/lab2` 和默认端口 8080、9090、9100。在该目录执行：
 
 ```bash
 taskset -c 0 tools/prometheus \
@@ -14,15 +14,15 @@ taskset -c 0 tools/prometheus \
   --web.console.templates=deploy/consoles
 ```
 
-保留原来的 TSDB，仅重启进程加载规则和 console 路径；不要同时运行两个 Prometheus 使用同一 TSDB。另一份工作树 `/home/ubuntu/lab2` 用于运行 enrolld、loadgen 和采集脚本（源码一致性记录：`runs/optional-checks/source-sha256.json`）。
+同一轮实验只运行一套服务和监控，切换任务时可以复用进程，全部结束后停止。重启 Prometheus 并使用同一 TSDB 路径会保留数据。历史 O3 运行时监控位于 `/home/ubuntu/ops-lab2-8`，服务位于 `/home/ubuntu/lab2`；该历史目录安排不再用于复现。
 
 本机建立隧道：
 
 ```bash
-ssh -N -L 19090:127.0.0.1:9090 se-devops
+ssh -N -L 9090:127.0.0.1:9090 se-devops
 ```
 
-打开 <http://127.0.0.1:19090/consoles/enrolld.html>；告警页面为 <http://127.0.0.1:19090/alerts>。不用开放安全组端口。
+打开 <http://127.0.0.1:9090/consoles/enrolld.html>；告警页面为 <http://127.0.0.1:9090/alerts>。不用开放安全组端口。
 
 ## 九格查询
 
