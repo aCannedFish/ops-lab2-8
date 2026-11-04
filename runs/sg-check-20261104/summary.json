@@ -1,0 +1,26 @@
+{
+  "date": "2026-11-04",
+  "check": "O2 security-group connectivity",
+  "b_requests": 3,
+  "b_http_codes": [
+    200,
+    200,
+    200
+  ],
+  "bytes_per_response": [
+    262144,
+    262144,
+    262144
+  ],
+  "b_elapsed_seconds": [
+    0.005086,
+    0.004361,
+    0.004393
+  ],
+  "a_public_ssh_connected": true,
+  "a_public_8080_connected": false,
+  "mac_curl_exit_code": 52,
+  "host_ipv4_input_policy": "-P INPUT ACCEPT",
+  "host_ipv4_output_policy": "-P OUTPUT ACCEPT",
+  "original_service_config_restored": true
+}

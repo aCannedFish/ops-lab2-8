@@ -1,0 +1,1 @@
+6e2d01f3e81fc5d25cfed6404e08a21b4876d27801b4f962d1ac6c95e37d18ca  /home/ubuntu/lab2-o2/sg-check-20261104/export.bin
