@@ -132,7 +132,7 @@ R1 的到达率（`scripts/rates.sh 384` 的输出）：77,154,230,269,307,346,3
 
 `main.spin` 占 CPU 采样的 82.54%。原估算将这一比例乘以 R1 第 5 阶段的 0.524181 ms/请求，得到 spin 约 0.433 ms、其余约 0.092 ms。两项数据来自相同目标到达率下的不同运行，因此这里只作近似拆分。其余开销包括 HTTP 读写、JSON 编码、系统调用、内存分配及 Go 调度。`sync.(*Cond).Wait` 出现在剖析中，但连接池实际用 channel 实现，不能将该符号直接归因于连接池。
 
-2026-11-03 补测时，将 CPU 和请求计数的读取对齐到 20 秒 profile 窗口。13:28:16～13:28:36 共完成 6115 个读请求，进程累计消耗 3.332097 CPU 秒，每请求约 0.545 ms。采样中 spin 占 82.67%，据此拆分为 spin 约 0.450 ms、其余约 0.094 ms。其余成本与原估算接近。原始 profile、起止计数、完整压测和计算结果见 `runs/r1-profile-window/`。前一次补测 `runs/r1-profile-check/` 也保留，但它用 `go tool pprof` 在线取样，计数窗口包含工具启动时间，正式拆分采用本次直接下载 profile 的结果。
+2026-11-03 补测时，将 CPU 和请求计数的读取对齐到 20 秒 profile 窗口。13:28:16～13:28:36 共完成 6115 个读请求，进程累计消耗 3.332097 CPU 秒，每请求约 0.545 ms。采样中 spin 占 82.67%，据此拆分为 spin 约 0.450 ms、其余约 0.094 ms。其余成本与原估算接近。原始 profile、起止计数、完整压测和计算结果见 `runs/r1-profile-window/`。
 
 ### 4.4 R2：调大连接池（预测在 R2 之前写）
 
@@ -309,7 +309,7 @@ R1 第 6 阶段两侧 SLI 为 0.960663、0.9664，第 7 阶段为 0、0.0520。�
 | 选做 | 完成情况与证据 |
 |---|---|
 | O1 内存与 GC | 已完成：预测、两轮对照和原始数据见下文 O1 |
-| O2 网络 | 已完成双机网络压测、双核对照及 11 月 4 日安全组连通性复核，见 `runs/o2-network/`、`runs/o2-network-2cpu/`、`runs/sg-check-20261104/` |
+| O2 网络 | 已按云安全组规则完成双机压测、双核对照与收尾，见 `runs/o2-sg-single/`、`runs/o2-sg-dual/` |
 | O3 告警与看板 | 已完成：`deploy/rules.yml`、`deploy/consoles/enrolld.html`、`deploy/DASHBOARD.md`；`runs/o3-burn/` 及 `runs/optional-checks/` 保存触发、解除与看板证据 |
 | O4 迁移到小组项目 | |
 
@@ -336,44 +336,46 @@ GC 增量为各次 `metrics-end.txt − metrics-start.txt`，覆盖完整负载�
 
 ### O2 网络
 
-测量前预测见 [首轮预测](runs/o2-network/prediction.md)和[双核对照预测](runs/o2-network-2cpu/prediction.md)，均在对应加压前保存。
+测量前预测见[单核预测](runs/o2-sg-single/prediction.md)和[双核预测](runs/o2-sg-dual/prediction.md)，均在本轮测量前记录。两台主机处于同一 VPC，通过内网直接通信。
 
-两台主机同属一个 VPC，通过内网直接通信。A 为 `se-devops`，地址 `192.168.0.134`，规格 `x1e.2u.4g`，位于 `cn-east-3a`；B 为 `se-devops2`，地址 `192.168.0.142`，规格 `x1.2u.4g`，位于 `cn-east-3c`。两台均为 2 vCPU、4 GiB，系统可见内存均为 3531 MiB。规格、CPU 拓扑和 VPC 元数据见 `runs/o2-network/host-a.json`、`host-b.json`。
+| 主机 | 内网地址 | 规格 | 可用区 |
+|---|---|---|---|
+| A，se-devops | 192.168.0.134 | x1e.2u.4g，2 vCPU / 4 GiB | cn-east-3a |
+| B，se-devops2 | 192.168.0.142 | x1.2u.4g，2 vCPU / 4 GiB | cn-east-3c |
 
-B 直接运行 loadgen，请求 A 的 `/api/export?kb=256`，响应体为 256 KiB。每秒 r 个请求仅响应体就需要 r × 262144 × 8 bit/s，例如 1000 请求/秒约需 2.097 Gbit/s，另有协议开销。首轮 A 使用一个服务核，B 使用两个核，依次施加 100～2500 请求/秒，每档 30 秒、随机种子为 1。两端同时记录 sar 和 mpstat，A 另记录 pidstat 与 `ss -tin`。
+主机信息见 `runs/o2-sg-single/host-a.json`、`host-b.json`。在 A 关联的云安全组中，添加 IPv4 入方向允许规则，协议 TCP、端口 8080、来源 `192.168.0.142/32`，规则配置见各目录的 `security-group.json`。
 
-首轮表格由 `scripts/table.sh runs/o2-network ok_rps error_rate p99_ms a_tx_gbps a_cpu_pct b_cpu_pct retrans_per_s` 生成：
+A 用 `taskset -c 1 bin/enrolld -addr 0.0.0.0:8080` 启动，使用一个服务核。B 直接运行 loadgen，请求 `/api/export?kb=256`，到达率依次为 100、250、400、500、700、1000、1500、2500 请求/秒，每档 30 秒，随机种子为 1。A 同步记录 sar、mpstat、pidstat 和 `ss -tin`，B 记录 sar、mpstat 和客户端结果。命令、参数及原始输出见 `runs/o2-sg-single/`。
 
-| step | target_rps | ok_rps | error_rate | p99_ms | a_tx_gbps | a_cpu_pct | b_cpu_pct | retrans_per_s |
-|---|---|---|---|---|---|---|---|---|
-| 1 | 100 | 100.8 | 0.0000 | 2.71 | 0.215 | 4.393 | 2.901 | 0.400 |
-| 2 | 250 | 248.6 | 0.0000 | 6.69 | 0.528 | 6.215 | 6.441 | 29.160 |
-| 3 | 400 | 405.7 | 0.0000 | 7.23 | 0.860 | 9.074 | 9.277 | 65.560 |
-| 4 | 500 | 502.8 | 0.0000 | 8.01 | 1.058 | 10.805 | 11.390 | 98.400 |
-| 5 | 700 | 701.3 | 0.0000 | 8.17 | 1.482 | 15.892 | 15.822 | 132.769 |
-| 6 | 1000 | 992.6 | 0.0000 | 565.86 | 2.128 | 48.968 | 35.253 | 3460.899 |
-| 7 | 1500 | 777.1 | 0.4821 | 1972.90 | 2.158 | 89.747 | 56.334 | 9226.273 |
-| 8 | 2500 | 799.2 | 0.6794 | 1989.72 | 2.086 | 86.090 | 54.137 | 3875.224 |
-| all | - | 566.0 | 0.3480 | 1937.04 | - | - | - | - |
-
-`a_tx_gbps` 为 A 的 eth0 发送速率，按 sar 的 txkB/s × 1024 × 8 ÷ 10⁹ 换算；CPU 列为两端整机平均忙碌百分比，`retrans_per_s` 为 A 每秒重传的 TCP 段数。资源列去掉阶段开头 5 秒后取样本均值，客户端列覆盖完整阶段。原始输出见各目录的 `sar.log`、`mpstat.log`、`pidstat.log` 和 `client/`；`ss.log.gz` 无损压缩了完整 TCP 快照，解压后校验值见 `compression.json`。`scripts/summarize-network.py` 从日志生成 `use.csv` 和 `summary.json`。
-
-700 请求/秒时，成功吞吐为 701.3，p99 为 8.17 ms，A 发送约 1.482 Gbit/s。升至 1000 时，成功吞吐仍为 992.6，但 p99 增至 565.86 ms；1500、2500 档的发送速率维持在约 2.1 Gbit/s，成功吞吐反降至 777～799，错误率升至 48.21%～67.94%。第 8 档发送滞后 p99 为 15.43 ms，已触发压测警告，其尾延迟只作过载现象记录。TCP 快照中，稳定窗口内聚合发送队列峰值从第 5 档的 0.699 MiB 增至第 6 档的 4.808 MiB，重传也明显增加。
-
-首轮高负载时，服务核接近满载，因此增加双核对照：A 改为 `GOMAXPROCS=2`、绑核 `0,1`，B 保持双核，以 800、1000、1200 请求/秒各运行 45 秒。表格由同样的列生成，原始数据见 `runs/o2-network-2cpu/`：
+单核表格由 `scripts/table.sh runs/o2-sg-single ok_rps error_rate p99_ms a_tx_gbps a_cpu_pct b_cpu_pct retrans_per_s` 生成。
 
 | step | target_rps | ok_rps | error_rate | p99_ms | a_tx_gbps | a_cpu_pct | b_cpu_pct | retrans_per_s |
 |---|---|---|---|---|---|---|---|---|
-| 1 | 800 | 805.0 | 0.0000 | 8.42 | 1.702 | 21.178 | 17.223 | 155.375 |
-| 2 | 1000 | 988.7 | 0.0097 | 1215.87 | 2.145 | 78.323 | 47.111 | 5728.521 |
-| 3 | 1200 | 935.0 | 0.2192 | 1948.77 | 2.159 | 99.863 | 57.740 | 8395.655 |
-| all | - | 909.6 | 0.0907 | 1899.85 | - | - | - | - |
+| 1 | 100 | 100.8 | 0.0000 | 2.93 | 0.223 | 3.610 | 3.148 | 1.280 |
+| 2 | 250 | 248.6 | 0.0000 | 7.03 | 0.536 | 6.871 | 7.075 | 36.960 |
+| 3 | 400 | 405.7 | 0.0000 | 7.82 | 0.863 | 9.209 | 10.061 | 65.680 |
+| 4 | 500 | 502.8 | 0.0000 | 7.55 | 1.065 | 11.780 | 11.822 | 84.360 |
+| 5 | 700 | 701.3 | 0.0000 | 8.06 | 1.500 | 15.516 | 16.047 | 135.040 |
+| 6 | 1000 | 992.6 | 0.0000 | 585.65 | 2.130 | 50.825 | 36.689 | 3901.119 |
+| 7 | 1500 | 606.3 | 0.5959 | 1960.79 | 2.120 | 60.577 | 46.626 | 7546.600 |
+| all | - | 508.3 | 0.2008 | 1737.99 | - | - | - | - |
 
-双核对照中，满足 50 ms 延迟目标的最高阶段吞吐为 805.0 请求/秒，p99 为 8.42 ms。继续加压后，发送速率仍约 2.1 Gbit/s，吞吐没有随服务核数翻倍，符合首轮对网络容量的预期。1200 档的整机 CPU 同时达到 99.86%，说明协议栈和应用 CPU 开销也参与了过载。两轮测得的是 A→B 路径在当前配置下约 2.1 Gbit/s 的有效发送平台；这些数据无法独立确定 A 网卡的物理上限，也无法区分 A 出口、B 入口、云网络配额及协议栈 CPU 各自的限制。
+700 请求/秒阶段的成功吞吐为 701.3，p99 为 8.06 ms，A 发送速率为 1.500 Gbit/s。1000 请求/秒阶段的成功吞吐为 992.6，p99 升至 585.65 ms，发送速率为 2.130 Gbit/s。再升至 1500 时，发送速率维持在 2.120 Gbit/s，成功吞吐降至 606.3，错误率为 59.59%，重传约 7547 段/秒。loadgen 因阶段结束时成功返回不足一半而停止，2500 请求/秒档未执行。该阶段 enrolld 平均消耗约 97.92% 的一个核，说明服务核也已接近满载。
 
-11 月 3 日测量时，通过 SSH 配置 A 的主机防火墙，TCP 8080 只允许回环及 B 的内网地址，其他来源被拒绝。该次测量使用主机防火墙隔离实验端口，当时未操作云安全组。两轮结束后均恢复 `127.0.0.1:8080`、interval 模式、单服务核，移除本次防火墙链；前后规则、监听地址与配置见各目录的 `firewall-*.txt`、`listen-*.txt` 和 `restored-config.json`。压测及采集进程均已退出。
+为检查服务核数的影响，在相同安全组和网络路径下将 A 改为 `GOMAXPROCS=2 taskset -c 0,1 bin/enrolld -addr 0.0.0.0:8080`。B 保持两个核，以 800、1000、1200 请求/秒各运行 45 秒。原始输出见 `runs/o2-sg-dual/`。表格由 `scripts/table.sh runs/o2-sg-dual ok_rps error_rate p99_ms a_tx_gbps a_cpu_pct b_cpu_pct retrans_per_s` 生成。
 
-11 月 4 日，用户在云控制台配置安全组后，补做了连通性复核。A 的 IPv4 INPUT、OUTPUT 策略均为 ACCEPT。enrolld 临时监听 `0.0.0.0:8080`，B 连续三次请求 `/api/export?kb=256`，均返回 HTTP 200、262144 字节，耗时分别为 5.086、4.361、4.393 ms。Mac 的公网 8080 探测没有收到 HTTP 响应。A 连接自身公网 22 端口成功，连接公网 8080 则在 5 秒后超时。测试结束后关闭对外监听，并恢复测试前的 `127.0.0.1:8080`、each 模式和单服务核。原始响应、主机防火墙策略和恢复配置见 `runs/sg-check-20261104/`。
+| step | target_rps | ok_rps | error_rate | p99_ms | a_tx_gbps | a_cpu_pct | b_cpu_pct | retrans_per_s |
+|---|---|---|---|---|---|---|---|---|
+| 1 | 800 | 805.0 | 0.0000 | 8.31 | 1.705 | 20.727 | 17.453 | 155.400 |
+| 2 | 1000 | 993.1 | 0.0053 | 1532.05 | 2.145 | 78.190 | 47.325 | 5739.583 |
+| 3 | 1200 | 931.3 | 0.2222 | 1926.63 | 2.153 | 99.499 | 56.490 | 8267.074 |
+| all | - | 909.8 | 0.0904 | 1878.03 | - | - | - | - |
+
+双核下，800 请求/秒阶段的成功吞吐为 805.0，p99 为 8.31 ms。继续加压后，发送速率在 2.145～2.153 Gbit/s，排队、重传和超时增加。1200 请求/秒阶段，A 整机 CPU 忙碌比例为 99.499%。两组都观察到约 2.1 Gbit/s 的有效发送平台，高负载同时增加了应用与协议栈的 CPU 成本。
+
+按 L-07 第 19 页核算，每个响应体为 256 KiB，即 262144 字节。1000 请求/秒仅响应体就需要 1000 × 262144 × 8 ≈ 2.097 Gbit/s，与本轮平台相近。`a_tx_gbps` 按 sar 的 txkB/s × 1024 × 8 ÷ 10⁹ 换算，CPU 列为整机平均忙碌百分比，`retrans_per_s` 为 A 每秒重传的 TCP 段数。资源列去掉阶段前 5 秒后取样本均值，客户端覆盖完整阶段。`scripts/summarize-network.py` 可从原始日志生成 `use.csv` 和 `summary.json`，TCP 快照以 `ss.log.gz` 无损保存。
+
+测量结束后停止本轮压测与采集，关闭 A 的对外监听，恢复原有的 `127.0.0.1:8080`、each 模式和单服务核，并在云控制台删除临时 TCP 8080 规则。监听、恢复配置和安全组收尾记录见各目录的 `listen-restored.txt`、`config-restored.json`、`security-group-cleanup.json`。
 
 ### O3 告警与看板
 
@@ -401,9 +403,9 @@ B 直接运行 loadgen，请求 A 的 `/api/export?kb=256`，响应体为 256 Ki
 
 告警与规则的原始 API 响应保存在 `runs/optional-checks/alerts*.json*`、`rules-*.json`。同目录 `summarize.py` 可从原始记录生成 `summary.json`。实测触发、恢复顺序与预测一致；本次验证 Prometheus 告警状态，未配置通知发送。
 
-九格看板见 `deploy/consoles/enrolld.html`。第一行为读请求 RPS、5xx 比例、服务端 p99；第二行为服务核 CPU 忙碌、池等待 p99、池超时率；第三行为 50 ms 成功率、5 分钟预算燃烧率、firing 告警数。查询、单位、窗口和启动方式见 [看板说明](deploy/DASHBOARD.md)。九个数值及查询链接均有渲染记录，触发时和恢复后的页面分别保存在 `runs/optional-checks/console-firing.html`、`console-final.html`。
+九格看板见 `deploy/consoles/enrolld.html`。第一行为读请求 RPS、5xx 比例、服务端 p99；第二行为服务核 CPU 忙碌、池等待 p99、池超时率；第三行为 50 ms 成功率、5 分钟预算燃烧率、firing 告警数。各格查询、单位和窗口见 [看板说明](deploy/DASHBOARD.md)。九个数值及查询链接均有渲染记录，触发时和恢复后的页面分别保存在 `runs/optional-checks/console-firing.html`、`console-final.html`。
 
-复现时统一在主机 A 的 `/home/ubuntu/lab2` 启动服务和监控，使用默认端口 8080、9090、9100。Mac 执行 `ssh -N -L 9090:127.0.0.1:9090 se-devops` 后访问 <http://127.0.0.1:9090/consoles/enrolld.html>。历史 O3 的 Prometheus 从 `/home/ubuntu/ops-lab2-8/deploy/prometheus.yml` 加载规则与看板，原 `/dev/shm/lab2-prom` 数据保留。具体复现与收尾见 [RE.md](RE.md)，实验结束后停止进程即可。
+Prometheus 通过 `deploy/prometheus.yml` 中的 `rule_files` 加载 `deploy/rules.yml`，通过 `--web.console.templates=deploy/consoles` 加载看板模板。服务、Prometheus 和 node_exporter 分别监听回环地址的 8080、9090、9100 端口，TSDB 位于 `/dev/shm/lab2-prom`。
 
 校验与收尾：Go 构建、测试及 promtool 配置、规则测试均通过，输出见 `runs/optional-checks/`，本次复核输出见 `runs/audit-20261103/`。六个规则场景覆盖健康、慢 200、503、零流量、目标缺失和短窗口恢复，并验证 `for: 15s`。O3 结束后已恢复 enrolld 的 interval 模式、默认 GOGC、绑核 1 和 `GOMAXPROCS=1`，证据见 `restored-config.json`。告警、看板及原始数据保留，监控端口保持回环监听。
 

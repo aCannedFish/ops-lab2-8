@@ -1,0 +1,7 @@
+Server directory: /home/ubuntu/lab2
+Server: GOMAXPROCS=2 taskset -c 0,1 bin/enrolld -addr 0.0.0.0:8080
+Client directory: /home/ubuntu/lab2-o2
+Client: taskset -c 0,1 ./loadgen -url http://192.168.0.134:8080/api/export?kb=256 -rates 800,1000,1200 -step 45s -seed 1
+Collectors on A: sar -n DEV,EDEV,TCP,ETCP 1; mpstat -P ALL 1; pidstat -h -u -r -w -p SERVER_PID 1; ss -tin
+Collectors on B: sar -n DEV,EDEV,TCP,ETCP 1; mpstat -P ALL 1
+Cloud rule: IPv4 TCP 8080, source 192.168.0.142/32, allow

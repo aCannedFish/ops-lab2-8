@@ -1,0 +1,35 @@
+[
+  {
+    "step": "1",
+    "target_rps": "800",
+    "a_tx_gbps": 1.7050853969920001,
+    "b_rx_gbps": 1.768289449984,
+    "a_cpu_pct": 20.727249999999998,
+    "a_process_cpu_pct": 24.5,
+    "b_cpu_pct": 17.452749999999995,
+    "retrans_per_s": 155.4,
+    "send_queue_max_mib": 0.5434417724609375
+  },
+  {
+    "step": "2",
+    "target_rps": "1000",
+    "a_tx_gbps": 2.1452857856,
+    "b_rx_gbps": 2.131995439104,
+    "a_cpu_pct": 78.19,
+    "a_process_cpu_pct": 105.563,
+    "b_cpu_pct": 47.3255,
+    "retrans_per_s": 5739.58325,
+    "send_queue_max_mib": 6.190895080566406
+  },
+  {
+    "step": "3",
+    "target_rps": "1200",
+    "a_tx_gbps": 2.152801818624,
+    "b_rx_gbps": 2.099924578304,
+    "a_cpu_pct": 99.499,
+    "a_process_cpu_pct": 134.64275,
+    "b_cpu_pct": 56.48975,
+    "retrans_per_s": 8267.074,
+    "send_queue_max_mib": 7.325347900390625
+  }
+]

@@ -1,37 +1,38 @@
 [
   {
     "run": "runs/t1-light",
-    "match": true,
-    "rows": 4
+    "match": true
   },
   {
     "run": "runs/r1-pool4",
-    "match": true,
-    "rows": 10
+    "match": true
   },
   {
     "run": "runs/r2-pool41",
-    "match": true,
-    "rows": 8
+    "match": true
   },
   {
     "run": "runs/w1-each",
-    "match": true,
-    "rows": 8
+    "match": true
   },
   {
     "run": "runs/w2-group",
-    "match": true,
-    "rows": 8
+    "match": true
   },
   {
     "run": "runs/w3-interval",
-    "match": true,
-    "rows": 4
+    "match": true
+  },
+  {
+    "run": "runs/o2-sg-single",
+    "match": true
+  },
+  {
+    "run": "runs/o2-sg-dual",
+    "match": true
   },
   {
     "run": "runs/o3-burn",
-    "match": true,
-    "rows": 4
+    "match": true
   }
 ]

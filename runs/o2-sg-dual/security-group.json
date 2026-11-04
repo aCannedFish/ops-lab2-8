@@ -1,0 +1,14 @@
+{
+  "source": "Huawei Cloud console",
+  "security_group": "Sys-WebServer",
+  "direction": "ingress",
+  "priority": 1,
+  "status": "enabled",
+  "policy": "allow",
+  "ip_version": "IPv4",
+  "protocol": "TCP",
+  "port": 8080,
+  "source_cidr": "192.168.0.142/32",
+  "description": "Lab2 O2，允许主机 B 访问 A",
+  "configured_at": "2026-11-04T22:26:24+08:00"
+}

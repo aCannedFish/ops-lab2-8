@@ -1,0 +1,1891 @@
+Linux 6.8.0-136-generic (ecs-ca77) 	2026-11-04 	_x86_64_	(2 CPU)
+
+22:36:28        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:29           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:29         eth0 143625.00   7361.00 211325.57    550.60      0.00      0.00      0.00      0.00
+
+22:36:28        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:29           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:29         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:28     active/s passive/s    iseg/s    oseg/s
+22:36:29        12.00      0.00   8948.00   7361.00
+
+22:36:28     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:29         0.00      0.00      0.00      0.00      0.00
+
+22:36:29        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:30           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:30         eth0 152242.00  12618.00 224054.46    895.90      0.00      0.00      0.00      0.00
+
+22:36:29        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:30           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:30         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:29     active/s passive/s    iseg/s    oseg/s
+22:36:30         0.00      0.00  16476.00  12618.00
+
+22:36:29     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:30         0.00      0.00      0.00      0.00      0.00
+
+22:36:30        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:31           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:31         eth0 151268.00  12808.00 222618.84    907.06      0.00      0.00      0.00      0.00
+
+22:36:30        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:31           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:31         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:30     active/s passive/s    iseg/s    oseg/s
+22:36:31         0.00      0.00  16487.00  12808.00
+
+22:36:30     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:31         0.00      0.00      0.00      0.00      0.00
+
+22:36:31        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:32           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:32         eth0 136972.00  10301.00 201580.63    737.85      0.00      0.00      0.00      0.00
+
+22:36:31        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:32           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:32         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:31     active/s passive/s    iseg/s    oseg/s
+22:36:32         0.00      0.00  13213.00  10306.00
+
+22:36:31     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:32         0.00      0.00      0.00      0.00      0.00
+
+22:36:32        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:33           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:33         eth0 140709.00  10405.00 207068.20    745.23      0.00      0.00      0.00      0.00
+
+22:36:32        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:33           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:33         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:32     active/s passive/s    iseg/s    oseg/s
+22:36:33         3.00      0.00  13205.00  10400.00
+
+22:36:32     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:33         0.00      0.00      0.00      0.00      0.00
+
+22:36:33        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:34           lo     12.00     12.00      1.26      1.26      0.00      0.00      0.00      0.00
+22:36:34         eth0 136840.00  10733.00 201346.76    777.47      0.00      0.00      0.00      0.00
+
+22:36:33        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:34           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:34         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:33     active/s passive/s    iseg/s    oseg/s
+22:36:34         3.00      0.00  13976.00  10733.00
+
+22:36:33     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:34         0.00      1.00      0.00      0.00      1.00
+
+22:36:34        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:35           lo     10.00     10.00      1.04      1.04      0.00      0.00      0.00      0.00
+22:36:35         eth0 151440.00  13221.00 222822.56    979.29      0.00      0.00      0.00      0.00
+
+22:36:34        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:35           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:35         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:34     active/s passive/s    iseg/s    oseg/s
+22:36:35         3.00      0.00  17015.00  13246.00
+
+22:36:34     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:35         0.00      1.00      0.00      0.00      3.00
+
+22:36:35        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:36           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:36         eth0 153666.00  12541.00 226149.93    890.60      0.00      0.00      0.00      0.00
+
+22:36:35        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:36           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:36         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:35     active/s passive/s    iseg/s    oseg/s
+22:36:36         0.00      0.00  16021.00  12536.00
+
+22:36:35     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:36         0.00      0.00      0.00      0.00      0.00
+
+22:36:36        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:37           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:37         eth0 153226.00  12716.00 225497.18    902.06      0.00      0.00      0.00      0.00
+
+22:36:36        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:37           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:37         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:36     active/s passive/s    iseg/s    oseg/s
+22:36:37         0.00      0.00  16401.00  12716.00
+
+22:36:36     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:37         0.00      0.00      0.00      0.00      0.00
+
+22:36:37        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:38           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:38         eth0 138140.00  10523.00 203296.50    752.11      0.00      0.00      0.00      0.00
+
+22:36:37        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:38           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:38         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:37     active/s passive/s    iseg/s    oseg/s
+22:36:38         0.00      0.00  13350.00  10524.00
+
+22:36:37     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:38         0.00      0.00      0.00      0.00      0.00
+
+22:36:38        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:39           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:39         eth0 133770.00   9754.00 196868.03    699.62      0.00      0.00      0.00      0.00
+
+22:36:38        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:39           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:39         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:38     active/s passive/s    iseg/s    oseg/s
+22:36:39         0.00      0.00  12288.00   9753.00
+
+22:36:38     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:39         0.00      0.00      0.00      0.00      0.00
+
+22:36:39        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:40           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:40         eth0 153488.00  12179.00 225886.35    866.69      0.00      0.00      0.00      0.00
+
+22:36:39        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:40           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:40         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:39     active/s passive/s    iseg/s    oseg/s
+22:36:40         1.00      0.00  15706.00  12182.00
+
+22:36:39     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:40         0.00      0.00      0.00      0.00      0.00
+
+22:36:40        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:41           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:41         eth0 143378.00  11990.00 211006.36    851.08      0.00      0.00      0.00      0.00
+
+22:36:40        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:41           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:41         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:40     active/s passive/s    iseg/s    oseg/s
+22:36:41         0.00      0.00  15413.00  11987.00
+
+22:36:40     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:41         0.00      0.00      0.00      0.00      0.00
+
+22:36:41        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:42           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:42         eth0 141392.00  10489.00 208084.59    750.48      0.00      0.00      0.00      0.00
+
+22:36:41        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:42           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:42         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:41     active/s passive/s    iseg/s    oseg/s
+22:36:42         0.00      0.00  13409.00  10489.00
+
+22:36:41     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:42         0.00      0.00      0.00      0.00      0.00
+
+22:36:42        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:43           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:43         eth0 145650.00   9553.00 214352.15    693.55      0.00      0.00      0.00      0.00
+
+22:36:42        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:43           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:43         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:42     active/s passive/s    iseg/s    oseg/s
+22:36:43         0.00      0.00  11947.00   9555.00
+
+22:36:42     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:43         0.00      0.00      0.00      0.00      0.00
+
+22:36:43        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:44           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:44         eth0 149483.00  10872.00 219993.12    779.93      0.00      0.00      0.00      0.00
+
+22:36:43        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:44           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:44         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:43     active/s passive/s    iseg/s    oseg/s
+22:36:44         0.00      0.00  13936.00  10871.00
+
+22:36:43     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:44         0.00      0.00      0.00      0.00      0.00
+
+22:36:44        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:45           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:45         eth0 153276.00  10758.00 225573.04    774.13      0.00      0.00      0.00      0.00
+
+22:36:44        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:45           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:45         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:44     active/s passive/s    iseg/s    oseg/s
+22:36:45         0.00      0.00  13823.00  10763.00
+
+22:36:44     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:45         0.00      0.00      0.00      0.00      0.00
+
+22:36:45        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:46           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:46         eth0 135994.00  10001.00 200140.58    717.43      0.00      0.00      0.00      0.00
+
+22:36:45        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:46           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:46         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:45     active/s passive/s    iseg/s    oseg/s
+22:36:46         0.00      0.00  12716.00   9996.00
+
+22:36:45     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:46         0.00      0.00      0.00      0.00      0.00
+
+22:36:46        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:47           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:47         eth0 147993.00  10613.00 217802.34    762.73      0.00      0.00      0.00      0.00
+
+22:36:46        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:47           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:47         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:46     active/s passive/s    iseg/s    oseg/s
+22:36:47         0.00      0.00  13548.00  10613.00
+
+22:36:46     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:47         0.00      0.00      0.00      0.00      0.00
+
+22:36:47        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:48           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:48         eth0 151932.00  11719.00 223595.85    836.20      0.00      0.00      0.00      0.00
+
+22:36:47        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:48           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:48         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:47     active/s passive/s    iseg/s    oseg/s
+22:36:48         0.00      0.00  15210.00  11721.00
+
+22:36:47     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:48         0.00      0.00      0.00      0.00      0.00
+
+22:36:48        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:49           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:49         eth0 149470.00  11586.00 219973.14    826.48      0.00      0.00      0.00      0.00
+
+22:36:48        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:49           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:49         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:48     active/s passive/s    iseg/s    oseg/s
+22:36:49         0.00      0.00  14923.00  11591.00
+
+22:36:48     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:49         0.00      0.00      0.00      0.00      0.00
+
+22:36:49        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:50           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:50         eth0 141955.00  10797.00 208912.54    771.62      0.00      0.00      0.00      0.00
+
+22:36:49        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:50           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:50         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:49     active/s passive/s    iseg/s    oseg/s
+22:36:50         0.00      0.00  13878.00  10792.00
+
+22:36:49     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:50         0.00      0.00      0.00      0.00      0.00
+
+22:36:50        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:51           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:51         eth0 163155.00  13346.00 240105.25    949.18      0.00      0.00      0.00      0.00
+
+22:36:50        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:51           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:51         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:50     active/s passive/s    iseg/s    oseg/s
+22:36:51         3.00      0.00  17346.00  13351.00
+
+22:36:50     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:51         0.00      0.00      0.00      0.00      0.00
+
+22:36:51        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:52           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:52         eth0 147085.00  12375.00 216456.78    877.34      0.00      0.00      0.00      0.00
+
+22:36:51        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:52           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:52         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:51     active/s passive/s    iseg/s    oseg/s
+22:36:52         0.00      0.00  16095.00  12370.00
+
+22:36:51     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:52         0.00      0.00      0.00      0.00      3.00
+
+22:36:52        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:53           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:53         eth0 159441.00  12924.00 234647.85    919.22      0.00      0.00      0.00      0.00
+
+22:36:52        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:53           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:53         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:52     active/s passive/s    iseg/s    oseg/s
+22:36:53         0.00      0.00  16901.00  12926.00
+
+22:36:52     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:53         0.00      0.00      0.00      0.00      0.00
+
+22:36:53        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:54           lo      4.00      4.00      0.42      0.42      0.00      0.00      0.00      0.00
+22:36:54         eth0 138747.00  10041.00 204177.86    724.53      0.00      0.00      0.00      0.00
+
+22:36:53        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:54           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:54         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:53     active/s passive/s    iseg/s    oseg/s
+22:36:54         1.00      0.00  13016.00  10037.00
+
+22:36:53     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:54         0.00      0.00      0.00      0.00      0.00
+
+22:36:54        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:55           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:55         eth0 146875.00  10646.00 216153.54    763.74      0.00      0.00      0.00      0.00
+
+22:36:54        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:55           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:55         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:54     active/s passive/s    iseg/s    oseg/s
+22:36:55         0.00      0.00  13768.00  10646.00
+
+22:36:54     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:55         0.00      0.00      0.00      0.00      0.00
+
+22:36:55        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:56           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:56         eth0 144719.00  10746.00 212979.69    769.32      0.00      0.00      0.00      0.00
+
+22:36:55        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:56           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:56         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:55     active/s passive/s    iseg/s    oseg/s
+22:36:56         0.00      0.00  13724.00  10746.00
+
+22:36:55     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:56         0.00      0.00      0.00      0.00      0.00
+
+22:36:56        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:57           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:57         eth0 141472.00  11089.00 208203.38    790.36      0.00      0.00      0.00      0.00
+
+22:36:56        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:57           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:57         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:56     active/s passive/s    iseg/s    oseg/s
+22:36:57         0.00      0.00  14398.00  11090.00
+
+22:36:56     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:57         0.00      0.00      0.00      0.00      0.00
+
+22:36:57        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:58           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:58         eth0 146208.00  11474.00 215174.09    818.06      0.00      0.00      0.00      0.00
+
+22:36:57        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:58           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:58         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:57     active/s passive/s    iseg/s    oseg/s
+22:36:58         0.00      0.00  14885.00  11473.00
+
+22:36:57     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:58         0.00      0.00      0.00      0.00      0.00
+
+22:36:58        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:36:59           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:59         eth0 153056.00  11871.00 225249.84    847.18      0.00      0.00      0.00      0.00
+
+22:36:58        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:36:59           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:36:59         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:58     active/s passive/s    iseg/s    oseg/s
+22:36:59         0.00      0.00  15472.00  11871.00
+
+22:36:58     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:36:59         0.00      0.00      0.00      0.00      0.00
+
+22:36:59        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:00           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:00         eth0 156231.00  12095.00 229921.18    863.58      0.00      0.00      0.00      0.00
+
+22:36:59        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:00           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:00         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:36:59     active/s passive/s    iseg/s    oseg/s
+22:37:00         0.00      0.00  15576.00  12095.00
+
+22:36:59     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:00         0.00      0.00      0.00      0.00      0.00
+
+22:37:00        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:01           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:01         eth0 147287.00  11453.00 216760.96    816.75      0.00      0.00      0.00      0.00
+
+22:37:00        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:01           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:01         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:00     active/s passive/s    iseg/s    oseg/s
+22:37:01         0.00      0.00  14754.00  11453.00
+
+22:37:00     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:01         0.00      0.00      0.00      0.00      0.00
+
+22:37:01        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:02           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:02         eth0 149789.00  12167.00 220431.35    866.17      0.00      0.00      0.00      0.00
+
+22:37:01        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:02           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:02         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:01     active/s passive/s    iseg/s    oseg/s
+22:37:02         1.00      0.00  15583.00  12167.00
+
+22:37:01     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:02         0.00      0.00      0.00      0.00      3.00
+
+22:37:02        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:03           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:03         eth0 146648.00  10941.00 215820.40    782.50      0.00      0.00      0.00      0.00
+
+22:37:02        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:03           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:03         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:02     active/s passive/s    iseg/s    oseg/s
+22:37:03         0.00      0.00  13803.00  10941.00
+
+22:37:02     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:03         0.00      0.00      0.00      0.00      0.00
+
+22:37:03        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:04           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:04         eth0 139504.00  11424.00 205307.33    811.59      0.00      0.00      0.00      0.00
+
+22:37:03        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:04           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:04         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:03     active/s passive/s    iseg/s    oseg/s
+22:37:04         0.00      0.00  14489.00  11424.00
+
+22:37:03     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:04         0.00      0.00      0.00      0.00      0.00
+
+22:37:04        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:05           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:05         eth0 150446.00  12259.00 221410.47    871.39      0.00      0.00      0.00      0.00
+
+22:37:04        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:05           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:05         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:04     active/s passive/s    iseg/s    oseg/s
+22:37:05         0.00      0.00  15773.00  12261.00
+
+22:37:04     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:05         0.00      0.00      0.00      0.00      0.00
+
+22:37:05        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:06           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:06         eth0 147860.00  11522.00 217599.84    820.53      0.00      0.00      0.00      0.00
+
+22:37:05        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:06           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:06         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:05     active/s passive/s    iseg/s    oseg/s
+22:37:06         0.00      0.00  14754.00  11520.00
+
+22:37:05     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:06         0.00      0.00      0.00      0.00      0.00
+
+22:37:06        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:07           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:07         eth0 145520.00  11575.00 214160.84    823.46      0.00      0.00      0.00      0.00
+
+22:37:06        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:07           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:07         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:06     active/s passive/s    iseg/s    oseg/s
+22:37:07         0.00      0.00  14770.00  11575.00
+
+22:37:06     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:07         0.00      0.00      0.00      0.00      0.00
+
+22:37:07        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:08           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:08         eth0 138733.00  10799.00 204171.12    769.78      0.00      0.00      0.00      0.00
+
+22:37:07        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:08           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:08         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:07     active/s passive/s    iseg/s    oseg/s
+22:37:08         0.00      0.00  13746.00  10799.00
+
+22:37:07     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:08         0.00      0.00      0.00      0.00      0.00
+
+22:37:08        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:09           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:09         eth0 141144.00  11150.00 207721.91    794.71      0.00      0.00      0.00      0.00
+
+22:37:08        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:09           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:09         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:08     active/s passive/s    iseg/s    oseg/s
+22:37:09         0.00      0.00  14251.00  11150.00
+
+22:37:08     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:09         0.00      0.00      0.00      0.00      0.00
+
+22:37:09        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:10           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:10         eth0 147274.00  11631.00 216740.74    828.55      0.00      0.00      0.00      0.00
+
+22:37:09        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:10           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:10         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:09     active/s passive/s    iseg/s    oseg/s
+22:37:10         0.00      0.00  14940.00  11631.00
+
+22:37:09     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:10         0.00      0.00      0.00      0.00      0.00
+
+22:37:10        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:11           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:11         eth0 145911.00  11982.00 214735.97    851.14      0.00      0.00      0.00      0.00
+
+22:37:10        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:11           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:11         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:10     active/s passive/s    iseg/s    oseg/s
+22:37:11         0.00      0.00  15403.00  11985.00
+
+22:37:10     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:11         0.00      0.00      0.00      0.00      0.00
+
+22:37:11        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:12           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:12         eth0 140504.00  11877.00 206779.12    841.21      0.00      0.00      0.00      0.00
+
+22:37:11        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:12           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:12         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:11     active/s passive/s    iseg/s    oseg/s
+22:37:12         0.00      0.00  15347.00  11875.00
+
+22:37:11     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:12         0.00      0.00      0.00      0.00      0.00
+
+22:37:12        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:13           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:13         eth0 148277.00  12282.00 218215.30    872.45      0.00      0.00      0.00      0.00
+
+22:37:12        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:13           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:13         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:12     active/s passive/s    iseg/s    oseg/s
+22:37:13         0.00      0.00  15808.00  12282.00
+
+22:37:12     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:13         0.00      0.00      0.00      0.00      0.00
+
+22:37:13        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:14           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:14         eth0 185084.00  15354.00 272389.04   1090.14      0.00      0.00      0.00      0.00
+
+22:37:13        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:14           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:14         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:13     active/s passive/s    iseg/s    oseg/s
+22:37:14         0.00      0.00  19912.00  15354.00
+
+22:37:13     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:14         0.00      0.00      0.00      0.00      0.00
+
+22:37:14        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:15           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:15         eth0 179332.00  14659.00 263918.85   1040.98      0.00      0.00      0.00      0.00
+
+22:37:14        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:15           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:15         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:14     active/s passive/s    iseg/s    oseg/s
+22:37:15         0.00      0.00  19370.00  14659.00
+
+22:37:14     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:15         0.00      0.00      0.00      0.00      0.00
+
+22:37:15        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:16           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:16         eth0 178014.00  14163.00 261980.62   1007.37      0.00      0.00      0.00      0.00
+
+22:37:15        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:16           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:16         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:15     active/s passive/s    iseg/s    oseg/s
+22:37:16         0.00      0.00  18360.00  14163.00
+
+22:37:15     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:16         0.00      0.00      0.00      0.00      0.00
+
+22:37:16        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:17           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:17         eth0 176175.00  14562.00 259275.05   1032.89      0.00      0.00      0.00      0.00
+
+22:37:16        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:17           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:17         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:16     active/s passive/s    iseg/s    oseg/s
+22:37:17         0.00      0.00  19268.00  14562.00
+
+22:37:16     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:17         0.00      0.00      0.00      0.00      0.00
+
+22:37:17        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:18           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:18         eth0 184174.00  16696.00 271047.39   1176.42      0.00      0.00      0.00      0.00
+
+22:37:17        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:18           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:18         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:17     active/s passive/s    iseg/s    oseg/s
+22:37:18         0.00      0.00  21622.00  16696.00
+
+22:37:17     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:18         0.00      0.00      0.00      0.00      0.00
+
+22:37:18        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:19           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:19         eth0 177447.00  14281.00 261147.03   1015.47      0.00      0.00      0.00      0.00
+
+22:37:18        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:19           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:19         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:18     active/s passive/s    iseg/s    oseg/s
+22:37:19         0.00      0.00  18598.00  14284.00
+
+22:37:18     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:19         0.00      0.00      0.00      0.00      0.00
+
+22:37:19        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:20           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:20         eth0 178816.00  13813.00 263160.42    985.47      0.00      0.00      0.00      0.00
+
+22:37:19        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:20           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:20         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:19     active/s passive/s    iseg/s    oseg/s
+22:37:20         0.00      0.00  17825.00  13811.00
+
+22:37:19     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:20         0.00      0.00      0.00      0.00      0.00
+
+22:37:20        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:21           lo      4.00      4.00      0.46      0.46      0.00      0.00      0.00      0.00
+22:37:21         eth0 180370.00  13978.00 265436.66    998.01      0.00      0.00      0.00      0.00
+
+22:37:20        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:21           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:21         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:20     active/s passive/s    iseg/s    oseg/s
+22:37:21         1.00      0.00  18088.00  13977.00
+
+22:37:20     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:21         0.00      0.00      0.00      0.00      2.00
+
+22:37:21        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:22           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:22         eth0 187394.00  14945.00 275786.26   1064.07      0.00      0.00      0.00      0.00
+
+22:37:21        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:22           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:22         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:21     active/s passive/s    iseg/s    oseg/s
+22:37:22         0.00      0.00  19507.00  14950.00
+
+22:37:21     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:22         0.00      0.00      0.00      0.00      0.00
+
+22:37:22        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:23           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:23         eth0 178753.00  13224.00 263067.28    946.94      0.00      0.00      0.00      0.00
+
+22:37:22        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:23           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:23         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:22     active/s passive/s    iseg/s    oseg/s
+22:37:23         0.00      0.00  16992.00  13221.00
+
+22:37:22     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:23         0.00      0.00      0.00      0.00      0.00
+
+22:37:23        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:24           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:24         eth0 192158.00  15416.00 282797.10   1096.64      0.00      0.00      0.00      0.00
+
+22:37:23        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:24           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:24         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:23     active/s passive/s    iseg/s    oseg/s
+22:37:24         0.00      0.00  19872.00  15415.00
+
+22:37:23     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:24         0.00      0.00      0.00      0.00      0.00
+
+22:37:24        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:25           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:25         eth0 183199.00  14776.00 269613.46   1050.23      0.00      0.00      0.00      0.00
+
+22:37:24        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:25           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:25         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:24     active/s passive/s    iseg/s    oseg/s
+22:37:25         0.00      0.00  19195.00  14782.00
+
+22:37:24     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:25         0.00      0.00      0.00      0.00      0.00
+
+22:37:25        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:26           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:26         eth0 176315.00  14421.00 259480.29   1023.92      0.00      0.00      0.00      0.00
+
+22:37:25        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:26           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:26         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:25     active/s passive/s    iseg/s    oseg/s
+22:37:26         0.00      0.00  18558.00  14413.00
+
+22:37:25     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:26         0.00      0.00      0.00      0.00      0.00
+
+22:37:26        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:27           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:27         eth0 181266.00  14329.00 266767.39   1021.03      0.00      0.00      0.00      0.00
+
+22:37:26        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:27           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:27         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:26     active/s passive/s    iseg/s    oseg/s
+22:37:27         0.00      0.00  18595.00  14329.00
+
+22:37:26     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:27         0.00      0.00      0.00      0.00      0.00
+
+22:37:27        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:28           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:28         eth0 189219.00  15848.00 278471.62   1122.91      0.00      0.00      0.00      0.00
+
+22:37:27        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:28           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:28         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:27     active/s passive/s    iseg/s    oseg/s
+22:37:28         0.00      0.00  20360.00  15848.00
+
+22:37:27     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:28         0.00      0.00      0.00      0.00      0.00
+
+22:37:28        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:29           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:29         eth0 186344.00  15004.00 274241.27   1066.15      0.00      0.00      0.00      0.00
+
+22:37:28        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:29           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:29         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:28     active/s passive/s    iseg/s    oseg/s
+22:37:29         0.00      0.00  19407.00  15004.00
+
+22:37:28     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:29         0.00      0.00      0.00      0.00      0.00
+
+22:37:29        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:30           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:30         eth0 185078.00  21967.00 272305.53   1559.57      0.00      0.00      0.00      0.00
+
+22:37:29        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:30           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:30         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:29     active/s passive/s    iseg/s    oseg/s
+22:37:30        26.00      0.00  28970.00  21969.00
+
+22:37:29     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:30         0.00      0.00      0.00      0.00      0.00
+
+22:37:30        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:31           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:31         eth0 174624.00  73424.00 256386.12   5058.60      0.00      0.00      0.00      0.00
+
+22:37:30        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:31           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:31         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:30     active/s passive/s    iseg/s    oseg/s
+22:37:31        99.00      0.00 107963.00  73436.00
+
+22:37:30     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:31         0.00      0.00      0.00      0.00      0.00
+
+22:37:31        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:32           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:32         eth0 175242.00  68832.00 256365.50   4722.72      0.00      0.00      0.00      0.00
+
+22:37:31        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:32           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:32         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:31     active/s passive/s    iseg/s    oseg/s
+22:37:32        51.00      0.00 102475.00  68826.00
+
+22:37:31     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:32         0.00      0.00      0.00      0.00      0.00
+
+22:37:32        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:33           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:33         eth0 175156.00  76010.00 256343.85   5206.05      0.00      0.00      0.00      0.00
+
+22:37:32        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:33           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:33         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:32     active/s passive/s    iseg/s    oseg/s
+22:37:33        40.00      0.00 115150.00  76007.00
+
+22:37:32     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:33         0.00      0.00      0.00      0.00      0.00
+
+22:37:33        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:34           lo     12.00     12.00      1.26      1.26      0.00      0.00      0.00      0.00
+22:37:34         eth0 175181.00  75038.00 256350.52   5111.52      0.00      0.00      0.00      0.00
+
+22:37:33        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:34           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:34         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:33     active/s passive/s    iseg/s    oseg/s
+22:37:34        18.00      0.00 116828.00  75043.00
+
+22:37:33     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:34         0.00      1.00      0.00      0.00      1.00
+
+22:37:34        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:35           lo     10.00     10.00      1.04      1.04      0.00      0.00      0.00      0.00
+22:37:35         eth0 175232.00  75052.00 256353.79   5186.85      0.00      0.00      0.00      0.00
+
+22:37:34        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:35           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:35         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:34     active/s passive/s    iseg/s    oseg/s
+22:37:35        57.00      0.00 113788.00  75072.00
+
+22:37:34     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:35         0.00      0.00      0.00      0.00      0.00
+
+22:37:35        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:36           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:36         eth0 175161.00  75542.00 256351.46   5131.95      0.00      0.00      0.00      0.00
+
+22:37:35        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:36           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:36         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:35     active/s passive/s    iseg/s    oseg/s
+22:37:36        24.00      0.00 116425.00  75544.00
+
+22:37:35     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:36         0.00      0.00      0.00      0.00      0.00
+
+22:37:36        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:37           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:37         eth0 175080.00  75750.00 256351.21   5144.93      0.00      0.00      0.00      0.00
+
+22:37:36        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:37           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:37         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:36     active/s passive/s    iseg/s    oseg/s
+22:37:37         0.00      0.00 117140.00  75748.00
+
+22:37:36     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:37         0.00      0.00      0.00      0.00      0.00
+
+22:37:37        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:38           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:38         eth0 175076.00  71957.00 256341.37   4893.77      0.00      0.00      0.00      0.00
+
+22:37:37        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:38           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:38         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:37     active/s passive/s    iseg/s    oseg/s
+22:37:38         0.00      0.00 111445.00  71955.00
+
+22:37:37     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:38         0.00      0.00      0.00      0.00      0.00
+
+22:37:38        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:39           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:39         eth0 175151.00  69451.00 256345.93   4719.17      0.00      0.00      0.00      0.00
+
+22:37:38        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:39           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:39         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:38     active/s passive/s    iseg/s    oseg/s
+22:37:39         0.00      0.00 106137.00  69448.00
+
+22:37:38     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:39         0.00      0.00      0.00      0.00      0.00
+
+22:37:39        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:40           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:40         eth0 175199.00  74024.00 256357.58   5061.49      0.00      0.00      0.00      0.00
+
+22:37:39        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:40           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:40         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:39     active/s passive/s    iseg/s    oseg/s
+22:37:40        42.00      0.00 112025.00  74022.00
+
+22:37:39     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:40         0.00      0.00      0.00      0.00      0.00
+
+22:37:40        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:41           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:41         eth0 175227.00  74087.00 256345.73   5042.46      0.00      0.00      0.00      0.00
+
+22:37:40        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:41           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:41         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:40     active/s passive/s    iseg/s    oseg/s
+22:37:41        68.00      0.00 114264.00  74095.00
+
+22:37:40     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:41         0.00      0.00      0.00      0.00      0.00
+
+22:37:41        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:42           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:42         eth0 175160.00  75016.00 256362.49   5132.30      0.00      0.00      0.00      0.00
+
+22:37:41        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:42           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:42         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:41     active/s passive/s    iseg/s    oseg/s
+22:37:42        27.00      0.00 113096.00  75016.00
+
+22:37:41     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:42         0.00      0.00      0.00      0.00      0.00
+
+22:37:42        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:43           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:43         eth0 175191.00  68302.00 256350.88   4677.57      0.00      0.00      0.00      0.00
+
+22:37:42        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:43           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:43         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:42     active/s passive/s    iseg/s    oseg/s
+22:37:43        27.00      0.00 103261.00  68298.00
+
+22:37:42     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:43         0.00      0.00      1.00      0.00      0.00
+
+22:37:43        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:44           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:44         eth0 175200.00  73477.00 256342.66   5050.93      0.00      0.00      0.00      0.00
+
+22:37:43        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:44           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:44         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:43     active/s passive/s    iseg/s    oseg/s
+22:37:44        62.00      0.00 110285.00  73469.00
+
+22:37:43     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:44         0.00      0.00      1.00      0.00      0.00
+
+22:37:44        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:45           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:45         eth0 175105.00  74417.00 256353.00   5060.23      0.00      0.00      0.00      0.00
+
+22:37:44        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:45           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:45         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:44     active/s passive/s    iseg/s    oseg/s
+22:37:45         0.00      0.00 114747.00  74427.00
+
+22:37:44     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:45         0.00      0.00      0.00      0.00      0.00
+
+22:37:45        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:46           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:46         eth0 175317.00  75187.00 256367.26   5122.79      0.00      0.00      0.00      0.00
+
+22:37:45        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:46           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:46         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:45     active/s passive/s    iseg/s    oseg/s
+22:37:46        87.00      0.00 115853.00  75187.00
+
+22:37:45     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:46         0.00      0.00      0.00      0.00      0.00
+
+22:37:46        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:47           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:47         eth0 175169.00  77102.00 256329.55   5292.80      0.00      0.00      0.00      0.00
+
+22:37:46        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:47           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:47         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:46     active/s passive/s    iseg/s    oseg/s
+22:37:47        45.00      0.00 115778.00  77104.00
+
+22:37:46     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:47         0.00      0.00      0.00      0.00      0.00
+
+22:37:47        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:48           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:48         eth0 175224.00  75525.00 256350.52   5160.37      0.00      0.00      0.00      0.00
+
+22:37:47        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:48           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:48         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:47     active/s passive/s    iseg/s    oseg/s
+22:37:48        62.00      0.00 114971.00  75522.00
+
+22:37:47     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:48         0.00      0.00      0.00      0.00      2.00
+
+22:37:48        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:49           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:49         eth0 175195.00  76094.00 256335.45   5193.87      0.00      0.00      0.00      0.00
+
+22:37:48        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:49           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:49         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:48     active/s passive/s    iseg/s    oseg/s
+22:37:49        51.00      0.00 115176.00  76085.00
+
+22:37:48     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:49         0.00      0.00      2.00      0.00      3.00
+
+22:37:49        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:50           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:50         eth0 175128.00  75965.00 256375.00   5160.93      0.00      0.00      0.00      0.00
+
+22:37:49        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:50           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:50         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:49     active/s passive/s    iseg/s    oseg/s
+22:37:50         0.00      0.00 117110.00  75970.00
+
+22:37:49     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:50         0.00      0.00      0.00      0.00      1.00
+
+22:37:50        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:51           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:51         eth0 175352.00  74130.00 256349.43   5033.00      0.00      0.00      0.00      0.00
+
+22:37:50        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:51           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:51         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:50     active/s passive/s    iseg/s    oseg/s
+22:37:51       105.00      0.00 114382.00  74132.00
+
+22:37:50     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:51         0.00      0.00      1.00      0.00     90.00
+
+22:37:51        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:52           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:52         eth0 175215.00  74610.00 256332.59   5090.50      0.00      0.00      0.00      0.00
+
+22:37:51        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:52           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:52         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:51     active/s passive/s    iseg/s    oseg/s
+22:37:52        61.00      0.00 113295.00  74599.00
+
+22:37:51     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:52         0.00      0.00      1.00      0.00    120.00
+
+22:37:52        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:53           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:53         eth0 175184.00  76807.00 256353.51   5240.50      0.00      0.00      0.00      0.00
+
+22:37:52        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:53           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:53         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:52     active/s passive/s    iseg/s    oseg/s
+22:37:53        31.00      0.00 117804.00  76813.00
+
+22:37:52     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:53         0.00      0.00      0.00      0.00     11.00
+
+22:37:53        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:54           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:54         eth0 175177.00  70303.00 256351.44   4761.50      0.00      0.00      0.00      0.00
+
+22:37:53        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:54           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:54         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:53     active/s passive/s    iseg/s    oseg/s
+22:37:54         0.00      0.00 107537.00  70303.00
+
+22:37:53     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:54         0.00      0.00      0.00      0.00    151.00
+
+22:37:54        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:55           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:55         eth0 175215.00  70474.00 256353.83   4799.04      0.00      0.00      0.00      0.00
+
+22:37:54        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:55           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:55         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:54     active/s passive/s    iseg/s    oseg/s
+22:37:55        37.00      0.00 107805.00  70469.00
+
+22:37:54     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:55         0.00      0.00      1.00      0.00      6.00
+
+22:37:55        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:56           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:56         eth0 175156.00  74050.00 256348.49   5049.38      0.00      0.00      0.00      0.00
+
+22:37:55        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:56           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:56         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:55     active/s passive/s    iseg/s    oseg/s
+22:37:56        30.00      0.00 113579.00  74055.00
+
+22:37:55     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:56         0.00      0.00      0.00      0.00    110.00
+
+22:37:56        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:57           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:57         eth0 175267.00  74640.00 256362.80   5063.30      0.00      0.00      0.00      0.00
+
+22:37:56        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:57           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:57         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:56     active/s passive/s    iseg/s    oseg/s
+22:37:57        71.00      0.00 115296.00  74647.00
+
+22:37:56     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:57         0.00      0.00      0.00      0.00    137.00
+
+22:37:57        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:58           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:58         eth0 175221.00  76044.00 256347.71   5201.44      0.00      0.00      0.00      0.00
+
+22:37:57        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:58           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:58         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:57     active/s passive/s    iseg/s    oseg/s
+22:37:58        41.00      0.00 115856.00  76037.00
+
+22:37:57     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:58         0.00      0.00      1.00      0.00    199.00
+
+22:37:58        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:37:59           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:59         eth0 175553.00  74086.00 256329.92   5082.29      0.00      0.00      0.00      0.00
+
+22:37:58        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:37:59           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:37:59         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:58     active/s passive/s    iseg/s    oseg/s
+22:37:59       227.00      0.00 111718.00  74089.00
+
+22:37:58     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:37:59         0.00      0.00      0.00      0.00     91.00
+
+22:37:59        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:00           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:00         eth0 175589.00  75897.00 256405.80   5195.32      0.00      0.00      0.00      0.00
+
+22:37:59        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:00           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:00         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:37:59     active/s passive/s    iseg/s    oseg/s
+22:38:00       231.00      0.00 116286.00  75896.00
+
+22:37:59     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:00         0.00      0.00      0.00      0.00     22.00
+
+22:38:00        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:01           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:01         eth0 175675.00  74436.00 256351.47   5058.09      0.00      0.00      0.00      0.00
+
+22:38:00        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:01           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:01         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:00     active/s passive/s    iseg/s    oseg/s
+22:38:01       208.00      0.00 115596.00  74456.00
+
+22:38:00     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:01         0.00      0.00      0.00      0.00     53.00
+
+22:38:01        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:02           lo     10.00     10.00      0.74      0.74      0.00      0.00      0.00      0.00
+22:38:02         eth0 175732.00  72768.00 256341.17   4947.03      0.00      0.00      0.00      0.00
+
+22:38:01        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:02           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:02         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:01     active/s passive/s    iseg/s    oseg/s
+22:38:02       215.00      1.00 112236.00  72757.00
+
+22:38:01     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:02         0.00      0.00      0.00      0.00    175.00
+
+22:38:02        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:03           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:03         eth0 175752.00  74543.00 256350.61   5089.10      0.00      0.00      0.00      0.00
+
+22:38:02        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:03           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:03         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:02     active/s passive/s    iseg/s    oseg/s
+22:38:03       250.00      0.00 113646.00  74542.00
+
+22:38:02     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:03         0.00      0.00      0.00      0.00    107.00
+
+22:38:03        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:04           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:04         eth0 175716.00  74591.00 256319.57   5067.82      0.00      0.00      0.00      0.00
+
+22:38:03        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:04           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:04         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:03     active/s passive/s    iseg/s    oseg/s
+22:38:04       206.00      0.00 115543.00  74594.00
+
+22:38:03     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:04         0.00      0.00      0.00      0.00    230.00
+
+22:38:04        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:05           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:05         eth0 175869.00  75438.00 256248.79   5151.40      0.00      0.00      0.00      0.00
+
+22:38:04        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:05           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:05         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:04     active/s passive/s    iseg/s    oseg/s
+22:38:05       326.00      0.00 116213.00  75431.00
+
+22:38:04     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:05         0.00      0.00      1.00      0.00     87.00
+
+22:38:05        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:06           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:06         eth0 175897.00  66093.00 256488.03   4483.21      0.00      0.00      0.00      0.00
+
+22:38:05        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:06           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:06         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:05     active/s passive/s    iseg/s    oseg/s
+22:38:06       251.00      0.00 101046.00  66092.00
+
+22:38:05     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:06         0.00      0.00      0.00      0.00    165.00
+
+22:38:06        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:07           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:07         eth0 175910.00  73785.00 256349.21   5088.43      0.00      0.00      0.00      0.00
+
+22:38:06        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:07           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:07         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:06     active/s passive/s    iseg/s    oseg/s
+22:38:07       264.00      0.00 111534.00  73789.00
+
+22:38:06     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:07         0.00      1.00      0.00      0.00    539.00
+
+22:38:07        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:08           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:08         eth0 175768.00  73799.00 256336.68   5030.59      0.00      0.00      0.00      0.00
+
+22:38:07        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:08           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:08         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:07     active/s passive/s    iseg/s    oseg/s
+22:38:08       241.00      0.00 113923.00  73797.00
+
+22:38:07     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:08         0.00      0.00      2.00      0.00     46.00
+
+22:38:08        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:09           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:09         eth0 175849.00  73371.00 256340.27   4997.18      0.00      0.00      0.00      0.00
+
+22:38:08        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:09           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:09         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:08     active/s passive/s    iseg/s    oseg/s
+22:38:09       263.00      0.00 112164.00  73371.00
+
+22:38:08     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:09         0.00      0.00      0.00      0.00    141.00
+
+22:38:09        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:10           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:10         eth0 175841.00  71294.00 256371.22   4854.57      0.00      0.00      0.00      0.00
+
+22:38:09        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:10           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:10         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:09     active/s passive/s    iseg/s    oseg/s
+22:38:10       244.00      0.00 108725.00  71297.00
+
+22:38:09     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:10         0.00      0.00      0.00      0.00     55.00
+
+22:38:10        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:11           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:11         eth0 175819.00  73565.00 256297.87   5017.26      0.00      0.00      0.00      0.00
+
+22:38:10        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:11           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:11         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:10     active/s passive/s    iseg/s    oseg/s
+22:38:11       267.00      0.00 112117.00  73568.00
+
+22:38:10     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:11         0.00      0.00      0.00      0.00    148.00
+
+22:38:11        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:12           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:12         eth0 175575.00  70272.00 256121.44   4778.01      0.00      0.00      0.00      0.00
+
+22:38:11        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:12           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:12         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:11     active/s passive/s    iseg/s    oseg/s
+22:38:12       207.00      0.00 108313.00  70267.00
+
+22:38:11     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:12         0.00      0.00      0.00      0.00     73.00
+
+22:38:12        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:13           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:13         eth0 175915.00  71293.00 256370.70   4868.51      0.00      0.00      0.00      0.00
+
+22:38:12        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:13           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:13         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:12     active/s passive/s    iseg/s    oseg/s
+22:38:13       281.00      0.00 108371.00  71289.00
+
+22:38:12     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:13         0.00      0.00      0.00      0.00    520.00
+
+22:38:13        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:14           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:14         eth0 175932.00  70340.00 256559.50   4793.17      0.00      0.00      0.00      0.00
+
+22:38:13        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:14           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:14         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:13     active/s passive/s    iseg/s    oseg/s
+22:38:14       272.00      0.00 107668.00  70340.00
+
+22:38:13     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:14         0.00      0.00      2.00      0.00    114.00
+
+22:38:14        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:15           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:15         eth0 175916.00  72654.00 256402.86   4956.57      0.00      0.00      0.00      0.00
+
+22:38:14        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:15           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:15         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:14     active/s passive/s    iseg/s    oseg/s
+22:38:15       241.00      0.00 110145.00  72656.00
+
+22:38:14     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:15         0.00      0.00      0.00      0.00    626.00
+
+22:38:15        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:16           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:16         eth0 175872.00  71352.00 256298.04   4848.71      0.00      0.00      0.00      0.00
+
+22:38:15        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:16           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:16         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:15     active/s passive/s    iseg/s    oseg/s
+22:38:16       252.00      0.00 108777.00  71354.00
+
+22:38:15     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:16         0.00      0.00      0.00      0.00    621.00
+
+22:38:16        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:17           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:17         eth0 175843.00  69944.00 256404.02   4762.48      0.00      0.00      0.00      0.00
+
+22:38:16        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:17           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:17         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:16     active/s passive/s    iseg/s    oseg/s
+22:38:17       242.00      0.00 107919.00  69943.00
+
+22:38:16     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:17         0.00      0.00      0.00      0.00     62.00
+
+22:38:17        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:18           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:18         eth0 175384.00  66470.00 255780.44   4541.86      0.00      0.00      0.00      0.00
+
+22:38:17        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:18           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:18         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:17     active/s passive/s    iseg/s    oseg/s
+22:38:18       214.00      0.00 100398.00  66467.00
+
+22:38:17     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:18         0.00      0.00      1.00      0.00    295.00
+
+22:38:18        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:19           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:19         eth0 175858.00  73921.00 256880.84   5046.98      0.00      0.00      0.00      0.00
+
+22:38:18        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:19           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:19         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:18     active/s passive/s    iseg/s    oseg/s
+22:38:19      1064.00      0.00 110610.00  73918.00
+
+22:38:18     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:19         0.00      0.00      6.00      0.00     98.00
+
+22:38:19        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:20           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:20         eth0 175698.00  74049.00 256358.09   5040.05      0.00      0.00      0.00      0.00
+
+22:38:19        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:20           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:20         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:19     active/s passive/s    iseg/s    oseg/s
+22:38:20      1198.00      0.00 112483.00  73066.00
+
+22:38:19     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:20         0.00      0.00    985.00      2.00    546.00
+
+22:38:20        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:21           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:21         eth0 175539.00  74470.00 256362.08   5092.66      0.00      0.00      0.00      0.00
+
+22:38:20        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:21           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:21         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:20     active/s passive/s    iseg/s    oseg/s
+22:38:21      1205.00      0.00 110907.00  73237.00
+
+22:38:20     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:21         0.00      0.00   1227.00     10.00    324.00
+
+22:38:21        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:22           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:22         eth0 175385.00  70435.00 256385.81   4802.17      0.00      0.00      0.00      0.00
+
+22:38:21        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:22           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:22         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:21     active/s passive/s    iseg/s    oseg/s
+22:38:22      1209.00      0.00 104672.00  69152.00
+
+22:38:21     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:22         0.00      0.00   1286.00     54.00     80.00
+
+22:38:22        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:23           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:23         eth0 175310.00  74664.00 256342.49   5102.05      0.00      0.00      0.00      0.00
+
+22:38:22        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:23           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:23         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:22     active/s passive/s    iseg/s    oseg/s
+22:38:23      1229.00      0.00 110900.00  73463.00
+
+22:38:22     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:23         0.00      0.00   1202.00      3.00    128.00
+
+22:38:23        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:24           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:24         eth0 175186.00  74817.00 256180.55   5108.78      0.00      0.00      0.00      0.00
+
+22:38:23        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:24           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:24         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:23     active/s passive/s    iseg/s    oseg/s
+22:38:24      1169.00      0.00 111812.00  73360.00
+
+22:38:23     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:24         0.00      0.00   1460.00     69.00     98.00
+
+22:38:24        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:25           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:25         eth0 175152.00  75011.00 256316.00   5097.74      0.00      0.00      0.00      0.00
+
+22:38:24        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:25           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:25         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:24     active/s passive/s    iseg/s    oseg/s
+22:38:25      1158.00      0.00 113130.00  73766.00
+
+22:38:24     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:25         0.00      0.00   1239.00      2.00    176.00
+
+22:38:25        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:26           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:26         eth0 175518.00  66198.00 256555.32   4504.81      0.00      0.00      0.00      0.00
+
+22:38:25        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:26           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:26         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:25     active/s passive/s    iseg/s    oseg/s
+22:38:26      1191.00      0.00  98922.00  65022.00
+
+22:38:25     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:26         0.00      0.00   1180.00      2.00    263.00
+
+22:38:26        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:27           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:27         eth0 174993.00  72762.00 256067.63   4968.93      0.00      0.00      0.00      0.00
+
+22:38:26        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:27           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:27         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:26     active/s passive/s    iseg/s    oseg/s
+22:38:27      1114.00      0.00 107772.00  71513.00
+
+22:38:26     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:27         0.00      0.00   1252.00      1.00    375.00
+
+22:38:27        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:28           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:28         eth0 175504.00  72976.00 256537.76   4964.86      0.00      0.00      0.00      0.00
+
+22:38:27        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:28           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:28         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:27     active/s passive/s    iseg/s    oseg/s
+22:38:28      1195.00      0.00 109815.00  71745.00
+
+22:38:27     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:28         0.00      1.00   1226.00      2.00    552.00
+
+22:38:28        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:29           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:29         eth0 176882.00  64966.00 256063.47   4481.18      0.00      0.00      0.00      0.00
+
+22:38:28        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:29           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:29         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:28     active/s passive/s    iseg/s    oseg/s
+22:38:29      1191.00      0.00  91339.00  63672.00
+
+22:38:28     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:29         0.00      0.00   1294.00      2.00   2813.00
+
+22:38:29        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:30           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:30         eth0 178014.00  60678.00 253195.68   4212.17      0.00      0.00      0.00      0.00
+
+22:38:29        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:30           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:30         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:29     active/s passive/s    iseg/s    oseg/s
+22:38:30      1224.00      0.00  78576.00  59242.00
+
+22:38:29     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:30         0.00      0.00   1430.00      2.00   9089.00
+
+22:38:30        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:31           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:31         eth0 178174.00  67035.00 258497.14   4571.78      0.00      0.00      0.00      0.00
+
+22:38:30        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:31           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:31         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:30     active/s passive/s    iseg/s    oseg/s
+22:38:31       139.00      0.00  90009.00  66804.00
+
+22:38:30     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:31         0.00      0.00    240.00      0.00   7341.00
+
+22:38:31        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:32           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:32         eth0 176264.00  71416.00 255743.02   4872.18      0.00      0.00      0.00      0.00
+
+22:38:31        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:32           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:32         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:31     active/s passive/s    iseg/s    oseg/s
+22:38:32       307.00      0.00 109271.00  71364.00
+
+22:38:31     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:32         0.00      0.00     47.00      0.00    210.00
+
+22:38:32        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:33           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:33         eth0 176696.00  67806.00 257325.14   4618.33      0.00      0.00      0.00      0.00
+
+22:38:32        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:33           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:33         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:32     active/s passive/s    iseg/s    oseg/s
+22:38:33       298.00      0.00 105836.00  67771.00
+
+22:38:32     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:33         0.00      0.00     37.00      0.00    271.00
+
+22:38:33        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:34           lo     12.00     12.00      1.26      1.26      0.00      0.00      0.00      0.00
+22:38:34         eth0 176118.00  69344.00 256766.02   4726.89      0.00      0.00      0.00      0.00
+
+22:38:33        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:34           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:34         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:33     active/s passive/s    iseg/s    oseg/s
+22:38:34       210.00      0.00 109812.00  69254.00
+
+22:38:33     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:34         0.00      1.00     89.00      0.00    738.00
+
+22:38:34        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:35           lo     10.00     10.00      1.04      1.04      0.00      0.00      0.00      0.00
+22:38:35         eth0 175330.00  67787.00 255469.67   4638.09      0.00      0.00      0.00      0.00
+
+22:38:34        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:35           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:35         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:34     active/s passive/s    iseg/s    oseg/s
+22:38:35       255.00      0.00 106324.00  67775.00
+
+22:38:34     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:35         0.00      0.00     35.00      0.00   1209.00
+
+22:38:35        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:36           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:36         eth0 175889.00  61788.00 256307.74   4187.35      0.00      0.00      0.00      0.00
+
+22:38:35        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:36           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:36         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:35     active/s passive/s    iseg/s    oseg/s
+22:38:36       296.00      1.00  93546.00  61764.00
+
+22:38:35     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:36         0.00      0.00     19.00      0.00   3381.00
+
+22:38:36        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:37           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:37         eth0 176973.00  65966.00 257753.15   4499.36      0.00      0.00      0.00      0.00
+
+22:38:36        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:37           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:37         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:36     active/s passive/s    iseg/s    oseg/s
+22:38:37       318.00      0.00 102808.00  65876.00
+
+22:38:36     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:37         0.00      0.00     93.00      0.00   1518.00
+
+22:38:37        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:38           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:38         eth0 175780.00  66521.00 256107.98   4531.19      0.00      0.00      0.00      0.00
+
+22:38:37        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:38           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:38         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:37     active/s passive/s    iseg/s    oseg/s
+22:38:38       287.00      0.00 103628.00  66488.00
+
+22:38:37     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:38         0.00      0.00     40.00      0.00    609.00
+
+22:38:38        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:39           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:39         eth0 175966.00  63722.00 256463.04   4352.63      0.00      0.00      0.00      0.00
+
+22:38:38        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:39           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:39         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:38     active/s passive/s    iseg/s    oseg/s
+22:38:39       262.00      0.00  98432.00  63684.00
+
+22:38:38     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:39         0.00      0.00     28.00      0.00    754.00
+
+22:38:39        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:40           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:40         eth0 174877.00  62265.00 254959.60   4234.60      0.00      0.00      0.00      0.00
+
+22:38:39        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:40           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:40         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:39     active/s passive/s    iseg/s    oseg/s
+22:38:40       211.00      0.00  95690.00  62231.00
+
+22:38:39     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:40         0.00      0.00     36.00      0.00   1092.00
+
+22:38:40        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:41           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:41         eth0 176384.00  65430.00 257162.55   4461.03      0.00      0.00      0.00      0.00
+
+22:38:40        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:41           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:41         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:40     active/s passive/s    iseg/s    oseg/s
+22:38:41       262.00      0.00 102012.00  65399.00
+
+22:38:40     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:41         0.00      0.00     28.00      0.00    971.00
+
+22:38:41        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:42           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:42         eth0 176092.00  68434.00 256799.32   4652.24      0.00      0.00      0.00      0.00
+
+22:38:41        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:42           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:42         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:41     active/s passive/s    iseg/s    oseg/s
+22:38:42       243.00      0.00 107616.00  68413.00
+
+22:38:41     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:42         0.00      0.00     25.00      0.00    827.00
+
+22:38:42        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+22:38:43           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:43         eth0 175729.00  68192.00 256249.25   4638.56      0.00      0.00      0.00      0.00
+
+22:38:42        IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s
+22:38:43           lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+22:38:43         eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+22:38:42     active/s passive/s    iseg/s    oseg/s
+22:38:43       242.00      0.00 107793.00  68163.00
+
+22:38:42     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+22:38:43         0.00      0.00     24.00      0.00    663.00

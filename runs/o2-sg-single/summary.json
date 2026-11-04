@@ -1,0 +1,79 @@
+[
+  {
+    "step": "1",
+    "target_rps": "100",
+    "a_tx_gbps": 0.2229624078336,
+    "b_rx_gbps": 0.2233895944192,
+    "a_cpu_pct": 3.6099999999999994,
+    "a_process_cpu_pct": 1.96,
+    "b_cpu_pct": 3.147599999999997,
+    "retrans_per_s": 1.28,
+    "send_queue_max_mib": 0.25011444091796875
+  },
+  {
+    "step": "2",
+    "target_rps": "250",
+    "a_tx_gbps": 0.5363375669248,
+    "b_rx_gbps": 0.5502266114048,
+    "a_cpu_pct": 6.870800000000003,
+    "a_process_cpu_pct": 4.48,
+    "b_cpu_pct": 7.074799999999996,
+    "retrans_per_s": 36.96,
+    "send_queue_max_mib": 0.3488006591796875
+  },
+  {
+    "step": "3",
+    "target_rps": "400",
+    "a_tx_gbps": 0.8625555898368,
+    "b_rx_gbps": 0.8930430746624,
+    "a_cpu_pct": 9.208799999999997,
+    "a_process_cpu_pct": 7.16,
+    "b_cpu_pct": 10.0608,
+    "retrans_per_s": 65.68,
+    "send_queue_max_mib": 0.39551544189453125
+  },
+  {
+    "step": "4",
+    "target_rps": "500",
+    "a_tx_gbps": 1.0651423244288,
+    "b_rx_gbps": 1.0981898420223999,
+    "a_cpu_pct": 11.780000000000001,
+    "a_process_cpu_pct": 9.0,
+    "b_cpu_pct": 11.822400000000002,
+    "retrans_per_s": 84.36,
+    "send_queue_max_mib": 0.9028854370117188
+  },
+  {
+    "step": "5",
+    "target_rps": "700",
+    "a_tx_gbps": 1.50048505856,
+    "b_rx_gbps": 1.5443983630336,
+    "a_cpu_pct": 15.515600000000006,
+    "a_process_cpu_pct": 12.52,
+    "b_cpu_pct": 16.046800000000005,
+    "retrans_per_s": 135.04,
+    "send_queue_max_mib": 0.5002288818359375
+  },
+  {
+    "step": "6",
+    "target_rps": "1000",
+    "a_tx_gbps": 2.129588312746667,
+    "b_rx_gbps": 2.1553627365376,
+    "a_cpu_pct": 50.82458333333333,
+    "a_process_cpu_pct": 39.17875,
+    "b_cpu_pct": 36.6892,
+    "retrans_per_s": 3901.11875,
+    "send_queue_max_mib": 8.744522094726562
+  },
+  {
+    "step": "7",
+    "target_rps": "1500",
+    "a_tx_gbps": 2.1199720873984003,
+    "b_rx_gbps": 2.0990017503232,
+    "a_cpu_pct": 60.5768,
+    "a_process_cpu_pct": 97.92,
+    "b_cpu_pct": 46.626,
+    "retrans_per_s": 7546.6,
+    "send_queue_max_mib": 2.1520156860351562
+  }
+]

@@ -2,27 +2,9 @@
 
 实现：`deploy/consoles/enrolld.html`，由 Prometheus 的 console 模板引擎直接执行 PromQL，九格数值每 5 秒刷新；每格的链接打开 Prometheus 原生时间序列图，展开「PromQL」可见查询。无需 Grafana 或 CDN。
 
-## 访问
+## 部署
 
-当前复现统一使用主机 A 的 `/home/ubuntu/lab2` 和默认端口 8080、9090、9100。在该目录执行：
-
-```bash
-taskset -c 0 tools/prometheus \
-  --config.file=deploy/prometheus.yml \
-  --storage.tsdb.path=/dev/shm/lab2-prom \
-  --web.listen-address=127.0.0.1:9090 \
-  --web.console.templates=deploy/consoles
-```
-
-同一轮实验只运行一套服务和监控，切换任务时可以复用进程，全部结束后停止。重启 Prometheus 并使用同一 TSDB 路径会保留数据。历史 O3 运行时监控位于 `/home/ubuntu/ops-lab2-8`，服务位于 `/home/ubuntu/lab2`；该历史目录安排不再用于复现。
-
-本机建立隧道：
-
-```bash
-ssh -N -L 9090:127.0.0.1:9090 se-devops
-```
-
-打开 <http://127.0.0.1:9090/consoles/enrolld.html>；告警页面为 <http://127.0.0.1:9090/alerts>。不用开放安全组端口。
+Prometheus 通过 `deploy/prometheus.yml` 加载服务与节点指标，通过 `rule_files` 加载 `deploy/rules.yml`。看板模板目录为 `deploy/consoles`，页面为 `/consoles/enrolld.html`，告警页面为 `/alerts`。Prometheus 监听 `127.0.0.1:9090`，TSDB 位于 `/dev/shm/lab2-prom`。
 
 ## 九格查询
 

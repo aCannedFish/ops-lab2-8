@@ -1,0 +1,11 @@
+{
+  "source": "Huawei Cloud console",
+  "security_group": "Sys-WebServer",
+  "protocol": "TCP",
+  "port": 8080,
+  "source_cidr": "192.168.0.142/32",
+  "temporary_rule_deleted": true,
+  "rule_count_before": 8,
+  "rule_count_after": 7,
+  "verified_at": "2026-11-04T22:42:08+08:00"
+}

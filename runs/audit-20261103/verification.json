@@ -1,4 +1,5 @@
 {
+  "verified_at": "2026-11-04T22:44:57.665626+08:00",
   "existing_evidence_files": 214,
   "existing_evidence_changed": [],
   "tables": [
@@ -27,11 +28,11 @@
       "match": true
     },
     {
-      "run": "runs/o2-network",
+      "run": "runs/o2-sg-single",
       "match": true
     },
     {
-      "run": "runs/o2-network-2cpu",
+      "run": "runs/o2-sg-dual",
       "match": true
     },
     {
@@ -69,20 +70,17 @@
       "unchanged": true
     }
   ],
-  "question_prompts_preserved": true,
-  "o4_blank": true,
   "restoration": [
     {
-      "run": "o2-network",
-      "rules_restored": true,
-      "config_restored": true
+      "run": "o2-sg-single",
+      "config_restored": true,
+      "temporary_security_group_rule_deleted": true
     },
     {
-      "run": "o2-network-2cpu",
-      "rules_restored": true,
-      "config_restored": true
+      "run": "o2-sg-dual",
+      "config_restored": true,
+      "temporary_security_group_rule_deleted": true
     }
   ],
-  "possible_public_ip_files": [],
-  "possible_secret_files": []
+  "o4_blank": true
 }

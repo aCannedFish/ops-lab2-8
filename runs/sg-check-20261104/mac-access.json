@@ -1,6 +1,0 @@
-{
-  "source": "Mac",
-  "destination": "A-public:8080",
-  "curl_exit_code": 52,
-  "output": "curl: (52) Empty reply from server\nhttp_code=000\nbytes=0\ntime_seconds=5.003802\n"
-}

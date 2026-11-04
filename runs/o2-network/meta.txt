@@ -1,4 +1,0 @@
-Command: taskset -c 0,1 ./loadgen -url http://192.168.0.134:8080/api/export?kb=256 -rates 100,250,400,500,700,1000,1500,2500 -step 30s -seed 1 -out steps.csv
-Server: GOMAXPROCS=1 taskset -c 1 bin/enrolld -addr 0.0.0.0:8080 -sync interval
-Repository: https://github.com/aCannedFish/ops-lab2-8
-Source revision: 701fc3a43aa880ff915bf0ffb274d67aceb17f25 (no application code changed)

@@ -1,8 +1,0 @@
-{
-  "requests": 9235.0,
-  "process_cpu_seconds": 5.110311999999993,
-  "cpu_ms_per_request": 0.5533635083919863,
-  "spin_fraction": 0.8395,
-  "spin_ms": 0.46454866529507255,
-  "other_ms": 0.08881484309691381
-}
